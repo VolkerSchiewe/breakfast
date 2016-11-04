@@ -1,0 +1,19 @@
+{% extends './base.html %}
+
+{% block title%}Auswertung{% endblock %}
+
+{% block body%}
+
+<h1>Wahlergebnisse:</h1>
+
+<h3>PT Wahl:</h3>
+{% for pt in pt_list %}
+<p>{{pt.name}}: {{pt.result}}</p>
+{% endfor %}
+
+<h3>AEJ Wahl:</h3>
+{% for aej in aej_list %}
+<p>{{aej.name}}: {{aej.result}}</p>
+{% endfor %}
+
+{% endblock %}

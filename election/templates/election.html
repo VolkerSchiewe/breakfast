@@ -1,0 +1,33 @@
+{% extends './base.html %}
+
+
+{% block body %}
+
+{% if not selected_item %}
+<h1>Kandidaten wählen:</h1>
+
+<form action="" method="post"> {% csrf_token %}
+
+    <label for="pt">PT-Wahl: </label>
+    <select name="pt" id="pt">
+        {% for pt in pt_list %}
+        <option value="{{ pt.pk }}">{{pt.name}}</option>
+        {% endfor %}
+    </select>
+    <p></p>
+
+    <label for="aej">AEJ-Wahl: </label>
+    <select name="aej" id="aej">
+        {% for aej in aej_list %}
+        <option value="{{ aej.pk }}">{{aej.name}}</option>
+        {% endfor %}
+    </select>
+    <p></p>
+
+    <input type="submit" value="Senden">
+
+</form>
+
+{% endif %}
+
+{% endblock %}
