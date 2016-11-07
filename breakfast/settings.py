@@ -74,6 +74,8 @@ WSGI_APPLICATION = 'breakfast.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+PASSWORD = 'ebujugend'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -84,6 +86,8 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
+
+LOGIN_URL = "./login"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
