@@ -5,15 +5,13 @@
 {% block body%}
 
 <h1>Wahlergebnisse:</h1>
- <!--todo add election count-->
-<h3>PT Wahl:</h3>
-{% for pt in pt_list %}
-<p>{{pt.name}}: {{pt.result}}</p>
-{% endfor %}
-
-<h3>AEJ Wahl:</h3>
-{% for aej in aej_list %}
-<p>{{aej.name}}: {{aej.result}}</p>
+<!--todo add election count-->
+<!--todo diagrams-->
+{% for c_list in list %}
+    <h3>{{c_list.0.sub_election.title}}:</h3>
+    {% for c in c_list %}
+        <p>{{c.name}}: {{c.result}}</p>
+    {% endfor %}
 {% endfor %}
 
 {% endblock %}
