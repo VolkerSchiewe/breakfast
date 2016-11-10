@@ -11,7 +11,6 @@ from django.views.generic import View
 
 from breakfast import settings
 from breakfast.settings import BASE_DIR
-from election import forms
 from .models import Ballot, Candidate, SubElection
 
 
@@ -20,9 +19,7 @@ class LoginView(View):
         # user first login
         c = {}
         c.update(csrf(request))
-        form = forms.LoginForm()
-        context = {'form': form, }
-        return render(request, 'login.html', context)
+        return render(request, 'login.html', context=None)
 
     def post(self, request, *args, **kwargs):
         # login submit button clicked
