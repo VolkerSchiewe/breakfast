@@ -2,8 +2,8 @@
 Tool um kleine Wahlen zu automatisieren
 
 User:
-*Login mit einem Usercode
-*Wahl durch Dropdowns
+  * Login mit 1 Usercode
+  * Wahl durch Dropdowns
 *Ansicht der abgegebenen Stimmen (/votes)
 
 Admin:
