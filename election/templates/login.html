@@ -1,21 +1,21 @@
 {% extends './base.html' %}
 
-{% block title%} Login {% endblock %}
+{% block title %} Login {% endblock %}
 
 {% block body %}
-<h1>Login</h1>
-<p></p>
-<form action="" method="post"> {% csrf_token %}
+    <div class="login">
+        <h1>Login</h1>
+        <p></p>
+        <form action="" method="post"> {% csrf_token %}
 
-    <label for="username">Dein Code: </label>
-    <br>
-    <input type="text" name="username" value="" id="username">
-    <span class="label label-danger">{{ error }}</span>
-    <p></p>
-    <input type="submit" class="btn btn-default" value="Login">
+            <label for="username">Dein Code: </label>
+            <br>
+            <input type="text" name="username" value="" id="username">
+            <span class="label label-danger">{{ error }}</span>
+            <p></p>
+            <input type="submit" class="btn btn-default" value="Login">
 
-
-</form>
-
+        </form>
+    </div>
 
 {% endblock %}
