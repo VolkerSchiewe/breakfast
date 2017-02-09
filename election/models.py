@@ -13,7 +13,7 @@ class SubElection(models.Model):
 class Candidate(models.Model):
     sub_election = models.ForeignKey(SubElection, on_delete=models.CASCADE, default=0)
     name = models.CharField(max_length=250)
-    img = models.FileField(upload_to='uploads/', null=True, blank=True, default="election/static/images/placeholder.png")
+    img = models.FileField(upload_to='uploads/', null=True, blank=True, default="breakfast/election/static/images/placeholder.png")
 
     # toString method
     def __str__(self):

@@ -151,7 +151,7 @@ def get_image(request, user_id):
     if candidate.img:
         return serve_file(candidate.img)
     else:
-        return serve_file(settings.STATIC_URL + "images/placeholder.png")
+        return serve_file(settings.BASE_DIR + "election/static/images/placeholder.png")
 
 
 def random_gen(n):

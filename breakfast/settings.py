@@ -17,6 +17,7 @@ ALLOWED_HOSTS = [
     '192.168.1.3',
     'localhost',
     '0.0.0.0',
+    'masterbruce.pythonanywhere.com',
 ]
 
 
