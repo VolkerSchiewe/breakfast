@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^results$', views.results, name='results'),
     # creating users
     url(r'^users$', views.create_users, name='users'),
+    url(r'^get_image/(?P<user_id>\d+)$', views.get_image, name='get_image')
 ]

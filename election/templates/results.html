@@ -1,17 +1,41 @@
 {% extends './base.html' %}
 
-{% block title%}Auswertung{% endblock %}
+{% block title %}Auswertung{% endblock %}
 
-{% block body%}
+{% block head %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
 
-<h1>Wahlergebnisse:</h1>
-<!--todo add election count-->
-<!--todo diagrams-->
-{% for c_list in list %}
-    <h3>{{c_list.0.sub_election.title}}:</h3>
-    {% for c in c_list %}
-        <p>{{c.name}}: {{c.result}}</p>
+            {% for c_list in list %}
+                var data = google.visualization.arrayToDataTable([
+                    ['Kandidat', 'Name'],
+                    {% for c in c_list %}
+                        ['{{ c.name }}', {{ c.result }}],
+                    {% endfor %}
+                ]);
+
+                var options = {
+                    title: '{{ c_list.0.sub_election.title }}',
+                    legend: '',
+                    pieSliceText: 'value'
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('{{ c_list.0.sub_election.short }}'));
+
+                chart.draw(data, options);
+            {% endfor %}
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <h1>Wahlergebnisse:</h1>
+    {% for c_list in list %}
+        <div class="chart-div" id="{{ c_list.0.sub_election.short }}"></div>
     {% endfor %}
-{% endfor %}
 
 {% endblock %}

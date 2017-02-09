@@ -11,6 +11,7 @@ from django.views.generic import View
 
 from breakfast import settings
 from breakfast.settings import BASE_DIR
+from election.util import serve_file
 from .models import Ballot, Candidate, SubElection
 
 
@@ -34,6 +35,30 @@ class LoginView(View):
             return render(request, 'login.html', {'error': 'Falscher Code'})
 
 
+def check_input(request):
+    elections = SubElection.objects.all()
+    selections = list()
+    for election in elections:
+        if request.POST.get(election.short, False):
+            selections.append(request.POST.get(election.short))
+
+    if len(selections) is len(elections):
+        return False
+
+    elections = []
+    for election in SubElection.objects.all():
+        c_list = Candidate.objects.filter(sub_election=election)
+        elections.append(c_list)
+
+    context = {
+        'selected': selections,
+        'list': elections,
+        'error': 'Du warst noch nicht fertig!'
+    }
+    print(selections)
+    return render(request, 'election.html', context)
+
+
 class ElectionView(View):
     def get(self, request, *args, **kwargs):
         elections = []
@@ -44,12 +69,20 @@ class ElectionView(View):
             c_list = Candidate.objects.filter(sub_election=election)
             elections.append(c_list)
 
-        return render(request, 'election.html', {'list': elections, })
+        context = {
+            'list': elections,
+            'img_dir': 'static/images/upload/photo.jpg',
+        }
+        return render(request, 'election.html', context)
 
     def post(self, request, *args, **kwargs):
         person_code = request.user
+        response = check_input(request)
+        if response:
+            return response
+
         for election in SubElection.objects.all():
-            selection = request.POST[election.short]
+            selection = request.POST.get(election.short)
             c = Candidate.objects.get(pk=selection)
             b = Ballot(personCode=person_code, choice=c)
             b.save()
@@ -70,7 +103,7 @@ def results(request):
             c.result = len(Ballot.objects.filter(choice=c))
         results.append(c_list)
 
-    election_count = int(len(Ballot.objects.all())/len(SubElection.objects.all()))
+    election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.all()))
     context = {
         'election_count': election_count,
         'list': results
@@ -106,11 +139,19 @@ def create_users(request):
 def votes(request):
     print('logout ' + str(request.user))
     auth.logout(request)
-    election_count = int(len(Ballot.objects.all())/len(SubElection.objects.all()))
+    election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.all()))
     context = {
         'election_count': election_count,
     }
     return render(request, 'votes.html', context)
+
+
+def get_image(request, user_id):
+    candidate = Candidate.objects.get(pk=user_id)
+    if candidate.img:
+        return serve_file(candidate.img)
+    else:
+        return serve_file(settings.STATIC_URL + "images/placeholder.png")
 
 
 def random_gen(n):

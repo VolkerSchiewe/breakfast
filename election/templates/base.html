@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     {% load staticfiles %}
     <meta charset="UTF-8">
@@ -8,24 +8,25 @@
     <title>{% block title %}Wahlen{% endblock %}</title>
 
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon; charset=binary">
-    <link rel="stylesheet" type="text/css" href="{%  static 'css/bootstrap.min.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{%  static 'css/style.css' %}"/>
-
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
 <!-- Static navbar -->
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <span class="navbar-brand">Frühjahrswerkstatt</span>
             <img id="nav_image" src="{% static 'images/jugend_schaf.png' %}">
+            <a class="navbar-brand" href="{% url 'login' %}">Frühjahrswerkstatt</a>
         </div>
     </div><!--/.container-fluid -->
 </nav>
 
 <div class="container theme-showcase" role="main">
     <p></p>
-    <div class="jumbotron">
+    <div class="jumbotron" style="text-align: center">
 
         {% block body %}
         {% endblock %}
@@ -35,6 +36,6 @@
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="{%  static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
 </html>
