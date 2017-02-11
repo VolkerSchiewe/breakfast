@@ -36,7 +36,7 @@ class LoginView(View):
 
 
 def check_input(request):
-    elections = SubElection.objects.all()
+    elections = SubElection.objects.filter(visible=True)
     selections = list()
     for election in elections:
         if request.POST.get(election.short, False):
@@ -46,7 +46,7 @@ def check_input(request):
         return False
 
     elections = []
-    for election in SubElection.objects.all():
+    for election in SubElection.objects.filter(visible=True):
         c_list = Candidate.objects.filter(sub_election=election)
         elections.append(c_list)
 
@@ -65,7 +65,7 @@ class ElectionView(View):
         if len(Ballot.objects.filter(personCode=request.user)) >= len(SubElection.objects.all()):
             # User hat bereits gewählt
             return redirect('./votes', request)
-        for election in SubElection.objects.all():
+        for election in SubElection.objects.filter(visible=True):
             c_list = Candidate.objects.filter(sub_election=election)
             elections.append(c_list)
 
@@ -81,7 +81,7 @@ class ElectionView(View):
         if response:
             return response
 
-        for election in SubElection.objects.all():
+        for election in SubElection.objects.filter(visible=True):
             selection = request.POST.get(election.short)
             c = Candidate.objects.get(pk=selection)
             b = Ballot(personCode=person_code, choice=c)
@@ -151,7 +151,7 @@ def get_image(request, user_id):
     if candidate.img:
         return serve_file(candidate.img)
     else:
-        return serve_file(settings.BASE_DIR + "election/static/images/placeholder.png")
+        return serve_file(open(settings.BASE_DIR + "/election/static/images/placeholder.png"))
 
 
 def random_gen(n):
