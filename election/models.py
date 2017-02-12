@@ -9,7 +9,6 @@ class SubElection(models.Model):
     short = models.CharField(max_length=10, default="")
     visible = models.BooleanField(default=True)
 
-    # toString method
     def __str__(self):
         return self.title
 
@@ -20,7 +19,6 @@ class Candidate(models.Model):
     img = models.FileField(upload_to='uploads/', null=True, blank=True,
                            default=os.path.join(settings.BASE_DIR, "election/static/images/placeholder.png"))
 
-    # toString method
     def __str__(self):
         return str(self.sub_election) + ' - ' + str(self.name)
 
@@ -29,6 +27,5 @@ class Ballot(models.Model):
     personCode = models.CharField(max_length=100)
     choice = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=0)
 
-    # toString method
     def __str__(self):
         return self.personCode

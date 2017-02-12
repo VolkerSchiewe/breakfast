@@ -62,12 +62,13 @@ def check_input(request):
 class ElectionView(View):
     def get(self, request, *args, **kwargs):
         elections = []
-        if len(Ballot.objects.filter(personCode=request.user)) >= len(SubElection.objects.all()):
+        if len(Ballot.objects.filter(personCode=request.user)) >= len(SubElection.objects.filter(visible=True)):
             # User hat bereits gewählt
             return redirect('./votes', request)
         for election in SubElection.objects.filter(visible=True):
             c_list = Candidate.objects.filter(sub_election=election)
-            elections.append(c_list)
+            if c_list:
+                elections.append(c_list)
 
         context = {
             'list': elections,
@@ -97,13 +98,13 @@ class ElectionView(View):
 def results(request):
     # calculate the results
     results = []
-    for election in SubElection.objects.all():
+    for election in SubElection.objects.filter(visible=True):
         c_list = Candidate.objects.filter(sub_election=election)
         for c in c_list:
             c.result = len(Ballot.objects.filter(choice=c))
         results.append(c_list)
 
-    election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.all()))
+    election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.filter(visible=True)))
     context = {
         'election_count': election_count,
         'list': results
@@ -139,7 +140,7 @@ def create_users(request):
 def votes(request):
     print('logout ' + str(request.user))
     auth.logout(request)
-    election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.all()))
+    election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.filter(visible=True)))
     context = {
         'election_count': election_count,
     }
