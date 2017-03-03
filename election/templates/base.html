@@ -28,6 +28,10 @@
     <p></p>
     <div class="jumbotron" style="text-align: center">
 
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+
         {% block body %}
         {% endblock %}
     </div>

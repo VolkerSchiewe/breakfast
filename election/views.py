@@ -2,6 +2,7 @@ import random
 import string
 
 from django.contrib import auth
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -36,13 +37,27 @@ class LoginView(View):
 
 
 def check_input(request):
+    error = None
     elections = SubElection.objects.filter(visible=True)
     selections = list()
     for election in elections:
         if request.POST.get(election.short, False):
             selections.append(request.POST.get(election.short))
 
-    if len(selections) is len(elections):
+    if not len(selections) is len(elections):
+        messages.error(request, "Das müssen wir noch üben. Da fehlte was!")
+        error = True
+
+    names = list()
+    for selection in selections:
+        c = Candidate.objects.get(pk=selection)
+        if c.name in names:
+            messages.error(request, "Wolltest Du jemanden doppelt wählen? Das grenzt an Wahlbetrug!")
+            error = True
+        else:
+            names.append(c.name)
+
+    if not error:
         return False
 
     elections = []
@@ -53,7 +68,6 @@ def check_input(request):
     context = {
         'selected': selections,
         'list': elections,
-        'error': 'Du warst noch nicht fertig!'
     }
     print(selections)
     return render(request, 'election.html', context)
@@ -138,8 +152,9 @@ def create_users(request):
 # users result view
 # -------------------------------------
 def votes(request):
-    print('logout ' + str(request.user))
-    auth.logout(request)
+    if not request.user.is_superuser:
+        print('logout ' + str(request.user))
+        auth.logout(request)
     election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.filter(visible=True)))
     context = {
         'election_count': election_count,
