@@ -2,7 +2,7 @@ import PIL
 from PIL import Image
 from django.contrib import admin
 
-from .models import Ballot, Candidate, SubElection
+from .models import Ballot, Candidate, SubElection, Settings
 
 
 def resize_images(modeladmin, request, queryset):
@@ -35,3 +35,4 @@ class SubElectionAdmin(admin.ModelAdmin):
 
 admin.site.register(Ballot)
 admin.site.register(SubElection, SubElectionAdmin)
+admin.site.register(Settings)

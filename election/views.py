@@ -1,6 +1,7 @@
 import random
 import string
 
+from django.db import transaction
 from django.contrib import auth
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -13,7 +14,7 @@ from django.views.generic import View
 from breakfast import settings
 from breakfast.settings import BASE_DIR
 from election.util import serve_file
-from .models import Ballot, Candidate, SubElection
+from .models import Ballot, Candidate, SubElection, Settings
 
 
 class LoginView(View):
@@ -29,10 +30,10 @@ class LoginView(View):
         user = auth.authenticate(username=username, password=settings.PASSWORD)
         if user is not None:
             auth.login(request, user)
-            print('login ' + str(user.username))
+            # print('login ' + str(user.username))
             return HttpResponseRedirect('./')
         else:
-            print('failed login: ' + username)
+            # print('failed login: ' + username)
             return render(request, 'login.html', {'error': 'Falscher Code'})
 
 
@@ -69,12 +70,15 @@ def check_input(request):
         'selected': selections,
         'list': elections,
     }
-    print(selections)
     return render(request, 'election.html', context)
 
 
 class ElectionView(View):
     def get(self, request, *args, **kwargs):
+        s = Settings.objects.first()
+        if s.closed:
+            return render(request, "closed.html")
+
         elections = []
         if len(Ballot.objects.filter(personCode=request.user)) >= len(SubElection.objects.filter(visible=True)):
             # User hat bereits gewählt
@@ -90,6 +94,7 @@ class ElectionView(View):
         }
         return render(request, 'election.html', context)
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         person_code = request.user
         response = check_input(request)
@@ -99,10 +104,13 @@ class ElectionView(View):
         for election in SubElection.objects.filter(visible=True):
             selection = request.POST.get(election.short)
             c = Candidate.objects.get(pk=selection)
-            b = Ballot(personCode=person_code, choice=c)
-            b.save()
+            b, created = Ballot.objects.get_or_create(personCode=person_code, choice=c)
+            if created:
+                b.save()
+            else:
+                messages.error(request, "Deine Stimme existiert schon, bitte melde dich beim PT")
 
-        print('Vote saved for: ' + str(request.user))
+        # print('Vote saved for: ' + str(request.user))
         return redirect('./votes', request)
 
 
@@ -153,7 +161,7 @@ def create_users(request):
 # -------------------------------------
 def votes(request):
     if not request.user.is_superuser:
-        print('logout ' + str(request.user))
+        # print('logout ' + str(request.user))
         auth.logout(request)
     election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.filter(visible=True)))
     context = {

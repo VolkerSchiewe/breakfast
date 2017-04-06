@@ -29,3 +29,7 @@ class Ballot(models.Model):
 
     def __str__(self):
         return self.personCode
+
+
+class Settings(models.Model):
+    closed = models.BooleanField(default=False)
