@@ -2,3 +2,8 @@ Django
 django-polymorphic
 python-magic
 Pillow
+django-bootstrap3
+gunicorn
+psycopg2
+whitenoise
+dj-database-url==0.4.1

@@ -1,45 +1,37 @@
 import random
 import string
 
-from django.db import transaction
 from django.contrib import auth
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.shortcuts import render, redirect
-from django.template.context_processors import csrf
-from django.views.generic import View
+from django.utils.decorators import method_decorator
+from django.views import View
 
 from breakfast import settings
-from breakfast.settings import BASE_DIR
+from election.forms import LoginForm, CreateElectionForm, CreateSubElectionForm
 from election.util import serve_file
-from .models import Ballot, Candidate, SubElection, Settings
+from .models import Ballot, Candidate, SubElection, User, Election
 
 
-class LoginView(View):
-    def get(self, request, *args, **kwargs):
-        # user first login
-        c = {}
-        c.update(csrf(request))
-        return render(request, 'login.html', context=None)
-
-    def post(self, request, *args, **kwargs):
-        # login submit button clicked
-        username = request.POST.get('username', '')
-        user = auth.authenticate(username=username, password=settings.PASSWORD)
-        if user is not None:
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=form.cleaned_data.get('username'))
             auth.login(request, user)
-            # print('login ' + str(user.username))
-            return HttpResponseRedirect('./')
-        else:
-            # print('failed login: ' + username)
-            return render(request, 'login.html', {'error': 'Falscher Code'})
+            return redirect('election')
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', context={'form': form, })
 
 
 def check_input(request):
     error = None
-    elections = SubElection.objects.filter(visible=True)
+    elections = SubElection.objects.filter(election=request.user.election)
     selections = list()
     for election in elections:
         if request.POST.get(election.short, False):
@@ -62,7 +54,7 @@ def check_input(request):
         return False
 
     elections = []
-    for election in SubElection.objects.filter(visible=True):
+    for election in SubElection.objects.filter(active=True):
         c_list = Candidate.objects.filter(sub_election=election)
         elections.append(c_list)
 
@@ -73,63 +65,51 @@ def check_input(request):
     return render(request, 'election.html', context)
 
 
+@method_decorator(login_required, name='get')
 class ElectionView(View):
-    def get(self, request, *args, **kwargs):
-        s = Settings.objects.first()
-        if s.closed:
+    def get(self, request):
+        if not Election.objects.filter(active=True).exists():
             return render(request, "closed.html")
-
-        elections = []
-        if len(Ballot.objects.filter(personCode=request.user)) >= len(SubElection.objects.filter(visible=True)):
-            # User hat bereits gewählt
-            return redirect('./votes', request)
-        for election in SubElection.objects.filter(visible=True):
-            c_list = Candidate.objects.filter(sub_election=election)
-            if c_list:
-                elections.append(c_list)
+        election = Election.objects.filter(active=True).first()
+        if request.user.electionuser.already_elected():
+            messages.error(request, 'Du hast schon gewählt')
+            return redirect('login')
 
         context = {
-            'list': elections,
-            'img_dir': 'static/images/upload/photo.jpg',
+            'sub_elections': election.get_sub_elections_with_candidates(),
+            # 'img_dir': 'static/images/upload/photo.jpg',
         }
         return render(request, 'election.html', context)
 
-    @transaction.atomic
-    def post(self, request, *args, **kwargs):
-        person_code = request.user
+    def post(self, request):
         response = check_input(request)
         if response:
             return response
 
-        for election in SubElection.objects.filter(visible=True):
+        for election in SubElection.objects.filter(election=request.user.election):
             selection = request.POST.get(election.short)
             c = Candidate.objects.get(pk=selection)
-            b, created = Ballot.objects.get_or_create(personCode=person_code, choice=c)
+            b, created = Ballot.objects.get_or_create(user=request.user, choice=c)
             if created:
                 b.save()
             else:
                 messages.error(request, "Deine Stimme existiert schon, bitte melde dich beim PT")
 
-        # print('Vote saved for: ' + str(request.user))
-        return redirect('./votes', request)
+        messages.success(request, 'Deine Stimme wurde gespeichert')
+        return redirect('login')
 
 
 # Results View
 # -------------------------------------
 @staff_member_required
-def results(request):
-    # calculate the results
-    results = []
-    for election in SubElection.objects.filter(visible=True):
-        c_list = Candidate.objects.filter(sub_election=election)
-        for c in c_list:
-            c.result = len(Ballot.objects.filter(choice=c))
-        results.append(c_list)
+def results(request, election_id):
+    election = Election.objects.get(id=election_id)
 
-    election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.filter(visible=True)))
+    election_count = int(len(Ballot.objects.filter(choice__sub_election__election=election)) / len(
+        SubElection.objects.filter(election=election)))
     context = {
         'election_count': election_count,
-        'list': results
+        'result_list': election.get_results()
     }
     return render(request, 'results.html', context)
 
@@ -137,37 +117,67 @@ def results(request):
 # Create new users view
 # -------------------------------------
 @staff_member_required
-def create_users(request):
-    f = open(BASE_DIR + '/election/static/users.txt', 'w')
+def create_election(request):
+    if request.GET.get('copy'):
+        election = Election()
+        election.title = Election.get_next_title()
+        election.save()
+        last_election = Election.objects.get(title__contains=str(len(Election.objects.all())) + '.')
+        for sub in last_election.subelection_set.all():
+            sub_election = sub
+            sub_election.election = election
+            sub_election.save()
+        return redirect('election_list')
+
     if request.POST:
-        new_users = int(request.POST['length'])
+        election_form = CreateElectionForm(request.POST)
+        if election_form.is_valid():
+            user_number = election_form.cleaned_data.get('user_number')
+            election = Election.objects.create(title=Election.get_next_title())
+            # Todo create subelections and candiates
 
-        i = 0
-        while i < new_users:
-            username = random_gen(1)[0]
-            user = auth.authenticate(username=username, password=settings.PASSWORD)
-            if user is None:
-                user = User.objects.create_user(username=username, password=settings.PASSWORD)
-                user.save()
-                i += 1
-                f.writelines(username + '\n')
+            i = 0
+            while i < user_number:
+                username = random_gen(1)[0]
+                user = auth.authenticate(username=username, password=settings.PASSWORD)
+                if user is None:
+                    user = User.objects.create_user(username=username, password=settings.PASSWORD, election=election)
+                    user.save()
+                    i += 1
+            return redirect('election_list')
+    else:
+        election_form = CreateElectionForm()
+        sub_election_form = CreateSubElectionForm()
 
-    user_count = len(User.objects.filter(is_superuser=False))
-    f.close()
-    return render(request, 'users.html', context={'user_count': user_count})
-
-
-# users result view
-# -------------------------------------
-def votes(request):
-    if not request.user.is_superuser:
-        # print('logout ' + str(request.user))
-        auth.logout(request)
-    election_count = int(len(Ballot.objects.all()) / len(SubElection.objects.filter(visible=True)))
     context = {
-        'election_count': election_count,
+        'election_form': election_form,
+        'sub_election_form': sub_election_form,
     }
-    return render(request, 'votes.html', context)
+    return render(request, 'create_elections.html', context)
+
+
+@staff_member_required
+def election_list(request):
+    elections = Election.objects.all()
+    for election in elections:
+        election.sub_elections = ', '.join(str(subelection) for subelection in election.subelection_set.all())
+        election.candidates = ', '.join(
+            str(candidate) for candidate in Candidate.objects.filter(sub_election__election=election))
+    context = {
+        'elections': elections,
+    }
+    return render(request, 'elections.html', context)
+
+
+@staff_member_required
+def toggle_active_election(request, election_id):
+    try:
+        election = Election.objects.get(id=election_id)
+        election.toggle_active()
+    except AttributeError as e:
+        messages.error(request, str(e))
+
+    return redirect('elections_list')
 
 
 def get_image(request, user_id):

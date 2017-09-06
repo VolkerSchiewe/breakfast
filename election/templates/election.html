@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends 'base_user.html' %}
 
 
 {% block body %}
@@ -7,18 +7,19 @@
 
     <form action="" method="post"> {% csrf_token %}
 
-        {% for candidates in list %}
+        {% for candidates in sub_elections %}
             <div class="election">
 
                 <h3>
                     <label class="election-headline">{{ candidates.0.sub_election.title }}:</label>
                 </h3>
-                {% for c in candidates %}
+                {% for candidate in candidates %}
 
                     <label class="election-radio">
-                        <input type="radio" name="{{ c.sub_election.short }}" value="{{ c.pk }}" {% if c.pk in selected %}checked="checked" {% endif %}>
-                        <img src="{% url 'get_image' c.pk %}"><br>
-                        {{ c.name }}
+                        <input type="radio" name="{{ candidate.sub_election.short }}" value="{{ candidate.pk }}"
+                               {% if candidate.pk in selected %}checked="checked" {% endif %}>
+                        <img src="{{ candidate.image.file }}"><br>
+                        {{ candidate.name }}
                     </label>
                 {% endfor %}
             </div>

@@ -1,8 +1,7 @@
-import PIL
-from PIL import Image
+from PIL import Image as PilImage
 from django.contrib import admin
 
-from .models import Ballot, Candidate, SubElection, Settings
+from .models import Ballot, Candidate, SubElection, Election, Image, ElectionUser
 
 
 def resize_images(modeladmin, request, queryset):
@@ -10,13 +9,13 @@ def resize_images(modeladmin, request, queryset):
     for election in queryset:
         for candidate in election.candidate_set.all():
             path = candidate.img.file.name
-            img = Image.open(path)
+            img = PilImage.open(path)
             if basewidth in img.size:
                 print("Already resized")
                 continue
             wpercent = (basewidth / float(img.size[0]))
             hsize = int((float(img.size[1]) * float(wpercent)))
-            img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
+            img = img.resize((basewidth, hsize), PilImage.ANTIALIAS)
             img.save(path)
 
 
@@ -31,8 +30,11 @@ class SubElectionAdmin(admin.ModelAdmin):
         CandidateAdmin,
     ]
     actions = [resize_images]
+    list_filter = ('election',)
 
 
 admin.site.register(Ballot)
 admin.site.register(SubElection, SubElectionAdmin)
-admin.site.register(Settings)
+admin.site.register(Election)
+admin.site.register(Image)
+admin.site.register(ElectionUser)

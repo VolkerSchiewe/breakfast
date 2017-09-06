@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block base_body %}
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Wahlen</th>
+                <th>Kandidaten</th>
+                <th>Aktiv</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for election in elections %}
+                <tr class="election_row" onclick="window.location = '{% url 'results' election.id %}';">
+                    <td>{{ election.title }}</td>
+                    <td>{{ election.sub_elections }}</td>
+                    <td>{{ election.candidates }} </td>
+                    <td><a class="btn btn-primary" href="{% url 'activate_election' election.id %}">
+                        {% if election.active %}Deaktivieren{% else %}Aktivieren {% endif %}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a class="btn btn-primary" href="{% url 'create_election' %}">Hinzufügen</a>
+    </div>
+
+{% endblock %}
