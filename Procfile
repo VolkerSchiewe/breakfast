@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn gustav.wsgi --log-file -
+web: gunicorn breakfast.wsgi --log-file -

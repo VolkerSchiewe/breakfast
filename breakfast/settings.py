@@ -16,10 +16,7 @@ SECRET_KEY = '=5u8p8*zc$w*0oa&e@0pd$l5)v+bl+4zm062zes&#*)3i(&(jf'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '192.168.1.3',
     'localhost',
-    'masterbruce.pythonanywhere.com',
-    'breakfast.bruce.suhail.uberspace.de'
     'ebu-breakfast.herokuapp.com'
 ]
 
@@ -67,9 +64,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'breakfast.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
 PASSWORD = 'ebujugend'
 
 DATABASES = {
@@ -102,8 +96,6 @@ USE_TZ = True
 USE_X_FORWARDED_HOST = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
