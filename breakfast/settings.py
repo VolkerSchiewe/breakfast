@@ -20,6 +20,7 @@ ALLOWED_HOSTS = [
     'localhost',
     'masterbruce.pythonanywhere.com',
     'breakfast.bruce.suhail.uberspace.de'
+    'ebu-breakfast.herokuapp.com'
 ]
 
 # Application definition
