@@ -18,7 +18,7 @@
                     <label class="election-radio">
                         <input type="radio" name="{{ candidate.sub_election.short }}" value="{{ candidate.pk }}"
                                {% if candidate.pk in selected %}checked="checked" {% endif %}>
-                        <img src="{{ candidate.image.file }}"><br>
+                        <img src="{% url 'get_image' candidate.image.pk %}"><br>
                         {{ candidate.name }}
                     </label>
                 {% endfor %}

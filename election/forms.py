@@ -25,6 +25,10 @@ class CreateElectionForm(forms.Form):
 
 
 class CreateSubElectionForm(forms.Form):
+    def __init__(self, prefix='pre-0', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.prefix = prefix
+
     title = forms.CharField(label='Titel', widget=forms.TextInput(attrs={'placeholder': ''}))
     short = forms.CharField(label='Kurzform', max_length=6, widget=forms.TextInput(attrs={'placeholder': ''}))
     candidates = forms.CharField(label='Kandidaten',

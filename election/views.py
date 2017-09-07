@@ -1,19 +1,14 @@
-import random
-import string
-
+from django.conf import settings
 from django.contrib import auth
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from django.utils.decorators import method_decorator
 from django.views import View
 
-from breakfast import settings
 from election.forms import LoginForm, CreateElectionForm, CreateSubElectionForm
 from election.util import serve_file
-from .models import Ballot, Candidate, SubElection, User, Election
+from .models import Ballot, Candidate, SubElection, User, Election, Image
 
 
 def login(request):
@@ -31,7 +26,7 @@ def login(request):
 
 def check_input(request):
     error = None
-    elections = SubElection.objects.filter(election=request.user.election)
+    elections = SubElection.objects.filter(election=request.user.electionuser.election)
     selections = list()
     for election in elections:
         if request.POST.get(election.short, False):
@@ -65,7 +60,6 @@ def check_input(request):
     return render(request, 'election.html', context)
 
 
-@method_decorator(login_required, name='get')
 class ElectionView(View):
     def get(self, request):
         if not Election.objects.filter(active=True).exists():
@@ -73,6 +67,7 @@ class ElectionView(View):
         election = Election.objects.filter(active=True).first()
         if request.user.electionuser.already_elected():
             messages.error(request, 'Du hast schon gewählt')
+            logout(request)
             return redirect('login')
 
         context = {
@@ -86,17 +81,18 @@ class ElectionView(View):
         if response:
             return response
 
-        for election in SubElection.objects.filter(election=request.user.election):
+        for election in SubElection.objects.filter(election=request.user.electionuser.election):
             selection = request.POST.get(election.short)
             c = Candidate.objects.get(pk=selection)
-            b, created = Ballot.objects.get_or_create(user=request.user, choice=c)
+            b, created = Ballot.objects.get_or_create(user=request.user.electionuser, choice=c)
             if created:
                 b.save()
+                logout(request)
             else:
                 messages.error(request, "Deine Stimme existiert schon, bitte melde dich beim PT")
 
         messages.success(request, 'Deine Stimme wurde gespeichert')
-        return redirect('login')
+        return redirect('election')
 
 
 # Results View
@@ -104,7 +100,7 @@ class ElectionView(View):
 @staff_member_required
 def results(request, election_id):
     election = Election.objects.get(id=election_id)
-
+    election_count = 0
     election_count = int(len(Ballot.objects.filter(choice__sub_election__election=election)) / len(
         SubElection.objects.filter(election=election)))
     context = {
@@ -119,32 +115,27 @@ def results(request, election_id):
 @staff_member_required
 def create_election(request):
     if request.GET.get('copy'):
-        election = Election()
-        election.title = Election.get_next_title()
-        election.save()
         last_election = Election.objects.get(title__contains=str(len(Election.objects.all())) + '.')
-        for sub in last_election.subelection_set.all():
-            sub_election = sub
-            sub_election.election = election
-            sub_election.save()
-        return redirect('election_list')
+        last_election.clone()
+        return redirect('elections_list')
 
     if request.POST:
         election_form = CreateElectionForm(request.POST)
-        if election_form.is_valid():
+        sub_election_form = CreateSubElectionForm(prefix='pre-1', data=request.POST)
+
+        if election_form.is_valid() and sub_election_form.is_valid():
             user_number = election_form.cleaned_data.get('user_number')
             election = Election.objects.create(title=Election.get_next_title())
-            # Todo create subelections and candiates
-
-            i = 0
-            while i < user_number:
-                username = random_gen(1)[0]
-                user = auth.authenticate(username=username, password=settings.PASSWORD)
-                if user is None:
-                    user = User.objects.create_user(username=username, password=settings.PASSWORD, election=election)
-                    user.save()
-                    i += 1
-            return redirect('election_list')
+            counter = 0
+            while 'pre-{}-title'.format(counter) in request.POST:
+                sub_election = SubElection.objects.create(title=request.POST.get('pre-{}-title'.format(counter)),
+                                                          short=request.POST.get('pre-{}-short'.format(counter)),
+                                                          election=election)
+                for name in request.POST.get('pre-{}-candidates'.format(counter)).split(','):
+                    Candidate.objects.create(name=name, sub_election=sub_election)
+                counter += 1
+            election.create_users(user_number)
+            return redirect('elections_list')
     else:
         election_form = CreateElectionForm()
         sub_election_form = CreateSubElectionForm()
@@ -153,12 +144,12 @@ def create_election(request):
         'election_form': election_form,
         'sub_election_form': sub_election_form,
     }
-    return render(request, 'create_elections.html', context)
+    return render(request, 'create_election.html', context)
 
 
 @staff_member_required
 def election_list(request):
-    elections = Election.objects.all()
+    elections = Election.objects.all().order_by('title')
     for election in elections:
         election.sub_elections = ', '.join(str(subelection) for subelection in election.subelection_set.all())
         election.candidates = ', '.join(
@@ -180,18 +171,22 @@ def toggle_active_election(request, election_id):
     return redirect('elections_list')
 
 
-def get_image(request, user_id):
-    candidate = Candidate.objects.get(pk=user_id)
-    if candidate.img:
-        return serve_file(candidate.img)
+def get_image(request, image_id):
+    image = Image.objects.get(pk=image_id)
+    if image.file:
+        return serve_file(image.file)
     else:
         return serve_file(open(settings.BASE_DIR + "/election/static/images/placeholder.png"))
 
 
-def random_gen(n):
-    codes = []
-    for i in range(0, n):
-        item = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(4))
-        codes.append(item)
+def home(request):
+    if request.user.is_superuser:
+        return redirect('elections_list')
+    else:
+        return redirect('election')
 
-    return codes
+
+def edit_election(request, election_id):
+    election = Election.objects.get(pk=election_id)
+
+    return render(request, 'edit_election.html', {'election': election, })

@@ -1,6 +1,10 @@
+from django.conf import settings
+from django.contrib import auth
 from django.contrib.auth.models import User
 from django.db import models, transaction
 from django.db.models.signals import post_save
+
+from election.util import generate_random_string
 
 
 class Image(models.Model):
@@ -49,6 +53,52 @@ class Election(models.Model):
             if candidates:
                 elections.append(candidates)
         return elections
+
+    def clone(self):
+        election = Election()
+        election.title = Election.get_next_title()
+        election.save()
+        for sub_election in self.subelection_set.all():
+            new_sub_election = SubElection()
+            new_sub_election.title = sub_election.title
+            new_sub_election.short = sub_election.short
+            new_sub_election.election = election
+            new_sub_election.save()
+            for candidate in sub_election.candidate_set.all():
+                new_candidate = Candidate()
+                new_candidate.name = candidate.name
+                new_candidate.image = candidate.image
+                new_candidate.sub_election = new_sub_election
+                new_candidate.save()
+        #TODO users
+
+    def candidates_sorted(self):
+        result = ''
+        for sub_election in self.subelection_set.all():
+            result += sub_election.title + ': '
+            for candidate in sub_election.candidate_set.all():
+                result += candidate.name + ', '
+            result = result[:-2] + ' '
+        return result
+
+    def sub_election_sorted(self):
+        result = ''
+        for sub_election in self.subelection_set.all():
+            result += sub_election.title + ', '
+        return result[:-2]
+
+    def create_users(self, number):
+        i = 0
+        while i < number:
+            username = generate_random_string(4)
+            user = auth.authenticate(username=username, password=settings.PASSWORD)
+            if user is None:
+                user = User.objects.create_user(username=username, password=settings.PASSWORD)
+                election_user = ElectionUser.objects.get(user=user)
+                election_user.election = self
+                election_user.save()
+                user.save()
+                i += 1
 
 
 class ElectionUser(models.Model):

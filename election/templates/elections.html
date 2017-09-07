@@ -9,17 +9,23 @@
                 <th>Titel</th>
                 <th>Wahlen</th>
                 <th>Kandidaten</th>
-                <th>Aktiv</th>
+                <th>Codes</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             {% for election in elections %}
                 <tr class="election_row" onclick="window.location = '{% url 'results' election.id %}';">
                     <td>{{ election.title }}</td>
-                    <td>{{ election.sub_elections }}</td>
-                    <td>{{ election.candidates }} </td>
-                    <td><a class="btn btn-primary" href="{% url 'activate_election' election.id %}">
-                        {% if election.active %}Deaktivieren{% else %}Aktivieren {% endif %}</a></td>
+                    <td>{{ election.sub_election_sorted }}</td>
+                    <td>{{ election.candidates_sorted }} </td>
+                    <td>{{ election.electionuser_set.all.count }} </td>
+                    <td>
+                        <a class="btn btn-primary" href="{% url 'edit_election' election.id %}">
+                        Bearbeiten</a>
+                        <a class="btn btn-primary" href="{% url 'activate_election' election.id %}">
+                        {% if election.active %}Deaktivieren{% else %}Aktivieren {% endif %}</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
