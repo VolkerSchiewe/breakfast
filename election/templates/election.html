@@ -1,37 +1,32 @@
 {% extends 'base_user.html' %}
-
+{% load bootstrap3 %}
 
 {% block body %}
 
     <h2 class="page-header">Kandidaten wählen:</h2>
-
     <form action="" method="post"> {% csrf_token %}
-
-        {% for candidates in sub_elections %}
-            <div class="election">
-
+        {% for field in form %}
+            <div class="form-group">
                 <h3>
-                    <label class="election-headline">{{ candidates.0.sub_election.title }}:</label>
+                    <label class="election-headline control-label"
+                           for="{{ field.id_for_label }}">{{ field.label }}:</label>
                 </h3>
-                {% for candidate in candidates %}
-
-                    <label class="election-radio">
-                        <input type="radio" name="{{ candidate.sub_election.short }}" value="{{ candidate.pk }}"
-                               {% if candidate.pk in selected %}checked="checked" {% endif %}>
-                        <img src="{% url 'get_image' candidate.image.pk %}"><br>
-                        {{ candidate.name }}
-                    </label>
-                {% endfor %}
+                <div id="{{ field.auto_id }}">
+                    <span class="text-danger">{{ field.errors }}</span>
+                    {% for choice in field %}
+                        <div class="radio-inline">
+                            <label class="election-radio" for="{{ choice.id_for_label}}">
+                                <input type="radio" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"
+                                       name="{{ choice.data.name }}" {% if choice.data.selected %}checked{% endif %}>
+                                <img src="{% url 'get_candidate_image' choice.data.value %}"><br>
+                                {{ choice.choice_label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         {% endfor %}
-        <br>
-        {% if error %}
-            <div class="text-danger">{{ error }}</div>
-        {% endif %}
-        <label class="btn btn-default">
-            <input type="submit" name="submit" value="submit">Stimme abgeben
-
-        </label>
+        <input class="btn btn-default" type="submit" name="submit" value="Stimme abgeben">
     </form>
 
 {% endblock %}

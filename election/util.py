@@ -11,7 +11,7 @@ def serve_file(file, file_name=None, content_type=None):
         return HttpResponseNotFound()
 
     if content_type is None:
-        content_type = magic.from_file(file.path, mime=True)
+        content_type = magic.from_file(file.name, mime=True)
 
     response = HttpResponse(file, content_type=content_type)
     if not file_name:

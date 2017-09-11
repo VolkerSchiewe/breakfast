@@ -8,11 +8,20 @@
         <form action="" method="post"> {% csrf_token %}
             <div style="text-align: left" class="row">
                 <div class="col-md-6">
-                    <h3>Wahlen</h3>
-                    <div class="jumbotron">
+                    {% for sub_election in election.subelection_set.all %}
+                        <h3>{{ sub_election.title }}
+                            <small>{{ sub_election.short }}</small>
+                        </h3>
+                        <div class="jumbotron">
+                            {% for candidate in sub_election.candidate_set.all %}
 
-                    </div>
-
+                                <label style="text-align: center">
+                                    <img src="{% url 'get_candidate_image' candidate.pk %}"><br>
+                               {{ candidate.name }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
                     <input type="submit" class="btn btn-primary" value="Speichern">
                 </div>
                 <div class="col-md-6"></div>

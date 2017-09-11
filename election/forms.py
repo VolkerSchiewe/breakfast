@@ -2,6 +2,9 @@ from django import forms
 from django.conf import settings
 from django.contrib import auth
 from django.core.exceptions import ValidationError
+from django.forms import ModelChoiceField
+
+from election.models import Election
 
 
 class LoginForm(forms.Form):
@@ -18,6 +21,26 @@ class LoginForm(forms.Form):
             return username
         else:
             raise ValidationError('Falscher Code')
+
+
+class ElectionModelChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.name
+
+
+class ElectionForm(forms.Form):
+    def __init__(self, election: Election, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for sub_election in election.subelection_set.all():
+            self.fields[sub_election.short] = ElectionModelChoiceField(queryset=sub_election.candidate_set.all(),
+                                                                       widget=forms.RadioSelect(),
+                                                                       label=sub_election.title, empty_label=None,
+                                                                       to_field_name='pk', required=False)
+
+    def clean(self):
+        for field in self:
+            if not self.cleaned_data.get(field.name):
+                self.add_error(field.name, 'Nicht vergessen zu wählen!')
 
 
 class CreateElectionForm(forms.Form):

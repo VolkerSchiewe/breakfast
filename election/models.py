@@ -70,7 +70,8 @@ class Election(models.Model):
                 new_candidate.image = candidate.image
                 new_candidate.sub_election = new_sub_election
                 new_candidate.save()
-        #TODO users
+
+        election.create_users(self.electionuser_set.all().count())
 
     def candidates_sorted(self):
         result = ''
@@ -106,14 +107,17 @@ class ElectionUser(models.Model):
     election = models.ForeignKey(Election, null=True, blank=True)
 
     def __str__(self):
-        return self.user.username
+        return '{} - {}'.format(self.user.username, self.election)
 
     @transaction.atomic
-    def select_candidate(self, sub_election_id, candidate_id):
-        sub_election = self.election.subelection_set.get(pk=sub_election_id)
-        candidate = sub_election.candidate_set.get(candidate_id)
-        ballot, created = Ballot.objects.get_or_create(person_Code=self.user.username, choice=candidate)
+    def select_candidate(self, candidate):
+        sub_elections_in_ballots = Ballot.objects.filter(user=self).values_list('choice__sub_election', flat=True)
+        if candidate.sub_election.pk in sub_elections_in_ballots:
+            print('----> ERROR: Ballot for sub_election {} already exists. User: {}'.format(candidate.sub_election, self))
+            raise ValueError('Es existiert schon eine Stimme für diese Wahl. Bitte melde Dich beim Wahlausschuss')
+        ballot, created = Ballot.objects.get_or_create(user=self, choice=candidate)
         if not created:
+            print('----> ERROR: Ballot already exits. Candidate: {}, User: {}'.format(candidate, self))
             raise ValueError('Deine Stimme existierte bereits. Bitte melde Dich beim Wahlausschuss!')
 
     def already_elected(self):
