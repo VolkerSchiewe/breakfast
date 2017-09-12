@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
 from django.core.files import File
+from django.db import transaction
+from django.db.models import QuerySet
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -45,6 +47,7 @@ class ElectionView(View):
         form = ElectionForm(election)
         return render(request, 'election.html', {'form': form, })
 
+    @transaction.atomic
     def post(self, request):
         election = request.user.electionuser.election
 
@@ -53,9 +56,12 @@ class ElectionView(View):
             election_user = request.user.electionuser
             logout(request)
             for sub_election in form.cleaned_data:
-                candidate = form.cleaned_data.get(sub_election)
+                selections = form.cleaned_data.get(sub_election)
                 try:
-                    election_user.select_candidate(candidate)
+                    if isinstance(selections, QuerySet):
+                        election_user.select_candidate(selections)
+                    else:
+                        election_user.select_candidate(selections)
                 except ValueError as e:
                     messages.error(request, e)
                     return redirect('election')

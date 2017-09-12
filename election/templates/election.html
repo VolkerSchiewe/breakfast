@@ -16,7 +16,7 @@
                     {% for choice in field %}
                         <div class="radio-inline">
                             <label class="election-radio" for="{{ choice.id_for_label}}">
-                                <input type="radio" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"
+                                <input type="{{ field.subwidgets.0.parent_widget.input_type }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"
                                        name="{{ choice.data.name }}" {% if choice.data.selected %}checked{% endif %}>
                                 <img src="{% url 'get_candidate_image' choice.data.value %}"><br>
                                 {{ choice.choice_label }}

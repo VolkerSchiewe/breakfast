@@ -40,13 +40,13 @@ class Election(models.Model):
             for candidate in candidates:
                 candidate.result = len(Ballot.objects.filter(choice=candidate))
             results.append(candidates)
-
         return results
 
     def ballots_count(self):
         if self.subelection_set.all().count() == 0:
             raise ValueError('Election {} has no SubElections'.format(self))
-        return int(len(Ballot.objects.filter(choice__sub_election__election=self)) / len(self.subelection_set.all()))
+        return int(len(set(Ballot.objects.filter(choice__sub_election__election=self).values_list(
+            'choice__sub_election', 'user'))) / len(self.subelection_set.all()))
 
     def get_sub_elections_with_candidates(self):
         elections = []
@@ -115,12 +115,21 @@ class ElectionUser(models.Model):
     def select_candidate(self, candidate):
         sub_elections_in_ballots = Ballot.objects.filter(user=self).values_list('choice__sub_election', flat=True)
         if candidate.sub_election.pk in sub_elections_in_ballots:
-            print('----> ERROR: Ballot for sub_election {} already exists. User: {}'.format(candidate.sub_election, self))
+            print(
+                '----> ERROR: Ballot for sub_election {} already exists. User: {}'.format(candidate.sub_election, self))
             raise ValueError('Es existiert schon eine Stimme für diese Wahl. Bitte melde Dich beim Wahlausschuss')
         ballot, created = Ballot.objects.get_or_create(user=self, choice=candidate)
         if not created:
             print('----> ERROR: Ballot already exits. Candidate: {}, User: {}'.format(candidate, self))
             raise ValueError('Deine Stimme existierte bereits. Bitte melde Dich beim Wahlausschuss!')
+
+    @transaction.atomic
+    def select_candidates(self, candidates):
+        for candidate in candidates:
+            ballot, created = Ballot.objects.get_or_create(user=self, choice=candidate)
+            if not created:
+                print('----> ERROR: Ballot already exits. Candidate: {}, User: {}'.format(candidate, self))
+                raise ValueError('Deine Stimme existierte bereits. Bitte melde Dich beim Wahlausschuss!')
 
     def already_elected(self):
         ballots = len(Ballot.objects.filter(user=self))
@@ -144,6 +153,7 @@ class SubElection(models.Model):
     election = models.ForeignKey(Election)
     title = models.CharField(max_length=100)
     short = models.CharField(max_length=10, default="")
+    is_multi_selectable = models.BooleanField(default=False)
 
     def __str__(self):
         return '{} - {}'.format(self.title, self.election)
