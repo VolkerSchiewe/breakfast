@@ -35,7 +35,7 @@ def login(request):
 class ElectionView(View):
     def get(self, request):
         election = request.user.electionuser.election
-        if not election.active:
+        if election and not election.active:
             return render(request, "closed.html")
         if request.user.electionuser.already_elected():
             messages.error(request, 'Du hast schon gewählt')
@@ -85,7 +85,7 @@ def results(request, election_id):
 def create_election(request):
     if request.POST:
         election_form = CreateElectionForm(request.POST)
-        sub_election_form = CreateSubElectionForm(prefix='pre-1', data=request.POST)
+        sub_election_form = CreateSubElectionForm(prefix='pre-0', data=request.POST)
 
         if election_form.is_valid() and sub_election_form.is_valid():
             user_number = election_form.cleaned_data.get('user_number')

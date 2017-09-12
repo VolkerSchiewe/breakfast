@@ -44,6 +44,8 @@ class Election(models.Model):
         return results
 
     def ballots_count(self):
+        if self.subelection_set.all().count() == 0:
+            raise ValueError('Election {} has no SubElections'.format(self))
         return int(len(Ballot.objects.filter(choice__sub_election__election=self)) / len(self.subelection_set.all()))
 
     def get_sub_elections_with_candidates(self):
