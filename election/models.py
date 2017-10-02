@@ -103,6 +103,10 @@ class Election(models.Model):
                 user.save()
                 i += 1
 
+    def get_plain_codes(self):
+        self.electionuser_set.all().values_list('user__username', flat=True)
+        return '</br>'.join(self.electionuser_set.all().values_list('user__username', flat=True))
+
 
 class ElectionUser(models.Model):
     user = models.OneToOneField(User)

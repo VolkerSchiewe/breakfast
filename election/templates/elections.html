@@ -30,6 +30,8 @@
                             Ergebnisse</a>
                         <a class="btn btn-primary" href="{% url 'activate_election' election.id %}">
                             {% if election.active %}Deaktivieren{% else %}Aktivieren {% endif %}</a>
+                        <a class="btn btn-primary" href="{% url 'get_user_codes' election.id %}"
+                           target="_blank">Codes</a>
                     </td>
                 </tr>
             {% endfor %}

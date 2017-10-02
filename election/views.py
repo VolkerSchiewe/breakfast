@@ -6,6 +6,7 @@ from django.contrib.auth import logout
 from django.core.files import File
 from django.db import transaction
 from django.db.models import QuerySet
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -159,3 +160,7 @@ def edit_election(request, election_id):
     election = Election.objects.get(pk=election_id)
 
     return render(request, 'edit_election.html', {'election': election, })
+
+
+def get_user_codes(request, election_id):
+    return HttpResponse(Election.objects.get(pk=election_id).get_plain_codes())
