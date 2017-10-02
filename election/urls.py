@@ -16,6 +16,9 @@ urlpatterns = [
     url(r'^elections/(?P<election_id>\d+)$', views.edit_election, name='edit_election'),
     url(r'^elections/(?P<election_id>\d+)/codes$', views.get_user_codes, name='get_user_codes'),
     url(r'^elections/(?P<election_id>\d+)/activate$', views.toggle_active_election, name='activate_election'),
+    url(r'^elections/(?P<election_id>\d+)/subelection/(?P<subelection_id>\d+)/edit$', views.edit_subelection,
+        name='edit_subelection'),
+    url(r'^candidates/(?P<candidate_id>\d+)/edit$', views.edit_candidate,name='edit_candidate'),
 
     url(r'^get_candidate_image/(?P<candidate_id>\d+)$', views.get_candidate_image, name='get_candidate_image'),
 ]

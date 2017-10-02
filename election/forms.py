@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import auth
 from django.core.exceptions import ValidationError
 
-from election.models import Election
+from election.models import Election, Image
 
 
 class LoginForm(forms.Form):
@@ -66,3 +66,14 @@ class CreateSubElectionForm(forms.Form):
     short = forms.CharField(label='Kurzform', max_length=6, widget=forms.TextInput(attrs={'placeholder': ''}))
     candidates = forms.CharField(label='Kandidaten',
                                  widget=forms.TextInput(attrs={'placeholder': '(durch Komma trennen)'}))
+
+
+class EditSubElectionForm(forms.Form):
+    title = forms.CharField(label='Titel', widget=forms.TextInput(attrs={'placeholder': ''}))
+    short = forms.CharField(label='Kurzform', max_length=6, widget=forms.TextInput(attrs={'placeholder': ''}))
+
+
+class CandidateForm(forms.Form):
+    name = forms.CharField(label='Name', widget=forms.TextInput(attrs={'placeholder': ''}))
+    image = forms.ModelChoiceField(label='Bild auswählen', queryset=Image.objects.all(), required=False)
+    new_image = forms.ImageField(label='Bild hochladen', required=False)

@@ -5,30 +5,28 @@
     <div class="container">
         <h1>{{ election.title }}</h1>
 
-        <form action="" method="post"> {% csrf_token %}
-            <div style="text-align: left" class="row">
+        <div class="row text-left">
+            {% for sub_election in election.subelection_set.all %}
                 <div class="col-md-6">
-                    {% for sub_election in election.subelection_set.all %}
-                        <h3>{{ sub_election.title }}
-                            <small>{{ sub_election.short }}</small>
-                        </h3>
-                        <div class="jumbotron">
-                            {% for candidate in sub_election.candidate_set.all %}
 
-                                <label style="text-align: center">
-                                    <img src="{% url 'get_candidate_image' candidate.pk %}"><br>
-                               {{ candidate.name }}
-                                </label>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                    <input type="submit" class="btn btn-primary" value="Speichern">
+                    <h3>{{ sub_election.title }}
+                        <small>
+                                <span class="modal-button" style="cursor: pointer"
+                                      data-url="{% url 'edit_subelection' election.id sub_election.id %}">Bearbeiten
+                                </span>
+                        </small>
+                    </h3>
+                    <div class="jumbotron">
+                        {% for candidate in sub_election.candidate_set.all %}
+                            <label class="text-center modal-button" data-url="{% url 'edit_candidate' candidate.pk %}">
+                                <img src="{% url 'get_candidate_image' candidate.pk %}"><br>
+                                {{ candidate.name }}
+                            </label>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="col-md-6"></div>
-
-            </div>
-
-        </form>
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock %}

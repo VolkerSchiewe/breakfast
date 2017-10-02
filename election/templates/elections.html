@@ -16,22 +16,21 @@
             </thead>
             <tbody>
             {% for election in elections %}
-                <tr class="election_row">
+                <tr class="election_row" style="cursor: pointer"
+                    onclick="location='{% url 'edit_election' election.id %}'">
                     <td>{{ election.title }}</td>
                     <td>{{ election.sub_election_sorted }}</td>
                     <td>{{ election.candidates_sorted }} </td>
                     <td class="text-center">{{ election.electionuser_set.all.count }} </td>
                     <td class="text-center">{{ election.ballots_count }} </td>
                     <td>
-                        <a class="btn btn-primary" href="{% url 'edit_election' election.id %}">
-                            Bearbeiten</a>
                         <a class="btn btn-primary" {% if election.ballots_count %}href="{% url 'results' election.id %}"
-                           {% else %} disabled{% endif %}>
+                        {% else %} disabled{% endif %}>
                             Ergebnisse</a>
-                        <a class="btn btn-primary" href="{% url 'activate_election' election.id %}">
-                            {% if election.active %}Deaktivieren{% else %}Aktivieren {% endif %}</a>
                         <a class="btn btn-primary" href="{% url 'get_user_codes' election.id %}"
                            target="_blank">Codes</a>
+                        <a class="btn btn-primary" href="{% url 'activate_election' election.id %}">
+                            {% if election.active %}Deaktivieren{% else %}Aktivieren {% endif %}</a>
                     </td>
                 </tr>
             {% endfor %}

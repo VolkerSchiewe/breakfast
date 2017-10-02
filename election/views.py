@@ -10,9 +10,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
 
-from election.forms import LoginForm, CreateElectionForm, CreateSubElectionForm, ElectionForm
+from election.forms import LoginForm, CreateElectionForm, CreateSubElectionForm, ElectionForm, EditSubElectionForm, \
+    CandidateForm
 from election.util import serve_file
-from .models import Candidate, SubElection, User, Election
+from .models import Candidate, SubElection, User, Election, Image
 
 
 def home(request):
@@ -164,3 +165,41 @@ def edit_election(request, election_id):
 
 def get_user_codes(request, election_id):
     return HttpResponse(Election.objects.get(pk=election_id).get_plain_codes())
+
+
+def edit_subelection(request, election_id, subelection_id):
+    sub_election = SubElection.objects.get(pk=subelection_id)
+    if request.method == 'POST':
+        form = EditSubElectionForm(request.POST)
+        if form.is_valid():
+            sub_election.edit(form.cleaned_data.get('title'), form.cleaned_data.get('short'))
+            return HttpResponse()
+    form = EditSubElectionForm(initial={'title': sub_election.title, 'short': sub_election.short})
+    context = {
+        'sub_election': sub_election,
+        'form': form,
+    }
+    return render(request, 'edit_subelection.html', context)
+
+
+def edit_candidate(request, candidate_id):
+    candidate = Candidate.objects.get(pk=candidate_id)
+    if request.method == 'POST':
+        form = CandidateForm(request.POST, request.FILES)
+        if form.is_valid():
+            image_file = form.cleaned_data.get('new_image')
+            name = form.cleaned_data.get('name')
+            if image_file:
+                image, created = Image.objects.get_or_create(name=name)
+                image.file = image_file
+                image.save()
+            else:
+                image = form.cleaned_data.get('image')
+            candidate.edit(name, image, True if not image else False)
+
+    form = CandidateForm(initial={'name': candidate.name, 'image': candidate.image})
+    context = {
+        'candidate': candidate,
+        'form': form
+    }
+    return render(request, 'candidate_modal.html', context)

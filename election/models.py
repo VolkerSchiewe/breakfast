@@ -5,14 +5,25 @@ from django.db import models, transaction
 from django.db.models.signals import post_save
 
 from election.util import generate_random_string
+from PIL import Image as PILImage
 
 
 class Image(models.Model):
     name = models.CharField(max_length=128)
-    file = models.FileField(upload_to='uploads/')
+    file = models.ImageField(upload_to='uploads/')
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super(Image, self).save(*args, **kwargs)
+        if self.file:
+            image = PILImage.open(self.file)
+            width = 160
+            ratio = (width / float(image.size[0]))
+            height = int((float(image.size[1]) * float(ratio)))
+            image = image.resize((width, height), PILImage.ANTIALIAS)
+            image.save(self.file.path)
 
 
 class Election(models.Model):
@@ -159,8 +170,18 @@ class SubElection(models.Model):
     short = models.CharField(max_length=10, default="")
     is_multi_selectable = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['title']
+
     def __str__(self):
         return '{} - {}'.format(self.title, self.election)
+
+    def edit(self, title=None, short=None):
+        if title:
+            self.title = title
+        if short:
+            self.short = short
+        self.save()
 
 
 class Candidate(models.Model):
@@ -168,8 +189,20 @@ class Candidate(models.Model):
     name = models.CharField(max_length=250)
     image = models.ForeignKey(Image, blank=True, null=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return str(self.sub_election) + ' - ' + str(self.name)
+
+    def edit(self, name=None, image=None, set_default_image=False):
+        if name:
+            self.name = name
+        if image:
+            self.image = image
+        if set_default_image:
+            self.image = None
+        self.save()
 
 
 class Ballot(models.Model):

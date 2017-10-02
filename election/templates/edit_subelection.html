@@ -1,0 +1,30 @@
+{% load bootstrap3 %}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form id="item_update_form" method='post' class="form" role="form"
+              action='{% url 'edit_subelection' sub_election.election.pk sub_election.pk %}'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">{{ sub_election.title }}</h4>
+            </div>
+
+            <div class="modal-body">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        {% bootstrap_field form.title %}
+                    </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.short %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Abbrechen"/>
+                <input type="submit" class="btn btn-primary" value="Speichern"/>
+            </div>
+        </form>
+    </div>
+</div>
