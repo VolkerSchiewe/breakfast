@@ -1,12 +1,15 @@
 # breakfast
-Tool um kleine Wahlen zu automatisieren
+Small election tool based on Django
 
-## User:
-  * Login mit 1 Usercode
-  * Wahl durch Dropdowns
-  * Ansicht der abgegebenen Stimmen (/votes)
+## Normal user:
+  * Login with 4 characters user-code
+  * election view with images for each candidate
 
-## Admin:
- * Einrichten der Wahlmöglichkeiten in der Django Admin Oberfläche /admin
- * Erstellen neuer Usercodes über /users
- * Ansicht der WAhlergebnisse über /results
+## Management:
+ * Create new elections and subelections
+ * Clone elections to create fast second elections
+ * Add new candidates and upload images
+ * Create and show user-codes for each election
+ * Show results in nice charts
+ * Activate and deactivate elections
+ * Option to create multiple select sub elections
