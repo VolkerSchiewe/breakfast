@@ -13,4 +13,5 @@ test:
   override:
     - python manage.py test
   post:
-    - codecov
+    - codecov --token=7dec1337-e275-44b5-8cbb-b14c012ea1f2
+
