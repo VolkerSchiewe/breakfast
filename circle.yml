@@ -11,6 +11,6 @@ dependencies:
 
 test:
   override:
-    - manage.py test
+    - python manage.py test
   post:
     - codecov
