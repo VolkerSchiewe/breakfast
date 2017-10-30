@@ -1,9 +1,12 @@
 # breakfast
-Small election tool based on Django
+[![CircleCI](https://img.shields.io/circleci/project/github/VolkerSchiewe/breakfast.svg)]()
+
+
+Small election tool based on django
 
 ## Normal user:
   * Login with 4 characters user-code
-  * election view with images for each candidate
+  * Election view with images for each candidate
 
 ## Management:
  * Create new elections and subelections
