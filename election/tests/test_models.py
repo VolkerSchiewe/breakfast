@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from election.models import Election, SubElection, Candidate, Ballot, ElectionUser
-from election.util import generate_random_string
 
 
 def create_election(title='election', active=False):
@@ -19,14 +18,19 @@ def create_sub_election_with_candidates():
 
 def create_election_users():
     election = create_election()
-    user = User.object.create_user(username='TestUser', password='TestPassword')
-    return ElectionUser.objects.get_or_create(user=user, election=election)[0]
+    user = User.objects.create_user(username='TestUser', password='TestPassword')
+    election_user = ElectionUser.objects.get_or_create(user=user)[0]
+    election_user.election = election
+    election_user.save()
+    return election_user
 
 
 def create_ballots():
     election_user = create_election_users()
     sub_election, candidate_1, candidate_2 = create_sub_election_with_candidates()
-    Ballot.objects.create()
+    ballot_1 = Ballot.objects.create(user=election_user, choice=candidate_1)
+    ballot_2 = Ballot.objects.create(user=election_user, choice=candidate_2)
+    return ballot_1, ballot_2
 
 
 class ActiveElectionTests(TestCase):
@@ -89,14 +93,32 @@ class ElectionUtilsTest(TestCase):
         self.assertIs(sub_election_sorted.count(','), SubElection.objects.count() - 1)
 
 
-class UtilTest(TestCase):
-    def test_random_list(self):
-        string_list = generate_random_string(10, 5)
-        self.assertIs(len(string_list), 5)
-        for string in string_list:
-            self.assertIs(len(string), 10)
+class SelectionTest(TestCase):
+    def setUp(self):
+        create_sub_election_with_candidates()
+        create_election_users()
 
-    def test_random_string(self):
-        random_string = generate_random_string(5)
-        self.assertIsInstance(random_string, str)
-        self.assertIs(len(random_string), 5)
+    def test_select_candidate(self):
+        election_user = ElectionUser.objects.get(user__username='TestUser')
+        candidate = Candidate.objects.get(name='John Doe')
+        election_user.select_candidate(candidate)
+        user_ballots = Ballot.objects.filter(user=election_user)
+        self.assertIs(user_ballots.count(), 1)
+        ballot = user_ballots.first()
+        self.assertEqual(ballot.user, election_user)
+        self.assertEqual(ballot.choice, candidate)
+
+    def test_second_ballot(self):
+        election_user = ElectionUser.objects.get(user__username='TestUser')
+        candidate = Candidate.objects.get(name='John Doe')
+        election_user.select_candidate(candidate)
+        with self.assertRaises(ValueError):
+            election_user.select_candidate(candidate)
+
+    def test_second_ballot_for_sub_election(self):
+        election_user = ElectionUser.objects.get(user__username='TestUser')
+        candidate_1 = Candidate.objects.get(name='John Doe')
+        candidate_2 = Candidate.objects.get(name='James Smith')
+        election_user.select_candidate(candidate_1)
+        with self.assertRaises(ValueError):
+            election_user.select_candidate(candidate_2)
