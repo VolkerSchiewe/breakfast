@@ -1,3 +1,5 @@
+https://circleci.com/gh/VolkerSchiewe/breakfast.png
+
 # breakfast
 Small election tool based on Django
 
