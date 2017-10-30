@@ -20,7 +20,7 @@
                     onclick="location='{% url 'edit_election' election.id %}'">
                     <td>{{ election.title }}</td>
                     <td>{{ election.sub_election_sorted }}</td>
-                    <td>{{ election.candidates_sorted }} </td>
+                    <td>{{ election.candidates_sorted | safe }} </td>
                     <td class="text-center">{{ election.electionuser_set.all.count }} </td>
                     <td class="text-center">{{ election.ballots_count }} </td>
                     <td>

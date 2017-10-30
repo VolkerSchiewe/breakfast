@@ -1,3 +1,4 @@
+from PIL import Image as PILImage
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -5,7 +6,6 @@ from django.db import models, transaction
 from django.db.models.signals import post_save
 
 from election.util import generate_random_string
-from PIL import Image as PILImage
 
 
 class Image(models.Model):
@@ -39,7 +39,7 @@ class Election(models.Model):
 
     def toggle_active(self):
         if len(Election.objects.filter(active=True)) >= 1 and not self.active:
-            raise AttributeError('Es darf nur ein Wahlgang aktiv sein!')
+            raise AttributeError('Only on active election is allowed')
 
         self.active = not self.active
         self.save()
@@ -89,17 +89,13 @@ class Election(models.Model):
     def candidates_sorted(self):
         result = ''
         for sub_election in self.subelection_set.all():
-            result += sub_election.title + ': '
-            for candidate in sub_election.candidate_set.all():
-                result += candidate.name + ', '
-            result = result[:-2] + ' '
+            result += '<b>{}</b>: {}; '.format(
+                sub_election.title,
+                ', '.join(sub_election.candidate_set.all().values_list('name', flat=True)))
         return result
 
     def sub_election_sorted(self):
-        result = ''
-        for sub_election in self.subelection_set.all():
-            result += sub_election.title + ', '
-        return result[:-2]
+        return ', '.join(self.subelection_set.all().values_list('title', flat=True))
 
     def create_users(self, number):
         i = 0
