@@ -38,7 +38,6 @@ def login(request):
 
 
 class ElectionView(View):
-    @login_required
     def get(self, request):
         election = request.user.electionuser.election
         if election and not election.active:
@@ -52,7 +51,6 @@ class ElectionView(View):
         return render(request, 'election.html', {'form': form, })
 
     @transaction.atomic
-    @login_required
     def post(self, request):
         election = request.user.electionuser.election
 
@@ -162,7 +160,6 @@ def get_candidate_image(request, candidate_id):
 @staff_member_required
 def edit_election(request, election_id):
     election = Election.objects.get(pk=election_id)
-
     return render(request, 'edit_election.html', {'election': election, })
 
 
@@ -177,7 +174,8 @@ def edit_subelection(request, election_id, subelection_id):
     if request.method == 'POST':
         form = EditSubElectionForm(request.POST)
         if form.is_valid():
-            sub_election.edit(form.cleaned_data.get('title'), form.cleaned_data.get('short'))
+            sub_election.title = form.cleaned_data.get('title')
+            sub_election.save()
             return HttpResponse()
     form = EditSubElectionForm(initial={'title': sub_election.title})
     context = {
@@ -202,7 +200,7 @@ def edit_candidate(request, candidate_id):
             else:
                 image = form.cleaned_data.get('image')
             candidate.edit(name, image, True if not image else False)
-
+            return HttpResponse()
     form = CandidateForm(initial={'name': candidate.name, 'image': candidate.image})
     context = {
         'candidate': candidate,

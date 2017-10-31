@@ -145,7 +145,7 @@ class ElectionUser(models.Model):
         ballots = len(Ballot.objects.filter(user=self))
         sub_elections = len(SubElection.objects.filter(election=self.election))
         if ballots > sub_elections:
-            raise Exception('Etwas ist schief gelaufen. Bitte melde Dich beim Aahlausschuss!')
+            raise Exception('Etwas ist schief gelaufen. Bitte melde Dich beim Wahlausschuss!')
         else:
             return ballots == sub_elections
 
@@ -173,11 +173,6 @@ class SubElection(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.title, self.election)
-
-    def edit(self, title=None):
-        if title:
-            self.title = title
-        self.save()
 
 
 class Candidate(models.Model):

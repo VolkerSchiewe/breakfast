@@ -22,7 +22,6 @@ class ActiveElectionTests(ElectionTestCase):
 
 
 class CreateElectionTest(ElectionTestCase):
-
     def test_create_users(self):
         election = Election.objects.get(pk=1)
         election.create_users(20)
@@ -37,7 +36,6 @@ class CreateElectionTest(ElectionTestCase):
 
 
 class ElectionUtilsTest(ElectionTestCase):
-
     def test_next_title(self):
         election = Election.objects.get(pk=1)
         next_title = election.get_next_title()
@@ -62,7 +60,6 @@ class ElectionUtilsTest(ElectionTestCase):
 
 
 class SelectionTest(ElectionTestCase):
-
     def test_select_candidate(self):
         election_user = ElectionUser.objects.filter(election__isnull=False).first()
         candidate = Candidate.objects.get(pk=1)
