@@ -63,14 +63,12 @@ class CreateSubElectionForm(forms.Form):
         self.prefix = prefix
 
     title = forms.CharField(label='Titel', widget=forms.TextInput(attrs={'placeholder': ''}))
-    short = forms.CharField(label='Kurzform', max_length=6, widget=forms.TextInput(attrs={'placeholder': ''}))
     candidates = forms.CharField(label='Kandidaten',
                                  widget=forms.TextInput(attrs={'placeholder': '(durch Komma trennen)'}))
 
 
 class EditSubElectionForm(forms.Form):
     title = forms.CharField(label='Titel', widget=forms.TextInput(attrs={'placeholder': ''}))
-    short = forms.CharField(label='Kurzform', max_length=6, widget=forms.TextInput(attrs={'placeholder': ''}))
 
 
 class CandidateForm(forms.Form):

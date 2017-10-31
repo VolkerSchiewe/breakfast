@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models, transaction
 from django.db.models.signals import post_save
 
-from election.util import generate_random_string
+from election.util import generate_random_string, normalize_string
 
 
 class Image(models.Model):
@@ -74,7 +74,6 @@ class Election(models.Model):
         for sub_election in self.subelection_set.all():
             new_sub_election = SubElection()
             new_sub_election.title = sub_election.title
-            new_sub_election.short = sub_election.short
             new_sub_election.election = election
             new_sub_election.save()
             for candidate in sub_election.candidate_set.all():
@@ -163,20 +162,21 @@ post_save.connect(create_election_user, sender=User)
 class SubElection(models.Model):
     election = models.ForeignKey(Election)
     title = models.CharField(max_length=100)
-    short = models.CharField(max_length=10, default="")
     is_multi_selectable = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['title']
 
+    @property
+    def short(self):
+        return normalize_string(self.title)
+
     def __str__(self):
         return '{} - {}'.format(self.title, self.election)
 
-    def edit(self, title=None, short=None):
+    def edit(self, title=None):
         if title:
             self.title = title
-        if short:
-            self.short = short
         self.save()
 
 

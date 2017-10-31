@@ -111,3 +111,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
+
+FIXTURE_DIRS = [
+    'fixtures'
+]

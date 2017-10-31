@@ -1,9 +1,9 @@
-import string
 import random
+import string
 
+import magic
 from django.http import HttpResponse
 from django.http import HttpResponseNotFound
-import magic
 
 
 def serve_file(file, file_name=None, content_type=None):
@@ -28,3 +28,7 @@ def generate_random_string(length, number=1):
         codes.append(item)
 
     return codes[0] if len(codes) == 1 else codes
+
+
+def normalize_string(string: str):
+    return string.lower().replace(' ', '_').replace('-', '_')

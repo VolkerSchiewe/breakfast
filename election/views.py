@@ -3,6 +3,7 @@ from django.contrib import auth
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.core.files import File
 from django.db import transaction
 from django.db.models import QuerySet
@@ -37,6 +38,7 @@ def login(request):
 
 
 class ElectionView(View):
+    @login_required
     def get(self, request):
         election = request.user.electionuser.election
         if election and not election.active:
@@ -50,6 +52,7 @@ class ElectionView(View):
         return render(request, 'election.html', {'form': form, })
 
     @transaction.atomic
+    @login_required
     def post(self, request):
         election = request.user.electionuser.election
 
@@ -101,7 +104,6 @@ def create_election(request):
             counter = 0
             while 'pre-{}-title'.format(counter) in request.POST:
                 sub_election = SubElection.objects.create(title=request.POST.get('pre-{}-title'.format(counter)),
-                                                          short=request.POST.get('pre-{}-short'.format(counter)),
                                                           election=election)
                 for name in request.POST.get('pre-{}-candidates'.format(counter)).split(','):
                     Candidate.objects.create(name=name, sub_election=sub_election)
@@ -147,6 +149,7 @@ def toggle_active_election(request, election_id):
     return redirect('elections_list')
 
 
+@login_required
 def get_candidate_image(request, candidate_id):
     candidate = Candidate.objects.get(pk=candidate_id)
 
@@ -163,10 +166,12 @@ def edit_election(request, election_id):
     return render(request, 'edit_election.html', {'election': election, })
 
 
+@staff_member_required
 def get_user_codes(request, election_id):
     return HttpResponse(Election.objects.get(pk=election_id).get_plain_codes())
 
 
+@staff_member_required
 def edit_subelection(request, election_id, subelection_id):
     sub_election = SubElection.objects.get(pk=subelection_id)
     if request.method == 'POST':
@@ -174,7 +179,7 @@ def edit_subelection(request, election_id, subelection_id):
         if form.is_valid():
             sub_election.edit(form.cleaned_data.get('title'), form.cleaned_data.get('short'))
             return HttpResponse()
-    form = EditSubElectionForm(initial={'title': sub_election.title, 'short': sub_election.short})
+    form = EditSubElectionForm(initial={'title': sub_election.title})
     context = {
         'sub_election': sub_election,
         'form': form,
@@ -182,6 +187,7 @@ def edit_subelection(request, election_id, subelection_id):
     return render(request, 'edit_subelection.html', context)
 
 
+@staff_member_required
 def edit_candidate(request, candidate_id):
     candidate = Candidate.objects.get(pk=candidate_id)
     if request.method == 'POST':

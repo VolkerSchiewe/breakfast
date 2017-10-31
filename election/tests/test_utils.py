@@ -14,4 +14,3 @@ class UtilTest(TestCase):
         random_string = generate_random_string(5)
         self.assertIsInstance(random_string, str)
         self.assertIs(len(random_string), 5)
-

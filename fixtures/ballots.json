@@ -1,0 +1,300 @@
+[
+  {
+    "model": "election.image",
+    "pk": 1,
+    "fields": {
+      "name": "Moritz",
+      "file": "fixtures/test_images/160x160_placeholder.png"
+    }
+  },
+  {
+    "model": "election.image",
+    "pk": 2,
+    "fields": {
+      "name": "Max",
+      "file": "fixtures/test_images/160x160_placeholder.png"
+    }
+  },
+  {
+    "model": "election.image",
+    "pk": 3,
+    "fields": {
+      "name": "Max Muster",
+      "file": "fixtures/test_images/160x160_placeholder.png"
+    }
+  },
+  {
+    "model": "election.image",
+    "pk": 4,
+    "fields": {
+      "name": "Maria Muster",
+      "file": "fixtures/test_images/160x160_placeholder.png"
+    }
+  },
+  {
+    "model": "election.election",
+    "pk": 1,
+    "fields": {
+      "title": "1. Durchgang",
+      "active": true
+    }
+  },
+  {
+    "model": "election.subelection",
+    "pk": 1,
+    "fields": {
+      "election": 1,
+      "title": "Planungsteam",
+      "is_multi_selectable": false
+    }
+  },
+  {
+    "model": "election.subelection",
+    "pk": 2,
+    "fields": {
+      "election": 1,
+      "title": "AeJ",
+      "is_multi_selectable": false
+    }
+  },
+  {
+    "model": "election.candidate",
+    "pk": 1,
+    "fields": {
+      "sub_election": 1,
+      "name": "Max Muster",
+      "image": 3
+    }
+  },
+  {
+    "model": "election.candidate",
+    "pk": 2,
+    "fields": {
+      "sub_election": 1,
+      "name": " Maria Muster",
+      "image": 4
+    }
+  },
+  {
+    "model": "election.candidate",
+    "pk": 3,
+    "fields": {
+      "sub_election": 2,
+      "name": "Max",
+      "image": 2
+    }
+  },
+  {
+    "model": "election.candidate",
+    "pk": 4,
+    "fields": {
+      "sub_election": 2,
+      "name": "Moritz",
+      "image": 1
+    }
+  },
+  {
+    "model": "election.ballot",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "choice": 3
+    }
+  },
+  {
+    "model": "election.ballot",
+    "pk": 2,
+    "fields": {
+      "user": 3,
+      "choice": 1
+    }
+  },
+  {
+    "model": "election.ballot",
+    "pk": 3,
+    "fields": {
+      "user": 6,
+      "choice": 4
+    }
+  },
+  {
+    "model": "election.ballot",
+    "pk": 4,
+    "fields": {
+      "user": 6,
+      "choice": 2
+    }
+  },
+  {
+    "model": "election.ballot",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "choice": 3
+    }
+  },
+  {
+    "model": "election.ballot",
+    "pk": 6,
+    "fields": {
+      "user": 5,
+      "choice": 2
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$36000$M7eaT02IymL2$PE801MWlW564FBw03pa4YOErRk2GGgTgm4ByNc2U4GI=",
+      "last_login": "2017-10-31T11:22:02.149Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2017-10-31T11:11:07.251Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$36000$k3VkX2VCDlTH$LYie0qnIS0AapNk/hgYws3AL2GPBves0LHKE2Ou0+p0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "OaIE",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2017-10-31T11:14:51.272Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$36000$3ioHHrhZz0M0$zv5sswR4EQE8qiIgsFDeKSk0qfcOLkBUXgV3Pesbzhw=",
+      "last_login": "2017-10-31T11:44:00.221Z",
+      "is_superuser": false,
+      "username": "WQky",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2017-10-31T11:14:51.354Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$36000$zE4xJys9j4I7$RXPB8yqSNnY0nrTQ7FJzVPQ7Uj3EquRsLcPVcw/8lpA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "pgmB",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2017-10-31T11:14:51.428Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$36000$vkzG8irGBLTZ$TIL+mQ0lcuNEplsRdrIt9EMiYmapKrJ5QPMxyt2YO7A=",
+      "last_login": "2017-10-31T11:44:40.482Z",
+      "is_superuser": false,
+      "username": "wumN",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2017-10-31T11:14:51.511Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$36000$WDOacGn7lxNP$++I85EscIK3q0C6PodK1qcPCaI3qzbCzXr1WUnQhMow=",
+      "last_login": "2017-10-31T11:44:26.562Z",
+      "is_superuser": false,
+      "username": "hnwA",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2017-10-31T11:14:51.590Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "election.electionuser",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "election": null
+    }
+  },
+  {
+    "model": "election.electionuser",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "election": 1
+    }
+  },
+  {
+    "model": "election.electionuser",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "election": 1
+    }
+  },
+  {
+    "model": "election.electionuser",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "election": 1
+    }
+  },
+  {
+    "model": "election.electionuser",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "election": 1
+    }
+  },
+  {
+    "model": "election.electionuser",
+    "pk": 6,
+    "fields": {
+      "user": 6,
+      "election": 1
+    }
+  }
+]
