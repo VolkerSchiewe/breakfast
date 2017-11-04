@@ -1,2 +1,3 @@
 release: python manage.py migrate
-web: gunicorn breakfast.wsgi --log-file -
+web: daphne breakfast.asgi:channel_layer
+worker: python manage.py runworker

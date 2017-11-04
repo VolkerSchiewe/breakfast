@@ -17,7 +17,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
-    'ebu-breakfast.herokuapp.com'
+    'ebu-breakfast.herokuapp.com',
+    '127.0.0.1',
 ]
 
 # Application definition
@@ -143,7 +144,7 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO'
         },
-        'chat': {
+        'election': {
             'handlers': ['console'],
             'propagate': False,
             'level': 'DEBUG',

@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.contrib import auth
 from django.contrib import messages
@@ -15,6 +17,8 @@ from election.forms import LoginForm, CreateElectionForm, CreateSubElectionForm,
     CandidateForm
 from election.util import serve_file
 from .models import Candidate, SubElection, User, Election, Image
+
+log = logging.getLogger(__name__)
 
 
 def home(request):
@@ -80,7 +84,7 @@ class ElectionView(View):
 @staff_member_required
 def results(request, election_id):
     election = Election.objects.get(id=election_id)
-
+    log.debug('results view')
     context = {
         'result_list': election.get_results()
     }

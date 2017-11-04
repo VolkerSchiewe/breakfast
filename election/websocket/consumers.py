@@ -5,10 +5,12 @@ from channels.auth import channel_session_user_from_http, channel_session_user
 from election.models import Election
 
 log = logging.getLogger(__name__)
+log.debug('Gelop')
 
 
 @channel_session_user_from_http
 def ws_connect(message):
+    print('hello world')
     log.debug(message)
     if not message.user.is_staff:
         message.reply_channel.send({'accept': False})
