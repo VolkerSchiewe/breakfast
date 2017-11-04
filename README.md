@@ -16,3 +16,4 @@ Small election tool based on django
  * Show results in nice charts
  * Activate and deactivate elections
  * Option to create multiple select sub elections
+ * Live update for results using WebSocket

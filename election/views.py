@@ -62,13 +62,13 @@ class ElectionView(View):
                 selections = form.cleaned_data.get(sub_election)
                 try:
                     if isinstance(selections, QuerySet):
-                        election_user.select_candidate(selections)
+                        election_user.select_candidates(selections)
                     else:
                         election_user.select_candidate(selections)
                 except ValueError as e:
                     messages.error(request, e)
                     return redirect('election')
-
+            election.send_results()
             messages.success(request, 'Deine Stimme wurde gespeichert')
             return redirect('election')
 
@@ -82,7 +82,6 @@ def results(request, election_id):
     election = Election.objects.get(id=election_id)
 
     context = {
-        'election_count': election.ballots_count(),
         'result_list': election.get_results()
     }
     return render(request, 'results.html', context)

@@ -1,3 +1,4 @@
+channels
 Django
 django-polymorphic
 python-magic

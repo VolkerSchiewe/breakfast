@@ -1,4 +1,7 @@
+import json
+
 from PIL import Image as PILImage
+from channels import Group
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -33,6 +36,16 @@ class Election(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def websocket_group(self):
+        return Group("election-%s" % self.id)
+
+    def send_results(self, msg_type=0):
+        message = {'message': self.get_results(), 'msg_type': msg_type}
+        self.websocket_group.send(
+            {"text": json.dumps(message)}
+        )
+
     @staticmethod
     def get_next_title():
         return str(len(Election.objects.all()) + 1) + '. Durchgang'
@@ -46,11 +59,18 @@ class Election(models.Model):
 
     def get_results(self):
         results = []
-        for election in self.subelection_set.all():
-            candidates = Candidate.objects.filter(sub_election=election)
-            for candidate in candidates:
-                candidate.result = len(Ballot.objects.filter(choice=candidate))
-            results.append(candidates)
+        for sub_election in self.subelection_set.all():
+            sub_elections = {
+                'title': sub_election.title,
+                'short': sub_election.short,
+                'votes_count': self.ballots_count(),
+            }
+            candidates = {}
+            for candidate in Candidate.objects.filter(sub_election=sub_election):
+                candidates[candidate.name] = len(Ballot.objects.filter(choice=candidate))
+
+            sub_elections['results'] = candidates
+            results.append(sub_elections)
         return results
 
     def ballots_count(self):

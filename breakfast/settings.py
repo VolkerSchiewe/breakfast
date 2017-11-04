@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'channels',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -115,3 +116,13 @@ MESSAGE_TAGS = {
 FIXTURE_DIRS = [
     'fixtures'
 ]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+        'ROUTING': 'election.websocket.routing.websocket_routing',
+    }
+}

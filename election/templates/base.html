@@ -35,11 +35,11 @@
     </div><!--/.container-fluid -->
 </nav>
 {% if messages %}
-    <div style="margin-top: -20px">
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
+        <div>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="margin-top: -20px">{{ message }}</div>
+            {% endfor %}
+        </div>
 {% endif %}
 
 {% block base_body %}
@@ -53,5 +53,6 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 <script src="{% static 'js/utils.js' %}"></script>
+
 </body>
 </html>
