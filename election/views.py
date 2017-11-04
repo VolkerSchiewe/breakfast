@@ -80,7 +80,6 @@ class ElectionView(View):
 @staff_member_required
 def results(request, election_id):
     election = Election.objects.get(id=election_id)
-
     context = {
         'result_list': election.get_results()
     }

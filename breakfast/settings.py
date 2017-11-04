@@ -17,7 +17,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
-    'ebu-breakfast.herokuapp.com'
+    'ebu-breakfast.herokuapp.com',
 ]
 
 # Application definition
@@ -125,4 +125,28 @@ CHANNEL_LAYERS = {
         },
         'ROUTING': 'election.websocket.routing.websocket_routing',
     }
+}
+
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO'
+        },
+        'election': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+    },
 }

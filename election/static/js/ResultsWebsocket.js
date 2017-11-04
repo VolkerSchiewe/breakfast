@@ -12,13 +12,16 @@ var chartOptionsList = [];
 var chartList = [];
 var websocketProtocol = ((location.protocol === 'http:') ? 'ws://' : 'wss://');
 
-var connection = new WebSocket(websocketProtocol + window.location.host);
+var electionId = window.location.href.split("/").pop();
+var connection = new WebSocket(websocketProtocol + window.location.host + '/' + electionId);
+
 connection.onopen = function () {
     console.log('Websocket connected.');
 };
 connection.onerror = function (error) {
     // Log errors
-    console.log('WebSocket Error ' + error);
+    console.log('WebSocket Error:');
+    console.log(error)
 };
 connection.onmessage = function (e) {
     var message = JSON.parse(e.data).message;

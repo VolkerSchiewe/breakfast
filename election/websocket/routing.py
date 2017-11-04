@@ -11,4 +11,5 @@ websocket_routing = [
 
     # Called when WebSockets disconnect
     route("websocket.disconnect", ws_disconnect),
+
 ]
