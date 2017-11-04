@@ -41,7 +41,7 @@ connection.onmessage = function (e) {
     });
     drawChart();
 };
-connection.onclose = function () {
+connection.onclose = function (event) {
     console.log('Websocket closed.');
 };
 
