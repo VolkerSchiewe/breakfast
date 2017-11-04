@@ -142,11 +142,11 @@ LOGGING = {
         'django': {
             'handlers': ['console'],
             'propagate': True,
-            'level': 'INFO'
+            'level': 'DEBUG'
         },
         'election': {
             'handlers': ['console'],
-            'propagate': False,
+            'propagate': True,
             'level': 'DEBUG',
         },
     },
