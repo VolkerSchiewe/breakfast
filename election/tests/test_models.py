@@ -93,5 +93,4 @@ class ElectionResultsTest(BallotsTestCase):
         self.assertEqual(election.subelection_set.count(), len(results))
         for sub_election in results:
             self.assertIn(sub_election.get('title'), election.subelection_set.all().values_list('title', flat=True))
-            self.assertIn(sub_election.get('results'), election.subelection_set.all().values_list('title', flat=True))
 
