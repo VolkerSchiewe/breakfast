@@ -1,11 +1,15 @@
+import logging
+
 from channels.auth import channel_session_user_from_http, channel_session_user
 
 from election.models import Election
 
+log = logging.getLogger(__name__)
+
 
 @channel_session_user_from_http
 def ws_connect(message):
-    print(message)
+    log.debug(message)
     if not message.user.is_staff:
         message.reply_channel.send({'accept': False})
     message.reply_channel.send({'accept': True})
@@ -17,7 +21,7 @@ def ws_connect(message):
 
 
 def ws_receive(message):
-    print(message)
+    log.debug(message)
 
 
 @channel_session_user
