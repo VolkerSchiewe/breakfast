@@ -45,7 +45,6 @@ connection.onmessage = function (e) {
     drawChart();
 };
 connection.onclose = function (event) {
-    console.log(event);
     console.log('Websocket closed.');
 };
 
