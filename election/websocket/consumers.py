@@ -5,19 +5,16 @@ from channels.auth import channel_session_user_from_http, channel_session_user
 from election.models import Election
 
 log = logging.getLogger(__name__)
-log.debug('Gelop')
 
 
 @channel_session_user_from_http
 def ws_connect(message):
-    print('hello world')
-    log.debug(message)
     if not message.user.is_staff:
         message.reply_channel.send({'accept': False})
     message.reply_channel.send({'accept': True})
     message.channel_session['elections'] = []
-
-    election = Election.objects.get(active=True)
+    election_id = message.content.get('path').split('/')[-1]
+    election = Election.objects.get(pk=election_id)
     election.websocket_group.add(message.reply_channel)
     election.send_results()
 
@@ -33,4 +30,4 @@ def ws_disconnect(message):
             room = Election.objects.get(pk=election_id)
             room.websocket_group.discard(message.reply_channel)
         except Election.DoesNotExist:
-            pass
+            log.debug('Election not found. ID:' + election_id)
