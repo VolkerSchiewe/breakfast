@@ -18,7 +18,8 @@ connection.onopen = function () {
 };
 connection.onerror = function (error) {
     // Log errors
-    console.log('WebSocket Error ' + error);
+    console.log('WebSocket Error:');
+    console.log(error)
 };
 connection.onmessage = function (e) {
     var message = JSON.parse(e.data).message;
@@ -42,6 +43,7 @@ connection.onmessage = function (e) {
     drawChart();
 };
 connection.onclose = function (event) {
+    console.log(event);
     console.log('Websocket closed.');
 };
 

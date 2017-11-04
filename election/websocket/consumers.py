@@ -5,6 +5,7 @@ from election.models import Election
 
 @channel_session_user_from_http
 def ws_connect(message):
+    print(message)
     if not message.user.is_staff:
         message.reply_channel.send({'accept': False})
     message.reply_channel.send({'accept': True})
