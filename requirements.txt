@@ -1,4 +1,6 @@
+asgi_redis
 channels
+daphne
 Django
 django-polymorphic
 python-magic
