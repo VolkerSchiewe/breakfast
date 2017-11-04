@@ -1,7 +1,7 @@
 google.charts.load('current', {'packages': ['corechart']});
 google.charts.setOnLoadCallback(initChart);
 
-var options_template = {
+var optionsTemplate = {
     title: '',
     titleTextStyle: {fontSize: 20},
     legend: {position: 'none'},
@@ -10,8 +10,9 @@ var options_template = {
 var chartDataList = [];
 var chartOptionsList = [];
 var chartList = [];
+var websocketProtocol = ((location.protocol === 'http:') ? 'ws://' : 'wss://');
 
-var connection = new WebSocket('ws://' + window.location.host);
+var connection = new WebSocket(websocketProtocol + window.location.host);
 connection.onopen = function () {
     console.log('Websocket connected.');
 };
@@ -30,8 +31,8 @@ connection.onmessage = function (e) {
             if (election.results.hasOwnProperty(key))
                 data.push([key, election.results[key]])
         }
-        options_template['title'] = election.title;
-        var options = Object.assign({}, options_template);
+        optionsTemplate['title'] = election.title;
+        var options = Object.assign({}, optionsTemplate);
 
         chartDataList.push(data);
         chartOptionsList.push(options);
