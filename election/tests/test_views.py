@@ -28,10 +28,6 @@ class TestResultsView(BallotsTestCase):
 
         response = self.client.get(reverse('results', args={election.pk}))
         self.assertIs(response.status_code, 200)
-        for sub_election in election.subelection_set.all():
-            self.assertContains(response, sub_election.title)
-            for candidate in sub_election.candidate_set.all():
-                self.assertContains(response, candidate.name)
 
 
 class TestLoginView(ElectionTestCase):

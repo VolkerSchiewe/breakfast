@@ -1,5 +1,5 @@
 from election.models import Election, SubElection, Candidate, Ballot, ElectionUser
-from election.tests.test_case import ElectionTestCase
+from election.tests.test_case import ElectionTestCase, BallotsTestCase
 
 
 class ActiveElectionTests(ElectionTestCase):
@@ -84,3 +84,14 @@ class SelectionTest(ElectionTestCase):
         election_user.select_candidate(candidate_1)
         with self.assertRaises(ValueError):
             election_user.select_candidate(candidate_2)
+
+
+class ElectionResultsTest(BallotsTestCase):
+    def test_results(self):
+        election = Election.objects.first()  # type: Election
+        results = election.get_results()
+        self.assertEqual(election.subelection_set.count(), len(results))
+        for sub_election in results:
+            self.assertIn(sub_election.get('title'), election.subelection_set.all().values_list('title', flat=True))
+            self.assertIn(sub_election.get('results'), election.subelection_set.all().values_list('title', flat=True))
+
