@@ -1,8 +1,7 @@
-import json
 import logging
 
+from channels import layers
 from PIL import Image as PILImage
-from channels import Group
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -39,15 +38,12 @@ class Election(models.Model):
     def __str__(self):
         return self.title
 
-    @property
-    def websocket_group(self):
-        return Group("election-%s" % self.id)
-
-    def send_results(self, msg_type=0):
-        message = {'message': self.get_results(), 'msg_type': msg_type}
-        self.websocket_group.send(
-            {"text": json.dumps(message)}
-        )
+    async def send_results(self):
+        channel_layer = layers.get_channel_layer()
+        await channel_layer.group_send('election_%s' % self.pk, {
+            'type': 'election_result',
+            'message': self.get_results()
+        })
 
     @staticmethod
     def get_next_title():
@@ -138,8 +134,8 @@ class Election(models.Model):
 
 
 class ElectionUser(models.Model):
-    user = models.OneToOneField(User)
-    election = models.ForeignKey(Election, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    election = models.ForeignKey(Election, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return '{} - {}'.format(self.user.username, self.election)
@@ -183,7 +179,7 @@ post_save.connect(create_election_user, sender=User)
 
 
 class SubElection(models.Model):
-    election = models.ForeignKey(Election)
+    election = models.ForeignKey(Election, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     is_multi_selectable = models.BooleanField(default=False)
 
@@ -201,7 +197,7 @@ class SubElection(models.Model):
 class Candidate(models.Model):
     sub_election = models.ForeignKey(SubElection, on_delete=models.CASCADE, default=0)
     name = models.CharField(max_length=250)
-    image = models.ForeignKey(Image, blank=True, null=True)
+    image = models.ForeignKey(Image, blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ['name']
@@ -220,7 +216,7 @@ class Candidate(models.Model):
 
 
 class Ballot(models.Model):
-    user = models.ForeignKey(ElectionUser)
+    user = models.ForeignKey(ElectionUser, on_delete=models.CASCADE)
     choice = models.ForeignKey(Candidate, on_delete=models.CASCADE, default=0)
 
     def __str__(self):

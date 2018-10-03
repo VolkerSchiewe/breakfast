@@ -13,7 +13,7 @@ var chartList = [];
 var websocketProtocol = ((location.protocol === 'http:') ? 'ws://' : 'wss://');
 
 var electionId = window.location.href.split("/").pop();
-var connection = new WebSocket(websocketProtocol + window.location.host + '/' + electionId);
+var connection = new WebSocket(websocketProtocol + window.location.host + '/election/' + electionId);
 
 connection.onopen = function () {
     console.log('Websocket connected.');

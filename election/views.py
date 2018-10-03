@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync, sync_to_async
 from django.conf import settings
 from django.contrib import auth
 from django.contrib import messages
@@ -68,7 +69,7 @@ class ElectionView(View):
                 except ValueError as e:
                     messages.error(request, e)
                     return redirect('election')
-            election.send_results()
+            async_to_sync(election.send_results)()
             messages.success(request, 'Deine Stimme wurde gespeichert')
             return redirect('election')
 

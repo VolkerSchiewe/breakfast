@@ -23,6 +23,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'election.apps.ElectionConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,10 +32,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-    'channels',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,7 +63,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'breakfast.wsgi.application'
+ASGI_APPLICATION = 'breakfast.routing.application'
 
 PASSWORD = 'ebujugend'
 
@@ -112,21 +112,18 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-
 FIXTURE_DIRS = [
     'fixtures'
 ]
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
-        'ROUTING': 'election.websocket.routing.websocket_routing',
-    }
+    },
 }
-
 
 # Logging
 LOGGING = {
