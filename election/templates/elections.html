@@ -24,9 +24,7 @@
                     <td class="text-center">{{ election.electionuser_set.all.count }} </td>
                     <td class="text-center">{{ election.ballots_count }} </td>
                     <td>
-                        <a class="btn btn-primary" {% if election.ballots_count %}href="{% url 'results' election.id %}"
-                        {% else %} disabled{% endif %}>
-                            Ergebnisse</a>
+                        <a class="btn btn-primary" href="{% url 'results' election.id %}">Ergebnisse</a>
                         <a class="btn btn-primary" href="{% url 'get_user_codes' election.id %}"
                            target="_blank">Codes</a>
                         <a class="btn btn-primary" href="{% url 'activate_election' election.id %}">
