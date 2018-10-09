@@ -10,11 +10,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=5u8p8*zc$w*0oa&e@0pd$l5)v+bl+4zm062zes&#*)3i(&(jf'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'please_override_me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+'=5u8p8*zc$w*0oa&e@0pd$l5)v+bl+4zm062zes&#*)3i(&(jf'
 ALLOWED_HOSTS = [
     'localhost',
     'ebu-breakfast.herokuapp.com',
@@ -147,3 +147,9 @@ LOGGING = {
         },
     },
 }
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

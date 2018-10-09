@@ -12,19 +12,18 @@ const styles = {
     root: style({
         flexGrow: 1,
     }),
-    flex: style({
-        flexGrow: 1,
-    }),
+    // flex: style({
+    //     flexGrow: 1,
+    // }),
 };
 
 export const NavBar = ({title}: NavBarProps) => (
     <div className={styles.root}>
         <AppBar position="static">
             <Toolbar>
-                <Typography variant="title" color="inherit" className={styles.flex}>
+                <Typography variant="h6" color="inherit">
                     {title}
                 </Typography>
-                {/*<Button color="inherit">Login</Button>*/}
             </Toolbar>
         </AppBar>
     </div>

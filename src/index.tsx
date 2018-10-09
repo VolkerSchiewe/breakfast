@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { Management } from "./components/Management";
+import {App} from "./components/App";
 
 ReactDOM.render(
-    <Management name={"name"} />,
+    <App/>,
     document.getElementById("container")
 );
