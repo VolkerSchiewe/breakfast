@@ -9,6 +9,9 @@ export const theme = createMuiTheme({
     //         }
     //     }
     // },
+    typography: {
+        useNextVariants: true,
+    },
     palette: {
         primary: {
             ...teal,
@@ -42,7 +45,8 @@ export const theme = createMuiTheme({
         appBar: 1100,
         snackbar: 2900,
         tooltip: 3000
-    }});
+    }
+});
 
 export const accentColor = {
     A100: '#5e9dfb',

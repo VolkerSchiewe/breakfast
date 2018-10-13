@@ -1,8 +1,8 @@
 import * as React from "react";
-import {NavBar} from "../modules/layout/NavBar";
+import {NavBar} from "../modules/layout/components/NavBar";
 import {Login} from "./Login";
 import {MuiThemeProvider} from "@material-ui/core/styles";
-import {theme} from "../modules/layout/styles";
+import {theme} from "../modules/layout/styles/styles";
 import {ElectionListContainer} from "../modules/management/containers/ElectionListContainer";
 import {EditElectionContainer} from "../modules/management/containers/EditElectionContainer";
 import {BrowserRouter as Router, Route} from "react-router-dom";
