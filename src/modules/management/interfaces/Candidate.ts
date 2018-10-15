@@ -1,6 +1,5 @@
-import {SubElection} from "./SubElection";
-
 export interface Candidate {
+    id?: number,
     name: string,
     imageFile?
 }

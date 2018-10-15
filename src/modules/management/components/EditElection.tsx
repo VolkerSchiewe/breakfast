@@ -17,7 +17,6 @@ import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 import {Candidate} from "../interfaces/Candidate";
 import cc from "classcat"
-import {CandidateModal} from "./CandidateModal";
 
 interface ElectionListProps {
     election: Election,
@@ -28,11 +27,6 @@ interface ElectionListProps {
 
     handleCandidateClick,
     handleNewCandidateClick,
-    handleCandidateModalClose,
-    saveCandidate,
-    handleModalNameChange,
-    handleModalImageChange,
-    handleModalClearImage,
 }
 
 const styles = ({
@@ -63,7 +57,7 @@ const styles = ({
     }),
 });
 
-export const EditElection = ({election, subElections, modalCandidate, modalImagePreview, candidateModalOpen, handleCandidateClick, handleNewCandidateClick, handleCandidateModalClose, saveCandidate, handleModalNameChange, handleModalImageChange, handleModalClearImage,}: ElectionListProps) => (
+export const EditElection = ({election, subElections, modalCandidate, modalImagePreview, candidateModalOpen, handleCandidateClick, handleNewCandidateClick}: ElectionListProps) => (
     <div>
         <Responsive edgeSize={2}>
             <Typography variant="h3" gutterBottom>
@@ -71,14 +65,14 @@ export const EditElection = ({election, subElections, modalCandidate, modalImage
             </Typography>
             <Grid container>
                 {subElections.map(subElection => (
-                    <Grid item xs={6} className={styles.grid}>
+                    <Grid item xs={6} className={styles.grid} key={subElection.id}>
                         <Paper className={styles.paper}>
                             <Typography variant={"h4"} align={"center"}>
                                 {subElection.name}
                             </Typography>
                             <Grid container>
                                 {subElection.candidates.map(candidate => (
-                                    <Grid className={styles.candidate} onClick={() => handleCandidateClick(candidate)}>
+                                    <Grid className={styles.candidate} onClick={() => handleCandidateClick(candidate)} key={candidate.id}>
                                         <CandidateView candidate={candidate}/>
                                     </Grid>
                                 ))
@@ -88,17 +82,6 @@ export const EditElection = ({election, subElections, modalCandidate, modalImage
                                     <Add fontSize={"large"}/>
                                     <Typography align={"center"}>Neu</Typography>
                                 </Grid>
-                                <CandidateModal isOpen={candidateModalOpen}
-                                                candidate={modalCandidate}
-                                                imagePreview={modalImagePreview}
-
-                                                handleClose={handleCandidateModalClose}
-                                                saveCandidate={saveCandidate}
-                                                handleNameChange={handleModalNameChange}
-                                                handleImageChange={handleModalImageChange}
-                                                handleClearImage={handleModalClearImage}
-                                />
-
                             </Grid>
                             <ResultView className={styles.results} subElection={subElection}/>
                         </Paper>

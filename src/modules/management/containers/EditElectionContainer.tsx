@@ -5,13 +5,19 @@ import {Election} from "../interfaces/Election";
 import {SubElection} from "../interfaces/SubElection";
 import {Candidate} from "../interfaces/Candidate";
 import {defaultImage} from "../../misc/components/UploadImage";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import {CandidateModal} from "../components/CandidateModal";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Grid from "@material-ui/core/Grid/Grid";
 
 interface EditElectionState {
     election?: Election,
     subElections: SubElection[],
     modalCandidate?: Candidate,
-    createCandidateModalOpen: boolean,
+    candidateModalOpen: boolean,
     modalImagePreview,
+
+    snackbarOpen: boolean
 }
 
 const emptyCandidate: Candidate = {name: ''};
@@ -22,26 +28,31 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
         this.state = {
             subElections: [
                 {
+                    id: 0,
                     name: "PT",
                     candidates: [
                         {
+                            id: 0,
                             name: "Max",
                             imageFile: "https://static.thenounproject.com/png/17241-200.png"
                         },
                         {
+                            id: 1,
                             name: "Moritz",
                             imageFile: "https://static.thenounproject.com/png/17241-200.png"
                         },
                     ],
                 },
                 {
+                    id: 1,
                     name: "AeJ",
                     candidates: [],
                 },
             ],
             modalCandidate: emptyCandidate,
             modalImagePreview: defaultImage,
-            createCandidateModalOpen: false,
+            candidateModalOpen: false,
+            snackbarOpen: false,
         }
     }
 
@@ -53,7 +64,7 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
     handleCandidateClick = (candidate) => {
         this.setState({
-            createCandidateModalOpen: true,
+            candidateModalOpen: true,
             modalCandidate: candidate,
             modalImagePreview: candidate.imageFile,
         })
@@ -61,21 +72,24 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
     handleNewCandidateClick = () => {
         this.setState({
-            createCandidateModalOpen: true,
+            candidateModalOpen: true,
             modalCandidate: emptyCandidate,
             modalImagePreview: defaultImage,
         })
     };
 
     handleCandidateModalClose = () => {
-        this.setState({createCandidateModalOpen: false});
-        //TODO Send to backend
+        this.setState({candidateModalOpen: false});
     };
 
-    saveCandidate = (candidate) => {
-        this.setState({createCandidateModalOpen: false});
-        //TODO show snackBar with spinner
-        console.log(candidate)
+    saveCandidate = () => {
+        //TODO Send to backend
+        console.log("Candidate",this.state.modalCandidate);
+
+        this.setState({
+            candidateModalOpen: false,
+            snackbarOpen: true,
+        });
     };
 
     handleModalNameChange = (value) => {
@@ -114,26 +128,37 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
     };
 
     public render() {
-        const {election, subElections, modalCandidate, createCandidateModalOpen, modalImagePreview} = this.state;
-        console.log(modalCandidate);
+        const {election, subElections, modalCandidate, candidateModalOpen, modalImagePreview, snackbarOpen} = this.state;
         return (
             <div>
                 {election &&
                 <EditElection election={election}
                               subElections={subElections}
                               modalCandidate={modalCandidate}
-                              candidateModalOpen={createCandidateModalOpen}
+                              candidateModalOpen={candidateModalOpen}
                               modalImagePreview={modalImagePreview}
 
                               handleCandidateClick={this.handleCandidateClick}
                               handleNewCandidateClick={this.handleNewCandidateClick}
-                              handleCandidateModalClose={this.handleCandidateModalClose}
-                              saveCandidate={this.saveCandidate}
-                              handleModalNameChange={this.handleModalNameChange}
-                              handleModalImageChange={this.handleModalImageChange}
-                              handleModalClearImage={this.handleModalClearImage}
                 />
                 }
+                <Snackbar open={snackbarOpen}
+                          message={(
+                              <Grid container alignItems={"center"}>
+                                  <CircularProgress size={15}/>
+                                  <span style={{marginLeft:10}}>Wird gespeichert ...</span>
+                              </Grid>
+                          )}/>
+                <CandidateModal isOpen={candidateModalOpen}
+                                candidate={modalCandidate}
+                                imagePreview={modalImagePreview}
+
+                                handleClose={this.handleCandidateModalClose}
+                                saveCandidate={this.saveCandidate}
+                                handleNameChange={this.handleModalNameChange}
+                                handleImageChange={this.handleModalImageChange}
+                                handleClearImage={this.handleModalClearImage}
+                />
             </div>
         )
     }

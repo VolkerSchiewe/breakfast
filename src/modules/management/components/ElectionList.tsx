@@ -11,7 +11,9 @@ import Typography from "@material-ui/core/Typography/Typography";
 interface ElectionListProps {
     elections: Election[],
     activeElectionId?: number,
+
     handleActiveChange,
+    handleRowClick,
 }
 
 const styles = ({
@@ -23,17 +25,20 @@ const styles = ({
     table: style({
         minWidth: 700,
     }),
+    row: style({
+        cursor: "pointer"
+    }),
     button: style({
         marginLeft: 5,
         marginRight: 5,
     })
 });
 
-export const ElectionList = ({elections, activeElectionId, handleActiveChange}: ElectionListProps) => (
+export const ElectionList = ({elections, activeElectionId, handleActiveChange, handleRowClick}: ElectionListProps) => (
     <Paper className={styles.root}>
         <Toolbar>
             <div>
-                <Typography variant="h6" id="tableTitle" >
+                <Typography variant="h6" id="tableTitle">
                     Wahlgänge
                 </Typography>
             </div>
@@ -50,15 +55,12 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange}: 
                 </TableRow>
             </TableHead>
             <TableBody>
-                {elections.map(election => {
-                    return (
-                        <TableRow key={election.id}>
-                            <TableCell component="th" scope="row">
-                                <Link to={"election/" + election.id}>{election.name}</Link>
-                            </TableCell>
-                            <TableCell>Bla</TableCell>
-                            <TableCell numeric>{1}</TableCell>
-                            <TableCell numeric>{1}</TableCell>
+                {elections.map(election => (
+                        <TableRow key={election.id} className={styles.row} >
+                            <TableCell component="th" scope="row" onClick={() =>handleRowClick(election.id)}>{election.name}</TableCell>
+                            <TableCell onClick={() =>handleRowClick(election.id)}>Bla</TableCell>
+                            <TableCell numeric onClick={() =>handleRowClick(election.id)}>{1}</TableCell>
+                            <TableCell numeric onClick={() =>handleRowClick(election.id)}>{1}</TableCell>
                             <TableCell>
                                 <Checkbox
                                     checked={election.id == activeElectionId}
@@ -72,8 +74,8 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange}: 
                                 </Button>
                             </TableCell>
                         </TableRow>
-                    );
-                })}
+                    )
+                )}
             </TableBody>
         </Table>
     </Paper>

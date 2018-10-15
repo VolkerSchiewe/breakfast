@@ -36,6 +36,7 @@ export const CandidateModal = ({isOpen, imagePreview, candidate, handleClose, sa
                         onChange={(e) => handleNameChange(e.target.value)}
                         value={candidate.name}
                         autoFocus
+                        required
                         margin="dense"
                         label="Name"
                         variant={"outlined"}/>
