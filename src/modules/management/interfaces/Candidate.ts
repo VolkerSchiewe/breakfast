@@ -1,5 +1,6 @@
 export interface Candidate {
-    id?: number,
-    name: string,
+    id?: number
+    name: string
     imageFile?
+    votes?: number
 }

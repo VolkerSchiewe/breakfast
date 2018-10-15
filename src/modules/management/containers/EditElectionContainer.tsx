@@ -34,12 +34,14 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                         {
                             id: 0,
                             name: "Max",
-                            imageFile: "https://static.thenounproject.com/png/17241-200.png"
+                            imageFile: "https://static.thenounproject.com/png/17241-200.png",
+                            votes: 10,
                         },
                         {
                             id: 1,
                             name: "Moritz",
-                            imageFile: "https://static.thenounproject.com/png/17241-200.png"
+                            imageFile: "https://static.thenounproject.com/png/17241-200.png",
+                            votes: 3,
                         },
                     ],
                 },
@@ -59,7 +61,12 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
     componentDidMount() {
         const electionId = this.props.match.params.electionId;
         //TODO get election
-        this.setState({election: {id: electionId, name: "1. Durchgang", isActive: true}})
+        this.setState({
+            election: {
+                id: electionId, name: "1. Durchgang",
+                isActive: true
+            }
+        })
     }
 
     handleCandidateClick = (candidate) => {
@@ -84,7 +91,7 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
     saveCandidate = () => {
         //TODO Send to backend
-        console.log("Candidate",this.state.modalCandidate);
+        console.log("Candidate", this.state.modalCandidate);
 
         this.setState({
             candidateModalOpen: false,
@@ -138,15 +145,15 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                               candidateModalOpen={candidateModalOpen}
                               modalImagePreview={modalImagePreview}
 
-                              handleCandidateClick={this.handleCandidateClick}
-                              handleNewCandidateClick={this.handleNewCandidateClick}
+                              handleCandidate={this.handleCandidateClick}
+                              handleNewCandidate={this.handleNewCandidateClick}
                 />
                 }
                 <Snackbar open={snackbarOpen}
                           message={(
                               <Grid container alignItems={"center"}>
                                   <CircularProgress size={15}/>
-                                  <span style={{marginLeft:10}}>Wird gespeichert ...</span>
+                                  <span style={{marginLeft: 10}}>Wird gespeichert ...</span>
                               </Grid>
                           )}/>
                 <CandidateModal isOpen={candidateModalOpen}

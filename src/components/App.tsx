@@ -6,10 +6,18 @@ import {theme} from "../modules/layout/styles/styles";
 import {ElectionListContainerWithRouter} from "../modules/management/containers/ElectionListContainer";
 import {EditElectionContainer} from "../modules/management/containers/EditElectionContainer";
 import {BrowserRouter as Router, Route} from "react-router-dom";
+import {style} from "typestyle";
 
 interface AppState {
     isLoggedIn: boolean
 }
+
+const styles = {
+    root: style({
+        width:'100%',
+        height:'100%',
+    }),
+};
 
 export class App extends React.Component<any, AppState> {
 
@@ -28,7 +36,7 @@ export class App extends React.Component<any, AppState> {
         return (
             <MuiThemeProvider theme={theme}>
                 <Router>
-                    <div>
+                    <div className={styles.root}>
                         <NavBar title={"Wahlen"}/>
                         {this.state.isLoggedIn ?
                             <Route exact path="/" component={ElectionListContainerWithRouter}/>

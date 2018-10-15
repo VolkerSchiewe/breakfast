@@ -11,12 +11,9 @@ import Paper from "@material-ui/core/Paper/Paper";
 import {CandidateView} from "./CandidateView";
 import {Add} from "@material-ui/icons";
 import {ResultView} from "./ResultView";
-import Button from "@material-ui/core/Button/Button";
-import TextField from "@material-ui/core/TextField/TextField";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 import {Candidate} from "../interfaces/Candidate";
 import cc from "classcat"
+import {CreateElection} from "./CreateElection";
 
 interface ElectionListProps {
     election: Election,
@@ -25,8 +22,8 @@ interface ElectionListProps {
     modalImagePreview,
     candidateModalOpen: boolean,
 
-    handleCandidateClick,
-    handleNewCandidateClick,
+    handleCandidate,
+    handleNewCandidate,
 }
 
 const styles = ({
@@ -44,7 +41,6 @@ const styles = ({
     candidate: style({
         margin: 10,
         cursor: "pointer",
-
     }),
     addCandidate: style({
         maxWidth: "min-content",
@@ -52,12 +48,9 @@ const styles = ({
     results: style({
         marginTop: 20,
     }),
-    button: style({
-        margin: 5
-    }),
 });
 
-export const EditElection = ({election, subElections, modalCandidate, modalImagePreview, candidateModalOpen, handleCandidateClick, handleNewCandidateClick}: ElectionListProps) => (
+export const EditElection = ({election, subElections, modalCandidate, modalImagePreview, candidateModalOpen, handleCandidate, handleNewCandidate}: ElectionListProps) => (
     <div>
         <Responsive edgeSize={2}>
             <Typography variant="h3" gutterBottom>
@@ -72,13 +65,14 @@ export const EditElection = ({election, subElections, modalCandidate, modalImage
                             </Typography>
                             <Grid container>
                                 {subElection.candidates.map(candidate => (
-                                    <Grid className={styles.candidate} onClick={() => handleCandidateClick(candidate)} key={candidate.id}>
+                                    <Grid className={styles.candidate} onClick={() => handleCandidate(candidate)}
+                                          key={candidate.id}>
                                         <CandidateView candidate={candidate}/>
                                     </Grid>
                                 ))
                                 }
                                 <Grid className={cc([styles.addCandidate, styles.candidate])}
-                                      onClick={handleNewCandidateClick}>
+                                      onClick={handleNewCandidate}>
                                     <Add fontSize={"large"}/>
                                     <Typography align={"center"}>Neu</Typography>
                                 </Grid>
@@ -88,26 +82,7 @@ export const EditElection = ({election, subElections, modalCandidate, modalImage
                     </Grid>
                 ))}
                 <Grid item xs={6} className={styles.grid}>
-                    <Paper className={styles.paper}>
-                        <Typography variant={"h6"}>
-                            Wahl hinzufügen
-                        </Typography>
-                        <Grid container>
-                            <TextField variant={"outlined"} label={"Titel"}/>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        value="checkedB"
-                                        color="primary"
-                                    />
-                                }
-                                label="Multiselect"
-                            />
-                            <Grid container justify={"flex-end"}>
-                                <Button className={styles.button}>Speichern</Button>
-                            </Grid>
-                        </Grid>
-                    </Paper>
+                    <CreateElection/>
                 </Grid>
             </Grid>
         </Responsive>

@@ -25,6 +25,7 @@
     "@types/react-dom": "^16.0.8",
     "chart.js": "^2.7.2",
     "classcat": "^3.2.3",
+    "google-palette": "^1.1.0",
     "parcel-bundler": "^1.10.2",
     "react": "^16.5.2",
     "react-chartjs-2": "^2.7.4",
