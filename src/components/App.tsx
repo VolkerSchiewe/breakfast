@@ -14,12 +14,12 @@ interface AppState {
 
 const styles = {
     root: style({
-        width:'100%',
-        height:'100%',
+        width: '100%',
+        height: '100%',
     }),
 };
 
-export class App extends React.Component<any, AppState> {
+export class App extends React.Component<{}, AppState> {
 
     constructor(props) {
         super(props);
@@ -27,11 +27,13 @@ export class App extends React.Component<any, AppState> {
             isLoggedIn: false,
         }
     }
-    handleLogin(){
+
+    handleLogin() {
         this.setState({
-            isLoggedIn:true
+            isLoggedIn: true
         })
     }
+
     render() {
         return (
             <MuiThemeProvider theme={theme}>
@@ -41,7 +43,7 @@ export class App extends React.Component<any, AppState> {
                         {this.state.isLoggedIn ?
                             <Route exact path="/" component={ElectionListContainerWithRouter}/>
                             :
-                            <Route exact path="/" render={() =>(<Login handleLogin={() => this.handleLogin()}/>)}/>
+                            <Route exact path="/" render={() => (<Login handleLogin={() => this.handleLogin()}/>)}/>
                         }
                         <Route exact path="/election/:electionId" component={EditElectionContainer}/>
                     </div>

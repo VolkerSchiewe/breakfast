@@ -5,7 +5,7 @@ import {style} from "typestyle";
 
 interface ResponsiveProps {
     edgeSize: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
-    children,
+    children: any,
 }
 
 const styles = {

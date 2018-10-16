@@ -11,19 +11,16 @@ import Paper from "@material-ui/core/Paper/Paper";
 import {CandidateView} from "./CandidateView";
 import {Add} from "@material-ui/icons";
 import {ResultView} from "./ResultView";
-import {Candidate} from "../interfaces/Candidate";
 import cc from "classcat"
 import {CreateElection} from "./CreateElection";
 
 interface ElectionListProps {
-    election: Election,
-    subElections: SubElection[],
-    modalCandidate: Candidate,
-    modalImagePreview,
-    candidateModalOpen: boolean,
+    election: Election
+    subElections: SubElection[]
 
-    handleCandidate,
-    handleNewCandidate,
+    handleCandidate(candidate)
+
+    handleNewCandidate()
 }
 
 const styles = ({
@@ -50,7 +47,7 @@ const styles = ({
     }),
 });
 
-export const EditElection = ({election, subElections, modalCandidate, modalImagePreview, candidateModalOpen, handleCandidate, handleNewCandidate}: ElectionListProps) => (
+export const EditElection = ({election, subElections, handleCandidate, handleNewCandidate}: ElectionListProps) => (
     <div>
         <Responsive edgeSize={2}>
             <Typography variant="h3" gutterBottom>

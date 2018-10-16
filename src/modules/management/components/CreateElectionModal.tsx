@@ -10,8 +10,9 @@ import Grid from "@material-ui/core/Grid/Grid";
 interface CreateElectionModalProps {
     isOpen: boolean
 
-    handleClose
-    saveElection
+    handleClose()
+
+    saveElection(title, number)
 }
 
 interface CreateElectionModalState {

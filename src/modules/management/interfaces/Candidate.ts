@@ -1,6 +1,6 @@
 export interface Candidate {
     id?: number
     name: string
-    imageFile?
+    imageFile?: string
     votes?: number
 }

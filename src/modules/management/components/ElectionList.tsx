@@ -19,13 +19,16 @@ import Typography from "@material-ui/core/Typography/Typography";
 import Grid from "@material-ui/core/Grid/Grid";
 
 interface ElectionListProps {
-    elections: Election[],
-    activeElectionId?: number,
+    elections: Election[]
+    activeElectionId?: number
 
-    handleActiveChange,
-    handleCodesClick,
-    handleRowClick,
-    handleNewElection
+    handleActiveChange(id)
+
+    handleCodesClick(id)
+
+    handleRowClick(id)
+
+    handleNewElection()
 }
 
 const styles = ({
