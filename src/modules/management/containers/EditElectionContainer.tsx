@@ -8,6 +8,7 @@ import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import {CandidateModal} from "../components/CandidateModal";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Grid from "@material-ui/core/Grid/Grid";
+import {ElectionService} from "../services/management-service";
 
 interface EditElectionState {
     election?: Election
@@ -20,6 +21,7 @@ interface EditElectionState {
 const emptyCandidate: Candidate = {name: ''};
 
 export class EditElectionContainer extends Component<any, EditElectionState> {
+    electionService = new ElectionService();
     constructor(props: any) {
         super(props);
         this.state = {
@@ -32,10 +34,19 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
     componentDidMount() {
         const electionId = this.props.match.params.electionId;
+        this.electionService.getElection(electionId)
+            .then(res =>
+                this.setState({election: res}));
+        this.electionService.getSubElections(electionId)
+            .then(
+                res =>
+                    this.setState({subElections: res})
+            );
         //TODO get election
         this.setState({
             election: {
-                id: electionId, title: "1. Durchgang",
+                id: electionId,
+                title: "1. Durchgang" + electionId,
                 isActive: true
             }
         })

@@ -1,5 +1,5 @@
 export function sendRequest(endpoint: string, method: string, headers?, body?: object): Promise<any> {
-    return fetch('http://localhost:8000' + endpoint, {
+    return fetch(endpoint, {
         method: method,
         credentials: 'same-origin',
         headers: headers,

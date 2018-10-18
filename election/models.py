@@ -141,7 +141,7 @@ class Election(models.Model):
 
 class ElectionUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    election = models.ForeignKey(Election, null=True, blank=True, on_delete=models.SET_NULL)
+    election = models.ForeignKey(Election, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} - {}'.format(self.user.username, self.election)

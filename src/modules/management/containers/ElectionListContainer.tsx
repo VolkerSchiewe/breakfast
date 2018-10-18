@@ -5,22 +5,34 @@ import {ElectionList} from "../components/ElectionList";
 import {RouteComponentProps, withRouter} from 'react-router';
 import {CreateElectionModal} from "../components/CreateElectionModal";
 import {ElectionService} from "../services/management-service";
+import Grid from "@material-ui/core/Grid/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 
 interface ElectionListContainerState {
     elections: Election[]
     electionModalOpen: boolean
+    snackbarOpen: boolean
 }
 
 class ElectionListContainer extends Component<RouteComponentProps, ElectionListContainerState> {
     electionService = new ElectionService();
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            elections: [],
+    saveElection = (title, number) => {
+        this.electionService.createElection(title, number)
+            .then(
+                res => {
+                    this.setState({
+                        snackbarOpen: false,
+                    });
+                    console.log(res)
+                }
+            );
+        this.setState({
             electionModalOpen: false,
-        }
-    }
+            snackbarOpen: true,
+        });
+    };
 
     handleRowClick = (id) => {
         this.props.history.push(`/elections/${id}`);
@@ -81,16 +93,17 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         })
     };
 
-    saveElection = (title, number) => {
-        console.log(title, number);
-        //TODO send to backend
-        this.setState({
-            electionModalOpen: false
-        })
-    };
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            elections: [],
+            electionModalOpen: false,
+            snackbarOpen: false,
+        }
+    }
 
     public render() {
-        const {elections, electionModalOpen} = this.state;
+        const {elections, electionModalOpen, snackbarOpen} = this.state;
         let activeElectionId = undefined;
         const activeElection = elections.filter((election) => election.isActive);
         if (activeElection.length != 0)
@@ -102,6 +115,13 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
                               handleRowClick={this.handleRowClick}
                               handleCodesClick={this.handleCodesClick}
                               handleNewElection={this.handleNewElection}/>
+                <Snackbar open={snackbarOpen}
+                          message={(
+                              <Grid container alignItems={"center"}>
+                                  <CircularProgress size={15}/>
+                                  <span style={{marginLeft: 10}}>Wird gespeichert ...</span>
+                              </Grid>
+                          )}/>
                 {electionModalOpen &&
                 <CreateElectionModal isOpen={electionModalOpen}
                                      handleClose={() => {

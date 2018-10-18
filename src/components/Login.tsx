@@ -34,7 +34,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                 console.log(res);
                 storeToken(res.token);
                 this.props.handleLogin();
-                this.props.history.push('/elections/')
+                this.props.history.push('/')
             });
     }
 

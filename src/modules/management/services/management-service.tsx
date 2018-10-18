@@ -10,8 +10,20 @@ export class ElectionService {
         return sendRequest(ELECTIONS_API, 'GET', this.authHeader());
     }
 
-    getSubElections(election_id): Promise<SubElection[]> {
-        return sendRequest(SUB_ELECTIONS_API, 'GET', this.authHeader())
+    getElection(electionId): Promise<Election> {
+        return sendRequest(ELECTIONS_API + electionId, 'GET', this.authHeader())
+    }
+
+    createElection(title: string, number: number): Promise<any> {
+        return sendRequest(ELECTIONS_API + 'create_election/', 'POST', this.authHeader(),
+            {
+                title: title,
+                number: number,
+            })
+    }
+
+    getSubElections(electionId): Promise<SubElection[]> {
+        return sendRequest(`${SUB_ELECTIONS_API}?election=${electionId}`, 'GET', this.authHeader())
     }
 
     private authHeader() {

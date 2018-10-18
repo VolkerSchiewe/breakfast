@@ -30,11 +30,11 @@ export class App extends React.Component<{}, AppState> {
         }
     }
 
-    handleLogin() {
+    handleLogin = () => {
         this.setState({
             isAuthenticated: true
         })
-    }
+    };
 
     render() {
         const {isAuthenticated} = this.state;
@@ -42,7 +42,7 @@ export class App extends React.Component<{}, AppState> {
             <div className={styles.root}>
                 <NavBar title={"Wahlen"}/>
                 <Switch>
-                    <Route exact path="/login" component={LoginWithRouter}/>
+                    <Route exact path="/login" render={() => <LoginWithRouter handleLogin={this.handleLogin}/>}/>
                     <ProtectedRoute isAuthenticated={isAuthenticated} path="/elections/:electionId"
                                     component={EditElectionContainer}/>
                     <ProtectedRoute exact path="/" component={ElectionListContainerWithRouter}
