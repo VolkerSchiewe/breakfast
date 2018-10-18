@@ -21,17 +21,15 @@ interface CandidateModalProps {
 interface CandidateModalState {
     candidate: Candidate
     nameError: boolean
-    imagePreview: string | ArrayBuffer
 }
 
 export class CandidateModal extends React.Component<CandidateModalProps, CandidateModalState> {
     handleClearImage = (event) => {
         event.stopPropagation();
         this.setState({
-            imagePreview: defaultImage,
             candidate: {
-                name: this.state.candidate.name,
-                imageFile: null
+                ...this.state.candidate,
+                image: null,
             }
         });
     };
@@ -41,10 +39,12 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
             reader.onloadend = () => {
                 this.setState({
                     candidate: {
-                        name: this.state.candidate.name,
-                        imageFile: files[0]
+                        ...this.state.candidate,
+                        image: {
+                            name: this.state.candidate.name,
+                            base64Image: reader.result,
+                        }
                     },
-                    imagePreview: reader.result,
                 });
             };
             reader.readAsDataURL(files[0]);
@@ -53,10 +53,23 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
     handleNameChange = (value) => {
         this.setState({
             candidate: {
+                ...this.state.candidate,
                 name: value,
+                image: {
+                    ...this.state.candidate.image,
+                    name: value,
+                }
             }
         })
     };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            candidate: props.candidate,
+            nameError: false,
+        };
+    }
     submit = () => {
         const {candidate} = this.state;
         if (candidate.name !== '')
@@ -65,18 +78,9 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
             this.setState({nameError: true});
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            candidate: props.candidate,
-            nameError: false,
-            imagePreview: props.candidate.imageFile || defaultImage,
-        }
-    }
-
     render() {
         const {isOpen, handleClose} = this.props;
-        const {imagePreview, candidate, nameError} = this.state;
+        const {candidate, nameError} = this.state;
         return (
             <div>
                 <Dialog open={isOpen}
@@ -85,7 +89,7 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
                     <DialogTitle id="form-dialog-title">Kandidat hinzufügen</DialogTitle>
                     <DialogContent>
                         <Grid container direction={"column"} justify={"space-around"} alignItems={"center"}>
-                            <UploadImage imagePreview={imagePreview}
+                            <UploadImage imagePreview={candidate.image && candidate.image.base64Image || defaultImage}
                                          handleImageChange={this.handleImageChange}
                                          handleClearImage={this.handleClearImage}/>
                             <TextField

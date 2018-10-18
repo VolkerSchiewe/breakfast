@@ -2,6 +2,7 @@ import * as React from "react";
 import Typography from "@material-ui/core/Typography/Typography";
 import {SubElection} from "../interfaces/SubElection";
 import {Pie} from "react-chartjs-2";
+
 const palette = require("google-palette");
 
 interface ResultViewProps {
@@ -28,7 +29,8 @@ export class ResultView extends React.Component<ResultViewProps, {}> {
                 },
             }
         };
-        const hasResults = subElection.candidates.map((c) => c.votes).some((x) => x !== null);
+        const votes = subElection.candidates.map((c) => c.votes);
+        const hasResults = votes.some(x => x !== null) && votes.every(x => x !== 0);
         return (
             <div className={className}>
                 <Typography variant={"h5"}>Ergebnisse</Typography>

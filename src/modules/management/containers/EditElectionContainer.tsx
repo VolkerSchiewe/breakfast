@@ -22,6 +22,7 @@ const emptyCandidate: Candidate = {name: ''};
 
 export class EditElectionContainer extends Component<any, EditElectionState> {
     electionService = new ElectionService();
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -32,51 +33,66 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
         }
     }
 
-    componentDidMount() {
-        const electionId = this.props.match.params.electionId;
-        this.electionService.getElection(electionId)
-            .then(res =>
-                this.setState({election: res}));
-        this.electionService.getSubElections(electionId)
-            .then(
-                res =>
-                    this.setState({subElections: res})
-            );
-        //TODO get election
-        this.setState({
-            election: {
-                id: electionId,
-                title: "1. Durchgang" + electionId,
-                isActive: true
-            }
-        })
-    }
+    openCandidateModal = (subElectionId: number, candidate?: Candidate) => {
+        if (candidate !== undefined)
+            candidate.subElection = subElectionId;
+        else
+            emptyCandidate.subElection = subElectionId;
+        const candidateModal = candidate ? candidate : emptyCandidate;
 
-    handleCandidateClick = (candidate) => {
         this.setState({
             candidateModalOpen: true,
-            modalCandidate: candidate,
+            modalCandidate: candidateModal,
         })
     };
-
-    handleNewCandidateClick = () => {
+    saveCandidate = (candidate: Candidate) => {
         this.setState({
-            candidateModalOpen: true,
-            modalCandidate: emptyCandidate,
-        })
+            candidateModalOpen: false,
+            snackbarOpen: true,
+        });
+
+        if (candidate.id !== undefined) {
+            this.electionService.updateCandidate(candidate)
+                .then(res =>
+                    this.setState({snackbarOpen: false})
+                );
+        } else {
+            this.electionService.createCandidate(candidate)
+                .then(res =>
+                    this.setState({snackbarOpen: false}
+                    )
+                );
+        }
+
     };
 
     handleCandidateModalClose = () => {
         this.setState({candidateModalOpen: false});
     };
+    saveSubElection = (name) => {
+        const electionId = this.props.match.params.electionId;
+        console.log(name);
+        this.electionService.createSubElection(name, electionId)
+            .then(res => {
+                    console.log(res)
+                }
+            );
 
-    saveCandidate = (candidate) => {
-        console.log(candidate);
-        this.setState({
-            candidateModalOpen: false,
-            snackbarOpen: true,
-        });
     };
+
+    componentDidMount() {
+        const electionId = this.props.match.params.electionId;
+        this.electionService.getElection(electionId)
+            .then(res => {
+                this.setState({election: res})
+            });
+        this.electionService.getSubElections(electionId)
+            .then(
+                res => {
+                    this.setState({subElections: res});
+                }
+            );
+    }
 
     public render() {
         const {election, subElections, modalCandidate, candidateModalOpen, snackbarOpen} = this.state;
@@ -86,8 +102,9 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                 <EditElection election={election}
                               subElections={subElections}
 
-                              handleCandidate={this.handleCandidateClick}
-                              handleNewCandidate={this.handleNewCandidateClick}
+                              openCandidateModal={this.openCandidateModal}
+
+                              saveSubElection={this.saveSubElection}
                 />
                 }
                 <Snackbar open={snackbarOpen}

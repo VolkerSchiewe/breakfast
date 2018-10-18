@@ -149,10 +149,10 @@ def toggle_active_election(request, election_id):
 
 @login_required
 def get_candidate_image(request, candidate_id):
-    candidate = Candidate.objects.get(pk=candidate_id)
+    candidate = Candidate.objects.filter(pk=candidate_id)
 
-    if candidate.image:
-        return serve_file(candidate.image.file.file)
+    if candidate.exists() and candidate.first().image:
+        return serve_file(candidate.first().image.file.file)
     else:
         return serve_file(File(open(settings.BASE_DIR + "/election/static/images/placeholder.png", mode='rb')))
 

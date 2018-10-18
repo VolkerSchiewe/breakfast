@@ -5,7 +5,7 @@ from api.serializers.candidate import CandidateSerializer
 
 
 class SubElectionSerializer(serializers.ModelSerializer):
-    isMultiSelect = serializers.BooleanField(source='is_multi_selectable')
+    isMultiSelect = serializers.BooleanField(source='is_multi_selectable', read_only=True)
     candidates = CandidateSerializer(source='candidate_set', many=True, read_only=True)
 
     class Meta:

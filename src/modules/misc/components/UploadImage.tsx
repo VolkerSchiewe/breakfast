@@ -38,7 +38,8 @@ const styles = {
         color: "white",
     }),
 };
-export const defaultImage = 'https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1'
+// TODO serve with statics
+export const defaultImage = '/get_candidate_image/0'; //https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1'
 
 export const UploadImage = ({imagePreview, handleImageChange, handleClearImage}: UploadImageProps) => (
     <Dropzone onDrop={handleImageChange} accept="image/*" multiple={false}

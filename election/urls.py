@@ -5,7 +5,8 @@ from . import views
 
 urlpatterns = [
     # /elections
-    url(r'^$', views.home, name='home'),
+    url(r'^get_candidate_image/(?P<candidate_id>\d+)$', views.get_candidate_image, name='get_candidate_image'),
+    url(r'^', views.home, name='home'),
     # url(r'^election$', login_required(views.ElectionView.as_view()), name='election'),
     # url(r'^login$', views.login, name='login'),
     #
@@ -20,5 +21,4 @@ urlpatterns = [
     #     name='edit_subelection'),
     # url(r'^candidates/(?P<candidate_id>\d+)/edit$', views.edit_candidate, name='edit_candidate'),
     #
-    # url(r'^get_candidate_image/(?P<candidate_id>\d+)$', views.get_candidate_image, name='get_candidate_image'),
 ]

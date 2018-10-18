@@ -2,7 +2,6 @@ import * as React from "react";
 import {Election} from "../interfaces/Election";
 import {style} from "typestyle";
 import {theme} from "../../layout/styles/styles";
-import {Link} from "react-router-dom";
 import {SubElection} from "../interfaces/SubElection";
 import {Responsive} from "../../layout/components/Responsive";
 import Grid from "@material-ui/core/Grid/Grid";
@@ -13,14 +12,15 @@ import {Add} from "@material-ui/icons";
 import {ResultView} from "./ResultView";
 import cc from "classcat"
 import {CreateElection} from "./CreateElection";
+import {Candidate} from "../interfaces/Candidate";
 
 interface ElectionListProps {
     election: Election
     subElections: SubElection[]
 
-    handleCandidate(candidate)
+    openCandidateModal(subElectionId: number, candidate?: Candidate)
 
-    handleNewCandidate()
+    saveSubElection(name: string)
 }
 
 const styles = ({
@@ -47,7 +47,7 @@ const styles = ({
     }),
 });
 
-export const EditElection = ({election, subElections, handleCandidate, handleNewCandidate}: ElectionListProps) => (
+export const EditElection = ({election, subElections, openCandidateModal, saveSubElection}: ElectionListProps) => (
     <div>
         <Responsive edgeSize={2}>
             <Typography variant="h3" gutterBottom>
@@ -58,18 +58,19 @@ export const EditElection = ({election, subElections, handleCandidate, handleNew
                     <Grid item xs={6} className={styles.grid} key={subElection.id}>
                         <Paper className={styles.paper}>
                             <Typography variant={"h4"} align={"center"}>
-                                {subElection.name}
+                                {subElection.title}
                             </Typography>
                             <Grid container>
                                 {subElection.candidates.map(candidate => (
-                                    <Grid className={styles.candidate} onClick={() => handleCandidate(candidate)}
+                                    <Grid className={styles.candidate}
+                                          onClick={() => openCandidateModal(subElection.id, candidate)}
                                           key={candidate.id}>
                                         <CandidateView candidate={candidate}/>
                                     </Grid>
                                 ))
                                 }
                                 <Grid className={cc([styles.addCandidate, styles.candidate])}
-                                      onClick={handleNewCandidate}>
+                                      onClick={() => openCandidateModal(subElection.id)}>
                                     <Add fontSize={"large"}/>
                                     <Typography align={"center"}>Neu</Typography>
                                 </Grid>
@@ -79,7 +80,7 @@ export const EditElection = ({election, subElections, handleCandidate, handleNew
                     </Grid>
                 ))}
                 <Grid item xs={6} className={styles.grid}>
-                    <CreateElection/>
+                    <CreateElection saveSubElection={saveSubElection}/>
                 </Grid>
             </Grid>
         </Responsive>
