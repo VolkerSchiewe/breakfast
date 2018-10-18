@@ -38,6 +38,11 @@ class Election(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def codes(self):
+        return ElectionUser.objects.filter(election=self).select_related('user').values_list('user__username',
+                                                                                             flat=True)
+
     async def send_results(self):
         channel_layer = layers.get_channel_layer()
         await channel_layer.group_send('election_%s' % self.pk, {
@@ -74,6 +79,7 @@ class Election(models.Model):
 
     def ballots_count(self):
         if self.subelection_set.all().count() == 0:
+            return 0
             raise ValueError('Election {} has no SubElections'.format(self))
         return int(len(set(Ballot.objects.filter(choice__sub_election__election=self).values_list(
             'choice__sub_election', 'user'))) / len(self.subelection_set.all()))
@@ -204,6 +210,10 @@ class Candidate(models.Model):
 
     def __str__(self):
         return str(self.sub_election) + ' - ' + str(self.name)
+
+    @property
+    def votes(self):
+        return Ballot.objects.filter(choice=self).count()
 
     def edit(self, name=None, image=None, set_default_image=False):
         if name:

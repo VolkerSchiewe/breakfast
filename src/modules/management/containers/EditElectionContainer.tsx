@@ -23,31 +23,7 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            subElections: [
-                {
-                    id: 0,
-                    name: "PT",
-                    candidates: [
-                        {
-                            id: 0,
-                            name: "Max",
-                            imageFile: "https://static.thenounproject.com/png/17241-200.png",
-                            votes: 10,
-                        },
-                        {
-                            id: 1,
-                            name: "Moritz",
-                            imageFile: "https://static.thenounproject.com/png/17241-200.png",
-                            votes: 3,
-                        },
-                    ],
-                },
-                {
-                    id: 1,
-                    name: "AeJ",
-                    candidates: [],
-                },
-            ],
+            subElections: [],
             modalCandidate: emptyCandidate,
             candidateModalOpen: false,
             snackbarOpen: false,
@@ -59,7 +35,7 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
         //TODO get election
         this.setState({
             election: {
-                id: electionId, name: "1. Durchgang",
+                id: electionId, title: "1. Durchgang",
                 isActive: true
             }
         })

@@ -51,7 +51,7 @@ export const EditElection = ({election, subElections, handleCandidate, handleNew
     <div>
         <Responsive edgeSize={2}>
             <Typography variant="h3" gutterBottom>
-                {election.name}
+                {election.title}
             </Typography>
             <Grid container>
                 {subElections.map(subElection => (

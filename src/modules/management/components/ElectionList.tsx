@@ -82,13 +82,13 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                     {elections.map(election => (
                             <TableRow key={election.id} className={styles.row}>
                                 <TableCell component="th" scope="row" onClick={() => handleRowClick(election.id)}>
-                                    {election.name}
+                                    {election.title}
                                 </TableCell>
                                 <TableCell onClick={() => handleRowClick(election.id)}>
                                     {election.candidateNames}
                                 </TableCell>
                                 <TableCell numeric onClick={() => handleRowClick(election.id)}>
-                                    {election.codes.length}
+                                    {election.codes && election.codes.length}
                                 </TableCell>
                                 <TableCell numeric onClick={() => handleRowClick(election.id)}>
                                     {election.voteCount}

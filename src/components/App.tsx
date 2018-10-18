@@ -1,15 +1,15 @@
 import * as React from "react";
 import {NavBar} from "../modules/layout/components/NavBar";
-import {Login} from "./Login";
-import {MuiThemeProvider} from "@material-ui/core/styles";
-import {theme} from "../modules/layout/styles/styles";
+import {LoginWithRouter} from "./Login";
 import {ElectionListContainerWithRouter} from "../modules/management/containers/ElectionListContainer";
 import {EditElectionContainer} from "../modules/management/containers/EditElectionContainer";
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 import {style} from "typestyle";
+import {ProtectedRoute} from "../modules/auth/components/ProtectedRoute";
+import {getToken} from "../modules/utils/http";
 
 interface AppState {
-    isLoggedIn: boolean
+    isAuthenticated: boolean
 }
 
 const styles = {
@@ -20,35 +20,35 @@ const styles = {
 };
 
 export class App extends React.Component<{}, AppState> {
-
     constructor(props) {
         super(props);
+        const token = getToken();
+        const isAuthenticated = token !== '' || token != undefined;
+
         this.state = {
-            isLoggedIn: false,
+            isAuthenticated: isAuthenticated,
         }
     }
 
     handleLogin() {
         this.setState({
-            isLoggedIn: true
+            isAuthenticated: true
         })
     }
 
     render() {
+        const {isAuthenticated} = this.state;
         return (
-            <MuiThemeProvider theme={theme}>
-                <Router>
-                    <div className={styles.root}>
-                        <NavBar title={"Wahlen"}/>
-                        {this.state.isLoggedIn ?
-                            <Route exact path="/" component={ElectionListContainerWithRouter}/>
-                            :
-                            <Route exact path="/" render={() => (<Login handleLogin={() => this.handleLogin()}/>)}/>
-                        }
-                        <Route exact path="/election/:electionId" component={EditElectionContainer}/>
-                    </div>
-                </Router>
-            </MuiThemeProvider>
+            <div className={styles.root}>
+                <NavBar title={"Wahlen"}/>
+                <Switch>
+                    <Route exact path="/login" component={LoginWithRouter}/>
+                    <ProtectedRoute isAuthenticated={isAuthenticated} path="/elections/:electionId"
+                                    component={EditElectionContainer}/>
+                    <ProtectedRoute exact path="/" component={ElectionListContainerWithRouter}
+                                    isAuthenticated={isAuthenticated}/>
+                </Switch>
+            </div>
         );
     }
 }

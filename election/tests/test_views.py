@@ -104,7 +104,7 @@ class CandidateViewTest(ElectionTestCase):
     def test_edit_candidate_post(self):
         self.client.login(username='admin', password='admin')
         candidate = Candidate.objects.order_by('pk').first()
-        response = self.client.post(reverse('edit_candidate', args={candidate.pk}), data={'name': 'NewName'})
+        response = self.client.post(reverse('edit_candidate', args={candidate.pk}), data={'title': 'NewName'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Candidate.objects.order_by('pk').first().name, 'NewName')
 

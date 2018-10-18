@@ -14,7 +14,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'please_override_me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-'=5u8p8*zc$w*0oa&e@0pd$l5)v+bl+4zm062zes&#*)3i(&(jf'
+
 ALLOWED_HOSTS = [
     'localhost',
     'ebu-breakfast.herokuapp.com',
@@ -25,6 +25,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'channels',
     'election.apps.ElectionConfig',
+    'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -32,6 +33,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'rest_framework',
+    'knox'
 ]
 
 MIDDLEWARE = [
@@ -85,13 +88,9 @@ DATABASES['default'].update(db_from_env)
 LOGIN_URL = "./login"
 
 LANGUAGE_CODE = 'de-de'
-
 TIME_ZONE = 'Europe/Berlin'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 USE_X_FORWARDED_HOST = True
@@ -105,8 +104,6 @@ STATICFILES_DIRS = [
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# AUTH_USER_MODEL = 'election.User'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
@@ -146,6 +143,12 @@ LOGGING = {
             'level': 'DEBUG',
         },
     },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'knox.auth.TokenAuthentication',
+    ),
 }
 
 if not DEBUG:

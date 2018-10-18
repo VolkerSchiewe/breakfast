@@ -1,13 +1,19 @@
-from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 from election.models import Election
 
 
 class ElectionConsumer(AsyncWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.election_id = ""
+        self.room_group_name = ""
+
     async def connect(self):
         self.election_id = self.scope['url_route']['kwargs']['election_id']
-        self.room_group_name = 'election_%s' % self.election_id
+        self.room_group_name = 'elections_%s' % self.election_id
 
         # Join room group
         await self.channel_layer.group_add(

@@ -1,19 +1,20 @@
 import * as React from "react";
 import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden/Hidden";
 import Paper from "@material-ui/core/Paper/Paper";
 import {style} from "typestyle";
 import Typography from "@material-ui/core/Typography/Typography";
 import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button/Button";
-import {RouteComponentProps} from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Responsive} from "../modules/layout/components/Responsive";
+import {storeToken} from "../modules/utils/http";
+import {AuthService} from "../modules/auth/services/auth-service";
 
-export interface LoginProps extends RouteComponentProps {
+interface LoginProps extends RouteComponentProps {
     handleLogin,
 }
 
-export interface LoginState {
+interface LoginState {
     code: string,
 }
 
@@ -24,11 +25,17 @@ const styles = {
     })
 };
 
-export class Login extends React.Component<LoginProps, LoginState> {
+class Login extends React.Component<LoginProps, LoginState> {
+    authService = new AuthService();
 
     handleLogin() {
-        console.log(this.state);
-        this.props.handleLogin()
+        this.authService.login('admin', 'admin').then(
+            res => {
+                console.log(res);
+                storeToken(res.token);
+                this.props.handleLogin();
+                this.props.history.push('/elections/')
+            });
     }
 
     render() {
@@ -57,3 +64,5 @@ export class Login extends React.Component<LoginProps, LoginState> {
         );
     }
 }
+
+export const LoginWithRouter = withRouter(Login);

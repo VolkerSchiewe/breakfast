@@ -1,6 +1,6 @@
 export interface Election {
     id: number
-    name: string
+    title: string
     candidateNames?: string
     codes?:string[]
     voteCount?:number

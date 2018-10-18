@@ -4,8 +4,9 @@
   "description": "Election Tool",
   "main": "index.tsx",
   "scripts": {
-    "dev": "parcel src/index.html",
-    "build": "parcel build src/index.html",
+    "start": "parcel src/index.html -d build/",
+    "dev": "parcel watch src/index.tsx -d election/static/build/",
+    "build": "parcel build src/index.tsx -d election/static/build/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,6 +37,9 @@
     "typestyle": "^2.0.1"
   },
   "devDependencies": {
+    "@types/react-router": "^4.0.32",
+    "@types/react-router-dom": "^4.3.1",
+    "sass": "^1.14.2",
     "typescript": "^3.1.1"
   }
 }

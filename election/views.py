@@ -19,6 +19,7 @@ from .models import Candidate, SubElection, User, Election, Image
 
 
 def home(request):
+    return render(request, 'react.html')
     if request.user.is_superuser:
         return redirect('elections_list')
     else:
@@ -191,7 +192,7 @@ def edit_candidate(request, candidate_id):
         form = CandidateForm(request.POST, request.FILES)
         if form.is_valid():
             image_file = form.cleaned_data.get('new_image')
-            name = form.cleaned_data.get('name')
+            name = form.cleaned_data.get('title')
             if image_file:
                 image, created = Image.objects.get_or_create(name=name)
                 image.file = image_file

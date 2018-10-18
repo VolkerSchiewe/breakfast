@@ -4,6 +4,7 @@ import {Election} from "../interfaces/Election";
 import {ElectionList} from "../components/ElectionList";
 import {RouteComponentProps, withRouter} from 'react-router';
 import {CreateElectionModal} from "../components/CreateElectionModal";
+import {ElectionService} from "../services/management-service";
 
 interface ElectionListContainerState {
     elections: Election[]
@@ -11,6 +12,8 @@ interface ElectionListContainerState {
 }
 
 class ElectionListContainer extends Component<RouteComponentProps, ElectionListContainerState> {
+    electionService = new ElectionService();
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -19,29 +22,9 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         }
     }
 
-    componentDidMount() {
-        this.setState({
-            elections: [
-                {
-                    id: 0,
-                    name: "1. Durchgang",
-                    candidateNames: "Max, Moritz",
-                    codes: ["cds", "csad"],
-                    voteCount: 2,
-                    isActive: false,
-
-                },
-                {
-                    id: 1,
-                    name: "2. Durchgang",
-                    candidateNames: "",
-                    codes: ["cds", "csad", "dasd", "asdas", "asd"],
-                    voteCount: 0,
-                    isActive: true
-                }
-            ]
-        })
-    }
+    handleRowClick = (id) => {
+        this.props.history.push(`/elections/${id}`);
+    };
 
     handleActiveChange = (id) => {
         const {elections} = this.state;
@@ -61,9 +44,36 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         // TODO show formatted codes in new tab
     };
 
-    handleRowClick = (id) => {
-        this.props.history.push(`/election/${id}`);
-    };
+    componentDidMount() {
+        this.electionService.getElections().then(
+            result => {
+                this.setState({
+                    elections: result,
+                })
+            }
+        );
+        // this.setState({
+        //     elections: [
+        //         {
+        //             id: 0,
+        //             title: "1. Durchgang",
+        //             candidateNames: "Max, Moritz",
+        //             codes: ["cds", "csad"],
+        //             voteCount: 2,
+        //             isActive: false,
+        //
+        //         },
+        //         {
+        //             id: 1,
+        //             title: "2. Durchgang",
+        //             candidateNames: "",
+        //             codes: ["cds", "csad", "dasd", "asdas", "asd"],
+        //             voteCount: 0,
+        //             isActive: true
+        //         }
+        //     ]
+        // })
+    }
 
     handleNewElection = () => {
         this.setState({
