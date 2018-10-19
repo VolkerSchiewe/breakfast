@@ -7,6 +7,10 @@ export function sendRequest(endpoint: string, method: string, headers?, body?: o
     }).then((response) => {
         if (response.ok)
             return response.json();
+        if (response.status == 401) {
+            deleteToken();
+            location.assign('/login/')
+        }
         response.json().then((res) => console.error('Error', res));
         throw Error(response.statusText);
     });
@@ -20,4 +24,8 @@ export function storeToken(token: string) {
 
 export function getToken() {
     return localStorage.getItem(TOKEN)
+}
+
+function deleteToken() {
+    localStorage.removeItem(TOKEN)
 }

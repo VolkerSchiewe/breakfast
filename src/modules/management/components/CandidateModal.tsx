@@ -24,6 +24,24 @@ interface CandidateModalState {
 }
 
 export class CandidateModal extends React.Component<CandidateModalProps, CandidateModalState> {
+    handleNameChange = (value) => {
+        const {candidate} = this.state;
+        let image = null;
+        if (candidate.image !== null && candidate.image !== undefined) {
+            image = {
+                ...candidate.image,
+                name: value,
+            };
+        }
+        this.setState({
+            candidate: {
+                ...candidate,
+                name: value,
+                image: image,
+            }
+        })
+    };
+
     handleClearImage = (event) => {
         event.stopPropagation();
         this.setState({
@@ -33,6 +51,7 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
             }
         });
     };
+
     handleImageChange = (files) => {
         if (files.length !== 0) {
             const reader = new FileReader();
@@ -50,17 +69,13 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
             reader.readAsDataURL(files[0]);
         }
     };
-    handleNameChange = (value) => {
-        this.setState({
-            candidate: {
-                ...this.state.candidate,
-                name: value,
-                image: {
-                    ...this.state.candidate.image,
-                    name: value,
-                }
-            }
-        })
+    submit = () => {
+        const {candidate} = this.state;
+        if (candidate.name !== '') {
+            console.log(candidate);
+            this.props.saveCandidate(candidate);
+        } else
+            this.setState({nameError: true});
     };
 
     constructor(props) {
@@ -70,13 +85,6 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
             nameError: false,
         };
     }
-    submit = () => {
-        const {candidate} = this.state;
-        if (candidate.name !== '')
-            this.props.saveCandidate(candidate);
-        else
-            this.setState({nameError: true});
-    };
 
     render() {
         const {isOpen, handleClose} = this.props;

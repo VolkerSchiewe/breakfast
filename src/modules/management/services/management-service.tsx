@@ -16,6 +16,10 @@ export class ElectionService {
         return sendRequest(ELECTIONS_API + electionId, 'GET', this.authHeader())
     }
 
+    updateElection(electionId: number): Promise<any> {
+        return sendRequest(ELECTIONS_API + electionId + '/set_active/', 'POST', this.authHeader())
+    }
+
     createElection(title: string, number: number): Promise<any> {
         return sendRequest(ELECTIONS_API + 'create_election/', 'POST', this.authHeader(),
             {

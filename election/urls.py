@@ -6,7 +6,8 @@ from . import views
 urlpatterns = [
     # /elections
     url(r'^get_candidate_image/(?P<candidate_id>\d+)$', views.get_candidate_image, name='get_candidate_image'),
-    url(r'^', views.home, name='home'),
+    url(r'^$', views.home, name='home'),
+    url(r'^elections/(?P<id>\d+)$', views.home, name='home'),
     # url(r'^election$', login_required(views.ElectionView.as_view()), name='election'),
     # url(r'^login$', views.login, name='login'),
     #

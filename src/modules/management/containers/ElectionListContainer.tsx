@@ -40,15 +40,8 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
 
     handleActiveChange = (id) => {
         const {elections} = this.state;
-
-        //TODO send to backend
-        elections.map((election) => {
-            if (election.id == id)
-                election.isActive = !election.isActive;
-            else
-                election.isActive = false;
-        });
-        this.setState({elections: elections});
+        this.electionService.updateElection(id)
+            .then(res => console.log(res));
     };
 
     handleCodesClick = (election) => {

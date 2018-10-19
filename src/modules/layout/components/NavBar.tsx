@@ -35,7 +35,7 @@ export const NavBar = ({title}: NavBarProps) => (
         <AppBar position="static">
             <Toolbar>
                 <img className={styles.img}
-                     src={"https://ebu-breakfast.herokuapp.com/static/images/jugend_schaf.png"}/>
+                     src={'/static/images/jugend_schaf.png'}/>
                 <Typography variant="h6" className={styles.text} component={MainLink}>
                     {title}
                 </Typography>

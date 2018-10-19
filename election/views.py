@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.files import File
 from django.db import transaction
 from django.db.models import QuerySet
@@ -15,10 +16,10 @@ from django.views import View
 from election.forms import LoginForm, CreateElectionForm, CreateSubElectionForm, ElectionForm, EditSubElectionForm, \
     CandidateForm
 from election.util import serve_file
-from .models import Candidate, SubElection, User, Election, Image
+from .models import Candidate, SubElection, Election, Image
 
 
-def home(request):
+def home(request, id=None):
     return render(request, 'react.html')
     if request.user.is_superuser:
         return redirect('elections_list')

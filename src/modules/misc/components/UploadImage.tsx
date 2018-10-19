@@ -14,9 +14,6 @@ interface UploadImageProps {
 }
 
 const styles = {
-    // container: style({
-    //     maxWidth: "min-content",
-    // }),
     avatar: style({
         width: 100,
         height: 100,
@@ -38,8 +35,8 @@ const styles = {
         color: "white",
     }),
 };
-// TODO serve with statics
-export const defaultImage = '/get_candidate_image/0'; //https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1'
+export const defaultImage = '/static/images/placeholder.png';
+//https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1'
 
 export const UploadImage = ({imagePreview, handleImageChange, handleClearImage}: UploadImageProps) => (
     <Dropzone onDrop={handleImageChange} accept="image/*" multiple={false}

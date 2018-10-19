@@ -15,7 +15,7 @@ class CandidateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_dict = validated_data.get('image')
-        image = Image.objects.create(name=image_dict.get('name'), file=image_dict.get('file'))
+        image = Image.objects.create(name=image_dict.get('name'), file=image_dict.get('file')) if image_dict else None
         return Candidate.objects.create(sub_election=validated_data.get('sub_election'),
                                         name=validated_data.get('name'), image=image)
 
