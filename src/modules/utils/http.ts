@@ -1,4 +1,6 @@
-export function sendRequest(endpoint: string, method: string, headers?, body?: object): Promise<any> {
+export function sendRequest(endpoint: string, method: string, body?: object, headers?, authHeaders: boolean = true): Promise<any> {
+    if (authHeaders)
+        headers = authHeader();
     return fetch(endpoint, {
         method: method,
         credentials: 'same-origin',
@@ -6,7 +8,10 @@ export function sendRequest(endpoint: string, method: string, headers?, body?: o
         body: JSON.stringify(body),
     }).then((response) => {
         if (response.ok)
-            return response.json();
+            if (response.status !== 204)
+                return response.json();
+            else
+                return '';
         if (response.status == 401) {
             deleteToken();
             location.assign('/login/')
@@ -14,6 +19,13 @@ export function sendRequest(endpoint: string, method: string, headers?, body?: o
         response.json().then((res) => console.error('Error', res));
         throw Error(response.statusText);
     });
+}
+
+export function authHeader() {
+    return {
+        'content-type': 'application/json',
+        'authorization': 'Token ' + getToken(),
+    };
 }
 
 export const TOKEN = 'token';
@@ -26,6 +38,6 @@ export function getToken() {
     return localStorage.getItem(TOKEN)
 }
 
-function deleteToken() {
+export function deleteToken() {
     localStorage.removeItem(TOKEN)
 }

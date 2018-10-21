@@ -4,6 +4,7 @@ import os
 import dj_database_url
 from django.contrib import messages
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -88,7 +89,7 @@ DATABASES['default'].update(db_from_env)
 
 LOGIN_URL = "./login"
 
-LANGUAGE_CODE = 'de-de'
+# LANGUAGE_CODE = 'de-de'
 TIME_ZONE = 'Europe/Berlin'
 USE_I18N = True
 USE_L10N = True
@@ -148,10 +149,15 @@ LOGGING = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
         'knox.auth.TokenAuthentication',
     ),
 }
+
+REST_KNOX = {
+    'USER_SERIALIZER': 'api.serializers.user.UserSerializer',
+}
+# USER_SERIALIZER = UserSerializer
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -5,17 +5,16 @@ import {style} from "typestyle";
 import Typography from "@material-ui/core/Typography/Typography";
 import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button/Button";
-import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Responsive} from "../modules/layout/components/Responsive";
-import {storeToken} from "../modules/utils/http";
-import {AuthService} from "../modules/auth/services/auth-service";
+import {AuthInterface, AuthConsumer} from "../modules/auth/components/AuthContext";
 
-interface LoginProps extends RouteComponentProps {
-    handleLogin,
+interface LoginProps {
 }
 
 interface LoginState {
-    code: string,
+    user: string
+    password: string
+    showAdminLogin: boolean
 }
 
 const styles = {
@@ -25,44 +24,70 @@ const styles = {
     })
 };
 
-class Login extends React.Component<LoginProps, LoginState> {
-    authService = new AuthService();
+export class Login extends React.Component<LoginProps, LoginState> {
+    toggleAdminView = () => {
+        const {showAdminLogin} = this.state;
+        this.setState({showAdminLogin: !showAdminLogin})
+    };
 
-    handleLogin() {
-        this.authService.login('admin', 'admin').then(
-            res => {
-                console.log(res);
-                storeToken(res.token);
-                this.props.handleLogin();
-                this.props.history.push('/')
-            });
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: '',
+            password: '',
+            showAdminLogin: false,
+        }
     }
 
     render() {
+        const {user, password, showAdminLogin} = this.state;
+        const userLabel = showAdminLogin ? 'Name' : 'Dein Code';
+        const pwd = showAdminLogin ? password : 'ebujugend';
         return (
-            <Responsive edgeSize={4}>
-                <Paper className={styles.paper}>
-                    <Grid container direction={"column"} alignItems={"center"} justify={"center"}>
-                        <Grid>
-                            <Typography variant={"h2"} align={"center"}>Login</Typography>
-                        </Grid>
-                        <Grid>
-                            <TextField
-                                id="code"
-                                label="Dein Code"
-                                margin="normal"
-                                variant={"outlined"}
-                                onChange={(event) => this.setState({code: event.target.value})}
-                            />
-                        </Grid>
-                        <Grid>
-                            <Button variant={"outlined"} onClick={() => this.handleLogin()}> Login</Button>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            </Responsive>
+            <AuthConsumer>
+                {({isAuthenticated, login}: AuthInterface) => (
+                    <Responsive edgeSize={4}>
+                        <Paper className={styles.paper}>
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                login(user, pwd)
+                            }}>
+                                <Grid container direction={"column"} alignItems={"center"} justify={"center"}>
+                                    <Grid>
+                                        <Typography variant={"h2"} align={"center"}>Login</Typography>
+                                    </Grid>
+                                    <Grid>
+                                        <TextField
+                                            required
+                                            value={user}
+                                            label={userLabel}
+                                            variant={"outlined"}
+                                            margin={"normal"}
+                                            onChange={(event) => this.setState({user: event.target.value})}
+                                        />
+                                    </Grid>
+                                    {showAdminLogin &&
+                                    <Grid>
+                                        <TextField
+                                            required
+                                            value={password}
+                                            label="Password"
+                                            margin="normal"
+                                            variant={"outlined"}
+                                            onChange={(event) => this.setState({password: event.target.value})}
+                                        />
+                                    </Grid>
+                                    }
+                                    {/*<Grid>*/}
+                                    <Button variant={"outlined"} type="submit" fullWidth> Login</Button>
+                                    {/*</Grid>*/}
+                                </Grid>
+                            </form>
+                        </Paper>
+                        <Typography onClick={this.toggleAdminView}>Admin</Typography>
+                    </Responsive>
+                )}
+            </AuthConsumer>
         );
     }
 }
-
-export const LoginWithRouter = withRouter(Login);
