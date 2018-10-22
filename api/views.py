@@ -1,18 +1,18 @@
+from django.contrib.auth import login
 from knox.views import LoginView as KnoxLoginView
-from rest_framework.authentication import BasicAuthentication
+from rest_framework import permissions, status
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.response import Response
 
 
 class LoginView(KnoxLoginView):
-    authentication_classes = [BasicAuthentication]
-#
-# class LoginView(generics.GenericAPIView):
-#     serializer_class = LoginUserSerializer
-#
-#     def post(self, request, format=None):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data
-#         return Response({
-#             "user": {"username": user.username, "isAdmin": user.is_staff},
-#             "token": AuthToken.objects.create(user)
-#         })
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            login(request, user)
+            return super(LoginView, self).post(request, format=None)
+        else:
+            return Response('Wrong credentials', status.HTTP_401_UNAUTHORIZED)

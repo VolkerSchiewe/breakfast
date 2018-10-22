@@ -78,9 +78,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                         />
                                     </Grid>
                                     }
-                                    {/*<Grid>*/}
                                     <Button variant={"outlined"} type="submit" fullWidth> Login</Button>
-                                    {/*</Grid>*/}
                                 </Grid>
                             </form>
                         </Paper>

@@ -1,3 +1,10 @@
+export const methods = {
+    GET: 'GET',
+    PATCH: 'PATCH',
+    POST: 'POST',
+    PUT: 'PUT',
+};
+
 export function sendRequest(endpoint: string, method: string, body?: object, headers?, authHeaders: boolean = true): Promise<any> {
     if (authHeaders)
         headers = authHeader();
@@ -12,10 +19,6 @@ export function sendRequest(endpoint: string, method: string, body?: object, hea
                 return response.json();
             else
                 return '';
-        if (response.status == 401) {
-            deleteToken();
-            location.assign('/login/')
-        }
         response.json().then((res) => console.error('Error', res));
         throw Error(response.statusText);
     });
@@ -39,5 +42,6 @@ export function getToken() {
 }
 
 export function deleteToken() {
-    localStorage.removeItem(TOKEN)
+    localStorage.removeItem(TOKEN);
+    localStorage.clear();
 }

@@ -1,4 +1,4 @@
-import {getToken, sendRequest} from "../../utils/http";
+import {methods, sendRequest} from "../../utils/http";
 import {Election} from "../interfaces/Election";
 import {SubElection} from "../interfaces/SubElection";
 import {Candidate} from "../interfaces/Candidate";
@@ -9,20 +9,20 @@ const CANDIDATES_API = '/api/candidates/';
 
 export class ElectionService {
     getElections(): Promise<Election[]> {
-        return sendRequest(ELECTIONS_API, 'GET');
+        return sendRequest(ELECTIONS_API, methods.GET);
     }
 
     getElection(electionId: number): Promise<Election> {
-        return sendRequest(ELECTIONS_API + electionId, 'GET')
+        return sendRequest(ELECTIONS_API + electionId, methods.GET)
     }
 
     updateElection(electionId: number): Promise<any> {
-        return sendRequest(ELECTIONS_API + electionId + '/set_active/', 'POST')
+        return sendRequest(ELECTIONS_API + electionId + '/set_active/', methods.POST)
     }
 
     createElection(title: string, number: number): Promise<any> {
         console.log(title, number);
-        return sendRequest(ELECTIONS_API + 'create_election/', 'POST',
+        return sendRequest(ELECTIONS_API + 'create_election/', methods.POST,
             {
                 title: title,
                 number: number,
@@ -30,11 +30,11 @@ export class ElectionService {
     }
 
     getSubElections(electionId: number): Promise<SubElection[]> {
-        return sendRequest(`${SUB_ELECTIONS_API}?election=${electionId}`, 'GET')
+        return sendRequest(`${SUB_ELECTIONS_API}?election=${electionId}`, methods.GET)
     }
 
     createSubElection(name: string, electionId: number): Promise<any> {
-        return sendRequest(SUB_ELECTIONS_API, 'POST', {
+        return sendRequest(SUB_ELECTIONS_API, methods.POST, {
                 election: electionId,
                 title: name
             }
@@ -42,10 +42,10 @@ export class ElectionService {
     }
 
     createCandidate(candidate: Candidate): Promise<any> {
-        return sendRequest(CANDIDATES_API, 'POST', candidate)
+        return sendRequest(CANDIDATES_API, methods.POST, candidate)
     }
 
     updateCandidate(candidate: Candidate): Promise<any> {
-        return sendRequest(CANDIDATES_API + candidate.id + '/', 'PATCH', candidate)
+        return sendRequest(CANDIDATES_API + candidate.id + '/', methods.PATCH, candidate)
     }
 }

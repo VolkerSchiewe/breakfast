@@ -4,8 +4,7 @@
   "description": "Election Tool",
   "main": "index.tsx",
   "scripts": {
-    "start": "parcel src/index.html -d build/",
-    "dev": "parcel watch src/index.tsx -d election/static/build/",
+    "start": "parcel watch src/index.tsx -d election/static/build/ --public-url ./",
     "build": "parcel build src/index.tsx -d election/static/build/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

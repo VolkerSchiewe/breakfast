@@ -35,7 +35,9 @@ class App extends React.Component<RouteComponentProps, AppState> {
                 });
                 this.props.history.push('/');
 
-            });
+            }).catch(e => {
+            console.log(e)
+        });
     };
     handleLogout = () => {
         this.setState({

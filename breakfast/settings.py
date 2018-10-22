@@ -149,7 +149,6 @@ LOGGING = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.BasicAuthentication',
         'knox.auth.TokenAuthentication',
     ),
 }
@@ -157,7 +156,6 @@ REST_FRAMEWORK = {
 REST_KNOX = {
     'USER_SERIALIZER': 'api.serializers.user.UserSerializer',
 }
-# USER_SERIALIZER = UserSerializer
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
