@@ -21,7 +21,6 @@ export class ElectionService {
     }
 
     createElection(title: string, number: number): Promise<any> {
-        console.log(title, number);
         return sendRequest(ELECTIONS_API + 'create_election/', methods.POST,
             {
                 title: title,

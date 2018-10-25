@@ -20,25 +20,14 @@ interface ElectionListContainerState {
 class ElectionListContainer extends Component<RouteComponentProps, ElectionListContainerState> {
     electionService = new ElectionService();
 
-    createElection = (title, number) => {
-        this.electionService.createElection(title, number)
-            .then(
-                res => {
-                    this.setState({
-                        snackbarOpen: false,
-                    });
-                    console.log(res)
-                }
-            );
-        this.setState({
-            electionModalOpen: false,
-            snackbarOpen: true,
-        });
-    };
     handleActiveChange = (id) => {
         this.electionService.updateElection(id)
-            .then(res => {
-            });
+            .then();
+    };
+    openNewElection = () => {
+        this.setState({
+            electionModalOpen: true
+        })
     };
 
     handleRowClick = (id) => {
@@ -53,6 +42,20 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         console.log(election.codes)
         // TODO show formatted codes in new tab
     };
+    createElection = (title, number) => {
+        this.electionService.createElection(title, number)
+            .then(
+                res => {
+                    this.setState({
+                        snackbarOpen: false,
+                    });
+                }
+            );
+        this.setState({
+            electionModalOpen: false,
+            snackbarOpen: true,
+        });
+    };
 
     constructor(props: any) {
         super(props);
@@ -64,20 +67,14 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         };
     }
 
-    handleNewElection = () => {
-        this.setState({
-            electionModalOpen: true
-        })
-    };
-
     componentDidMount() {
-        const ws = new Sockette('ws://localhost:8000/elections', {
+        new Sockette('ws://localhost:8000/elections', {
             timeout: 5e3,
             maxAttempts: 10,
-            onopen: e => console.log('Connected!', e),
+            onopen: () => console.log('Elections Connected!'),
             onmessage: this.onMessage,
-            onclose: e => console.log('Closed!', e),
-            onerror: e => console.log('Error:', e)
+            onclose: () => console.log('Elections Closed!'),
+            onerror: e => console.log('Elections Error:', e)
         });
     }
 
@@ -93,7 +90,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
                               handleActiveChange={this.handleActiveChange}
                               handleRowClick={this.handleRowClick}
                               handleCodesClick={this.handleCodesClick}
-                              handleNewElection={this.handleNewElection}/>
+                              handleNewElection={this.openNewElection}/>
                 <Snackbar open={snackbarOpen}
                           message={(
                               <Grid container alignItems={"center"}>

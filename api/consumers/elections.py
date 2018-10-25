@@ -1,12 +1,12 @@
 from asgiref.sync import async_to_sync
 from channels import layers
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from rest_framework.renderers import JSONRenderer
 
 from api.serializers.election import ElectionSerializer
-from election.models import Election
+from election.models import Election, ElectionUser
 
 ROOM_NAME = 'elections'
 
@@ -45,6 +45,8 @@ class ElectionConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=data.decode('utf-8'))
 
 
+@receiver(post_save, sender=ElectionUser)
+@receiver(post_delete, sender=Election)
 @receiver(post_save, sender=Election)
 def on_election_save(sender, instance, **kwargs):
     channel_layer = layers.get_channel_layer()

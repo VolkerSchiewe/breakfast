@@ -19,13 +19,6 @@ class Election(models.Model):
     def codes(self):
         return self.electionuser_set.select_related('user').values_list('user__username', flat=True)
 
-    # async def send_results(self):
-    #     channel_layer = layers.get_channel_layer()
-    #     await channel_layer.group_send('election_%s' % self.pk, {
-    #         'type': 'election_result',
-    #         'message': self.get_results()
-    #     })
-
     @staticmethod
     def get_next_title():
         return str(len(Election.objects.all()) + 1) + '. Durchgang'
@@ -37,26 +30,10 @@ class Election(models.Model):
         self.active = not self.active
         self.save()
 
-    # def get_results(self):
-    #     results = []
-    #     for sub_election in self.subelection_set.all():
-    #         sub_elections = {
-    #             'title': sub_election.title,
-    #             'short': sub_election.short,
-    #             'votes_count': self.ballots_count(),
-    #         }
-    #         candidates = {}
-    #         for candidate in Candidate.objects.filter(sub_election=sub_election):
-    #             candidates[candidate.name] = len(Ballot.objects.filter(choice=candidate))
-    #
-    #         sub_elections['results'] = candidates
-    #         results.append(sub_elections)
-    #     return results
-
     def ballots_count(self):
         if self.subelection_set.all().count() == 0:
             return 0
-            raise ValueError('Election {} has no SubElections'.format(self))
+            # raise ValueError('Election {} has no SubElections'.format(self))
         return int(len(set(Ballot.objects.filter(choice__sub_election__election=self).values_list(
             'choice__sub_election', 'user'))) / len(self.subelection_set.all()))
 
@@ -89,7 +66,7 @@ class Election(models.Model):
     def candidates_sorted(self):
         result = ''
         for sub_election in self.subelection_set.all():
-            result += '<b>{}</b>: {}; '.format(
+            result += '{}: {}\n'.format(
                 sub_election.title,
                 ', '.join(sub_election.candidate_set.all().values_list('name', flat=True)))
         return result

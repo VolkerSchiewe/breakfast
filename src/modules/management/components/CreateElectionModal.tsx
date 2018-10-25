@@ -27,6 +27,7 @@ export class CreateElectionModal extends React.Component<CreateElectionModalProp
         super(props);
         this.state = {
             title: '',
+            number: '',
             titleError: false,
             numberError: false,
         }

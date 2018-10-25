@@ -30,6 +30,11 @@ const emptyCandidate: Candidate = {name: ''};
 export class EditElectionContainer extends Component<any, EditElectionState> {
     electionService = new ElectionService();
 
+    handleDeleteCandidate = (candidate: Candidate) => {
+        this.electionService.deleteCandidate(candidate)
+            .then(() => this.setState({candidateModalOpen: false}))
+    };
+
     saveCandidate = (candidate: Candidate) => {
         this.setState({
             candidateModalOpen: false,
@@ -62,41 +67,38 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
             modalCandidate: candidateModal,
         })
     };
-    createSubElection = (name) => {
-        const electionId = this.props.match.params.electionId;
-        this.electionService.createSubElection(name, electionId)
-            .then(res => {
-                    console.log(res)
-                }
-            );
-    };
 
     handleCandidateModalClose = () => {
         this.setState({candidateModalOpen: false});
     };
-    handleDeleteElectionModal = () => {
+    openDeleteElectionModal = () => {
         this.setState({deleteDialogOpen: true})
-    };
-    handleDialogClose = () => {
-        this.setState({deleteDialogOpen: false, editDialogOpen: false})
     };
     handleDeleteElection = () => {
         const {election} = this.state;
         this.setState({deleteDialogOpen: false});
         this.electionService.deleteElection(election)
-            .then(() => this.props.history.push('/elections'));
+            .then(() =>
+                this.props.history.push('/elections'));
+    };
+
+    handleDialogClose = () => {
+        this.setState({deleteDialogOpen: false, editDialogOpen: false})
+    };
+    createSubElection = (name) => {
+        const electionId = this.props.match.params.electionId;
+        this.electionService.createSubElection(name, electionId)
+            .then();
     };
     onSubElectionMessage = (e) => {
         const data = JSON.parse(e.data);
         this.setState({subElections: data});
     };
-    handleDeleteCandidate = (candidate: Candidate) => {
-        this.electionService.deleteCandidate(candidate)
-            .then(() => this.setState({candidateModalOpen: false}))
-    };
+
     editSubElection = (subElection: SubElection) => {
         this.setState({editDialogOpen: true, modalSubElection: subElection})
     };
+
     changeSubElectionModal = (value: string) => {
         this.setState({
             modalSubElection: {
@@ -105,10 +107,12 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
             }
         })
     };
+
     saveSubElection = () => {
         this.electionService.updateSubElection(this.state.modalSubElection)
             .then(() => this.setState({editDialogOpen: false}));
     };
+
     deleteSubElection = () => {
         this.electionService.deleteSubElection(this.state.modalSubElection.id)
             .then(() => this.setState({editDialogOpen: false}));
@@ -129,19 +133,19 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
     componentDidMount() {
         const electionId = this.props.match.params.electionId;
-        const ws = new Sockette('ws://localhost:8000/elections/' + electionId, {
+        new Sockette('ws://localhost:8000/elections/' + electionId, {
             timeout: 5e3,
             maxAttempts: 10,
-            onopen: e => console.log('WebSocket Connected!'),
+            onopen: () => console.log('SubElections Connected!'),
             onmessage: this.onSubElectionMessage,
-            onclose: e => console.log('WebSocket Closed!'),
-            onerror: e => console.log('Error:', e)
+            onclose: () => console.log('SubElections Closed!'),
+            onerror: e => console.log('SubElections Error:', e)
         });
 
         this.electionService.getElection(electionId)
             .then(res => {
                 this.setState({election: res})
-            }).catch(res => this.props.history.push('/elections'));
+            }).catch(() => this.props.history.push('/elections'));
     }
 
     render() {
@@ -153,7 +157,7 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                               subElections={subElections}
                               openCandidateModal={this.openCandidateModal}
                               saveSubElection={this.createSubElection}
-                              deleteElection={this.handleDeleteElectionModal}
+                              deleteElection={this.openDeleteElectionModal}
                               editSubElection={this.editSubElection}
                 />
                 }

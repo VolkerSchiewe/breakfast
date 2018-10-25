@@ -75,7 +75,6 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                         <TableCell numeric>Abgegebene Stimmen</TableCell>
                         <TableCell>Aktiv</TableCell>
                         <TableCell/>
-                        <TableCell/>
                     </TableRow>
                 </TableHead>
                 <TableBody>

@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
+from api.consumers.elections import on_election_save
 from election.models import Election
 from api.serializers.election import ElectionSerializer
 
@@ -22,8 +23,7 @@ class ElectionViewSet(viewsets.ModelViewSet):
             raise ValidationError('Title or Number missing')
         election = Election.objects.create(title=title)
         election.create_users(number_of_codes)
-
-        return Response('Created!')
+        return Response()
 
     @action(methods=['post'], detail=True, permission_classes=[permissions.IsAdminUser])
     def set_active(self, request, pk):
@@ -35,4 +35,4 @@ class ElectionViewSet(viewsets.ModelViewSet):
             Election.objects.filter(active=True).update(active=False)
             election.active = True
             election.save()
-        return Response('done')
+        return Response()
