@@ -23,7 +23,7 @@ class ElectionViewSet(viewsets.ModelViewSet):
             raise ValidationError('Title or Number missing')
         election = Election.objects.create(title=title)
         election.create_users(number_of_codes)
-        return Response()
+        return Response("")
 
     @action(methods=['post'], detail=True, permission_classes=[permissions.IsAdminUser])
     def set_active(self, request, pk):
@@ -35,4 +35,4 @@ class ElectionViewSet(viewsets.ModelViewSet):
             Election.objects.filter(active=True).update(active=False)
             election.active = True
             election.save()
-        return Response()
+        return Response("")

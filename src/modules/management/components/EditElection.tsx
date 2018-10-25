@@ -63,7 +63,11 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                 <Typography variant="h3" gutterBottom>
                     {election.title}
                 </Typography>
-                <Button onClick={deleteElection}><Delete/></Button>
+                {!election.isActive ?
+                    <Button onClick={deleteElection}><Delete/></Button>
+                    :
+                    <Typography variant={"h6"}>Aktiv</Typography>
+                }
             </div>
             <Grid container>
                 {subElections.map(subElection => (
@@ -73,32 +77,40 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                                 <Typography variant={"h4"} align={"center"}>
                                     {subElection.title}
                                 </Typography>
+                                {!election.isActive &&
                                 <Button onClick={() => editSubElection(subElection)}>
                                     <Edit/>
                                 </Button>
+                                }
                             </Grid>
                             <Grid container>
                                 {subElection.candidates.map(candidate => (
                                         <Grid className={styles.candidate}
-                                              onClick={() => openCandidateModal(subElection.id, candidate)}
+                                              onClick={() => {
+                                                  if (!election.isActive) openCandidateModal(subElection.id, candidate)
+                                              }}
                                               key={candidate.id}>
                                             <CandidateView candidate={candidate}/>
                                         </Grid>
                                     )
                                 )}
+                                {!election.isActive &&
                                 <Grid className={cc([styles.addCandidate, styles.candidate])}
                                       onClick={() => openCandidateModal(subElection.id)}>
                                     <Add fontSize={"large"}/>
                                     <Typography align={"center"}>Neu</Typography>
                                 </Grid>
+                                }
                             </Grid>
                             <ResultView className={styles.results} subElection={subElection}/>
                         </Paper>
                     </Grid>
                 ))}
+                {!election.isActive &&
                 <Grid item xs={6} className={styles.grid}>
                     <CreateSubElection saveSubElection={saveSubElection}/>
                 </Grid>
+                }
             </Grid>
         </Responsive>
     </div>

@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import Sockette from 'sockette'
+import {openWebsocket} from "../../utils/websocket";
 
 interface ElectionListContainerState {
     elections: Election[]
@@ -68,14 +69,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
     }
 
     componentDidMount() {
-        new Sockette('ws://localhost:8000/elections', {
-            timeout: 5e3,
-            maxAttempts: 10,
-            onopen: () => console.log('Elections Connected!'),
-            onmessage: this.onMessage,
-            onclose: () => console.log('Elections Closed!'),
-            onerror: e => console.log('Elections Error:', e)
-        });
+        openWebsocket('elections', this.onMessage)
     }
 
     render() {

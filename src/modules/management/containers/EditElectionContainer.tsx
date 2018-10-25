@@ -10,8 +10,8 @@ import CircularProgress from "@material-ui/core/CircularProgress/CircularProgres
 import Grid from "@material-ui/core/Grid/Grid";
 import {ElectionService} from "../services/management-service";
 import {AlertDialog} from "../../layout/components/AlertDialog";
-import Sockette from "sockette"
 import TextField from "@material-ui/core/TextField/TextField";
+import {openWebsocket} from "../../utils/websocket";
 
 interface EditElectionState {
     election?: Election
@@ -133,17 +133,11 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
     componentDidMount() {
         const electionId = this.props.match.params.electionId;
-        new Sockette('ws://localhost:8000/elections/' + electionId, {
-            timeout: 5e3,
-            maxAttempts: 10,
-            onopen: () => console.log('SubElections Connected!'),
-            onmessage: this.onSubElectionMessage,
-            onclose: () => console.log('SubElections Closed!'),
-            onerror: e => console.log('SubElections Error:', e)
-        });
+        openWebsocket('elections/' + electionId, this.onSubElectionMessage);
 
         this.electionService.getElection(electionId)
             .then(res => {
+                console.log(res);
                 this.setState({election: res})
             }).catch(() => this.props.history.push('/elections'));
     }
