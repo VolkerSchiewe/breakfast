@@ -4,9 +4,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {style} from 'typestyle';
 import {Link} from "react-router-dom";
-import {withAuthContext} from "../../utils/context";
-import {AuthConsumer, AuthInterface} from "../../auth/components/AuthContext";
 import Button from "@material-ui/core/Button/Button";
+import {AuthConsumer} from "../../auth/components/AuthContext";
+import {AuthInterface} from "../../auth/interfaces/AuthInterface";
 
 interface NavBarProps {
     title: string
@@ -33,11 +33,12 @@ const styles = {
         color: "white",
     }),
 };
-const MainLink = props => (<Link to={'/'} {...props}/>);
+
+const MainLink = props => (<Link to={'/elections'} {...props}/>);
 export const NavBar = ({title}: NavBarProps) => (
     <div className={styles.root}>
         <AuthConsumer>
-            {({isAuthenticated, logout}: AuthInterface) => (
+            {({user, logout}: AuthInterface) => (
                 <AppBar position="static">
                     <Toolbar>
                         <img className={styles.img}
@@ -45,8 +46,8 @@ export const NavBar = ({title}: NavBarProps) => (
                         <Typography variant="h6" className={styles.text} component={MainLink}>
                             {title}
                         </Typography>
-                        {isAuthenticated &&
-                        <Button className={styles.logout} onClick={() => logout()}>Logout</Button>
+                        {user &&
+                        <Button className={styles.logout} onClick={() => logout()}>{"Logout " + user.username}</Button>
                         }
                     </Toolbar>
                 </AppBar>

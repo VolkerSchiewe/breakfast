@@ -1,5 +1,5 @@
 import {authHeader, methods, sendRequest} from "../../utils/http";
-import {LoginResponse} from "../interfaces/login-response";
+import {LoginResponse} from "../interfaces/LoginResponse";
 
 const LOGIN_API = '/api/login/';
 const LOGOUT_API = '/api/auth/logout/';

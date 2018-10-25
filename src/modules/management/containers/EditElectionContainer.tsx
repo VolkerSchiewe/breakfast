@@ -9,12 +9,19 @@ import {CandidateModal} from "../components/CandidateModal";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Grid from "@material-ui/core/Grid/Grid";
 import {ElectionService} from "../services/management-service";
+import {AlertDialog} from "../../layout/components/AlertDialog";
+import Sockette from "sockette"
+import TextField from "@material-ui/core/TextField/TextField";
 
 interface EditElectionState {
     election?: Election
     subElections: SubElection[]
     modalCandidate?: Candidate
+    modalSubElection?: SubElection
+
     candidateModalOpen: boolean
+    deleteDialogOpen: boolean
+    editDialogOpen: boolean
     snackbarOpen: boolean
 }
 
@@ -23,15 +30,25 @@ const emptyCandidate: Candidate = {name: ''};
 export class EditElectionContainer extends Component<any, EditElectionState> {
     electionService = new ElectionService();
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            subElections: [],
-            modalCandidate: emptyCandidate,
+    saveCandidate = (candidate: Candidate) => {
+        this.setState({
             candidateModalOpen: false,
-            snackbarOpen: false,
+            snackbarOpen: true,
+        });
+
+        if (candidate.id !== undefined) {
+            this.electionService.updateCandidate(candidate)
+                .then(() =>
+                    this.setState({snackbarOpen: false})
+                );
+        } else {
+            this.electionService.createCandidate(candidate)
+                .then(() =>
+                    this.setState({snackbarOpen: false}
+                    )
+                );
         }
-    }
+    };
 
     openCandidateModal = (subElectionId: number, candidate?: Candidate) => {
         if (candidate !== undefined)
@@ -45,66 +62,99 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
             modalCandidate: candidateModal,
         })
     };
-    saveCandidate = (candidate: Candidate) => {
-        this.setState({
-            candidateModalOpen: false,
-            snackbarOpen: true,
-        });
-
-        if (candidate.id !== undefined) {
-            this.electionService.updateCandidate(candidate)
-                .then(res =>
-                    this.setState({snackbarOpen: false})
-                );
-        } else {
-            this.electionService.createCandidate(candidate)
-                .then(res =>
-                    this.setState({snackbarOpen: false}
-                    )
-                );
-        }
-
-    };
-
-    handleCandidateModalClose = () => {
-        this.setState({candidateModalOpen: false});
-    };
-    saveSubElection = (name) => {
+    createSubElection = (name) => {
         const electionId = this.props.match.params.electionId;
-        console.log(name);
         this.electionService.createSubElection(name, electionId)
             .then(res => {
                     console.log(res)
                 }
             );
-
     };
+
+    handleCandidateModalClose = () => {
+        this.setState({candidateModalOpen: false});
+    };
+    handleDeleteElectionModal = () => {
+        this.setState({deleteDialogOpen: true})
+    };
+    handleDialogClose = () => {
+        this.setState({deleteDialogOpen: false, editDialogOpen: false})
+    };
+    handleDeleteElection = () => {
+        const {election} = this.state;
+        this.setState({deleteDialogOpen: false});
+        this.electionService.deleteElection(election)
+            .then(() => this.props.history.push('/elections'));
+    };
+    onSubElectionMessage = (e) => {
+        const data = JSON.parse(e.data);
+        this.setState({subElections: data});
+    };
+    handleDeleteCandidate = (candidate: Candidate) => {
+        this.electionService.deleteCandidate(candidate)
+            .then(() => this.setState({candidateModalOpen: false}))
+    };
+    editSubElection = (subElection: SubElection) => {
+        this.setState({editDialogOpen: true, modalSubElection: subElection})
+    };
+    changeSubElectionModal = (value: string) => {
+        this.setState({
+            modalSubElection: {
+                ...this.state.modalSubElection,
+                title: value,
+            }
+        })
+    };
+    saveSubElection = () => {
+        this.electionService.updateSubElection(this.state.modalSubElection)
+            .then(() => this.setState({editDialogOpen: false}));
+    };
+    deleteSubElection = () => {
+        this.electionService.deleteSubElection(this.state.modalSubElection.id)
+            .then(() => this.setState({editDialogOpen: false}));
+    };
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            subElections: [],
+            modalCandidate: null,
+            modalSubElection: null,
+            candidateModalOpen: false,
+            deleteDialogOpen: false,
+            editDialogOpen: false,
+            snackbarOpen: false,
+        }
+    }
 
     componentDidMount() {
         const electionId = this.props.match.params.electionId;
+        const ws = new Sockette('ws://localhost:8000/elections/' + electionId, {
+            timeout: 5e3,
+            maxAttempts: 10,
+            onopen: e => console.log('WebSocket Connected!'),
+            onmessage: this.onSubElectionMessage,
+            onclose: e => console.log('WebSocket Closed!'),
+            onerror: e => console.log('Error:', e)
+        });
+
         this.electionService.getElection(electionId)
             .then(res => {
                 this.setState({election: res})
-            });
-        this.electionService.getSubElections(electionId)
-            .then(
-                res => {
-                    this.setState({subElections: res});
-                }
-            );
+            }).catch(res => this.props.history.push('/elections'));
     }
 
-    public render() {
-        const {election, subElections, modalCandidate, candidateModalOpen, snackbarOpen} = this.state;
+    render() {
+        const {election, subElections, modalCandidate, modalSubElection, candidateModalOpen, deleteDialogOpen, editDialogOpen, snackbarOpen} = this.state;
         return (
             <div>
                 {election &&
                 <EditElection election={election}
                               subElections={subElections}
-
                               openCandidateModal={this.openCandidateModal}
-
-                              saveSubElection={this.saveSubElection}
+                              saveSubElection={this.createSubElection}
+                              deleteElection={this.handleDeleteElectionModal}
+                              editSubElection={this.editSubElection}
                 />
                 }
                 <Snackbar open={snackbarOpen}
@@ -116,9 +166,30 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                           )}/>
                 {candidateModalOpen &&
                 <CandidateModal isOpen={candidateModalOpen}
+                                isNew={modalCandidate == emptyCandidate}
                                 candidate={modalCandidate}
                                 handleClose={this.handleCandidateModalClose}
-                                saveCandidate={this.saveCandidate}/>
+                                saveCandidate={this.saveCandidate}
+                                handleDelete={this.handleDeleteCandidate}/>
+                }
+                {deleteDialogOpen &&
+                <AlertDialog isOpen={deleteDialogOpen}
+                             title={'Wahlgang löschen?'}
+                             handleClose={this.handleDialogClose}
+                             handleOk={this.handleDeleteElection}/>
+                }
+                {editDialogOpen &&
+                <AlertDialog isOpen={editDialogOpen}
+                             title={'Wahl ändern'}
+                             body={<TextField variant={"outlined"}
+                                              label={'Name'}
+                                              margin={"normal"}
+                                              value={modalSubElection.title}
+                                              onChange={(e) => this.changeSubElectionModal(e.target.value)}/>}
+                             deleteButton={true}
+                             handleClose={this.handleDialogClose}
+                             handleOk={this.saveSubElection}
+                             handleDelete={this.deleteSubElection}/>
                 }
             </div>
         )

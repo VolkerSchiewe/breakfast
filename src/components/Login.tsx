@@ -6,13 +6,14 @@ import Typography from "@material-ui/core/Typography/Typography";
 import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button/Button";
 import {Responsive} from "../modules/layout/components/Responsive";
-import {AuthInterface, AuthConsumer} from "../modules/auth/components/AuthContext";
+import {AuthConsumer} from "../modules/auth/components/AuthContext";
+import {AuthInterface} from "../modules/auth/interfaces/AuthInterface";
 
 interface LoginProps {
 }
 
 interface LoginState {
-    user: string
+    username: string
     password: string
     showAdminLogin: boolean
 }
@@ -33,24 +34,24 @@ export class Login extends React.Component<LoginProps, LoginState> {
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
+            username: '',
             password: '',
             showAdminLogin: false,
         }
     }
 
     render() {
-        const {user, password, showAdminLogin} = this.state;
+        const {username, password, showAdminLogin} = this.state;
         const userLabel = showAdminLogin ? 'Name' : 'Dein Code';
         const pwd = showAdminLogin ? password : 'ebujugend';
         return (
             <AuthConsumer>
-                {({isAuthenticated, login}: AuthInterface) => (
+                {({login, error}: AuthInterface) => (
                     <Responsive edgeSize={4}>
                         <Paper className={styles.paper}>
                             <form onSubmit={(e) => {
                                 e.preventDefault();
-                                login(user, pwd)
+                                login(username, pwd)
                             }}>
                                 <Grid container direction={"column"} alignItems={"center"} justify={"center"}>
                                     <Grid>
@@ -59,11 +60,12 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                     <Grid>
                                         <TextField
                                             required
-                                            value={user}
+                                            value={username}
+                                            error={error != null}
                                             label={userLabel}
                                             variant={"outlined"}
                                             margin={"normal"}
-                                            onChange={(event) => this.setState({user: event.target.value})}
+                                            onChange={(event) => this.setState({username: event.target.value})}
                                         />
                                     </Grid>
                                     {showAdminLogin &&
@@ -71,6 +73,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                         <TextField
                                             required
                                             value={password}
+                                            error={error != null}
                                             label="Password"
                                             margin="normal"
                                             variant={"outlined"}

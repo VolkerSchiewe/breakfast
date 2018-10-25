@@ -8,19 +8,24 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import Paper from "@material-ui/core/Paper/Paper";
 import {CandidateView} from "./CandidateView";
-import {Add} from "@material-ui/icons";
+import {Add, Delete, Edit} from "@material-ui/icons";
 import {ResultView} from "./ResultView";
 import cc from "classcat"
-import {CreateElection} from "./CreateElection";
+import {CreateSubElection} from "./CreateSubElection";
 import {Candidate} from "../interfaces/Candidate";
+import Button from "@material-ui/core/Button/Button";
 
 interface ElectionListProps {
     election: Election
     subElections: SubElection[]
 
+    deleteElection(electionId)
+
     openCandidateModal(subElectionId: number, candidate?: Candidate)
 
     saveSubElection(name: string)
+
+    editSubElection(subElection: SubElection)
 }
 
 const styles = ({
@@ -45,30 +50,42 @@ const styles = ({
     results: style({
         marginTop: 20,
     }),
+    header: style({
+        display: "flex",
+        justifyContent: "space-between",
+    }),
 });
 
-export const EditElection = ({election, subElections, openCandidateModal, saveSubElection}: ElectionListProps) => (
+export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, deleteElection}: ElectionListProps) => (
     <div>
         <Responsive edgeSize={2}>
-            <Typography variant="h3" gutterBottom>
-                {election.title}
-            </Typography>
+            <div className={styles.header}>
+                <Typography variant="h3" gutterBottom>
+                    {election.title}
+                </Typography>
+                <Button onClick={deleteElection}><Delete/></Button>
+            </div>
             <Grid container>
                 {subElections.map(subElection => (
                     <Grid item xs={6} className={styles.grid} key={subElection.id}>
                         <Paper className={styles.paper}>
-                            <Typography variant={"h4"} align={"center"}>
-                                {subElection.title}
-                            </Typography>
+                            <Grid container direction={"row"} justify={"space-between"}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    {subElection.title}
+                                </Typography>
+                                <Button onClick={() => editSubElection(subElection)}>
+                                    <Edit/>
+                                </Button>
+                            </Grid>
                             <Grid container>
                                 {subElection.candidates.map(candidate => (
-                                    <Grid className={styles.candidate}
-                                          onClick={() => openCandidateModal(subElection.id, candidate)}
-                                          key={candidate.id}>
-                                        <CandidateView candidate={candidate}/>
-                                    </Grid>
-                                ))
-                                }
+                                        <Grid className={styles.candidate}
+                                              onClick={() => openCandidateModal(subElection.id, candidate)}
+                                              key={candidate.id}>
+                                            <CandidateView candidate={candidate}/>
+                                        </Grid>
+                                    )
+                                )}
                                 <Grid className={cc([styles.addCandidate, styles.candidate])}
                                       onClick={() => openCandidateModal(subElection.id)}>
                                     <Add fontSize={"large"}/>
@@ -80,7 +97,7 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                     </Grid>
                 ))}
                 <Grid item xs={6} className={styles.grid}>
-                    <CreateElection saveSubElection={saveSubElection}/>
+                    <CreateSubElection saveSubElection={saveSubElection}/>
                 </Grid>
             </Grid>
         </Responsive>

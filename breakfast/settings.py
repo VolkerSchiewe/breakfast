@@ -89,7 +89,7 @@ DATABASES['default'].update(db_from_env)
 
 LOGIN_URL = "./login"
 
-# LANGUAGE_CODE = 'de-de'
+LANGUAGE_CODE = 'de-de'
 TIME_ZONE = 'Europe/Berlin'
 USE_I18N = True
 USE_L10N = True

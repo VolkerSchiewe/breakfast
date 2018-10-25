@@ -8,9 +8,11 @@ import {ElectionService} from "../services/management-service";
 import Grid from "@material-ui/core/Grid/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import Sockette from 'sockette'
 
 interface ElectionListContainerState {
     elections: Election[]
+    modalElection?: Election
     electionModalOpen: boolean
     snackbarOpen: boolean
 }
@@ -18,7 +20,7 @@ interface ElectionListContainerState {
 class ElectionListContainer extends Component<RouteComponentProps, ElectionListContainerState> {
     electionService = new ElectionService();
 
-    saveElection = (title, number) => {
+    createElection = (title, number) => {
         this.electionService.createElection(title, number)
             .then(
                 res => {
@@ -33,15 +35,18 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
             snackbarOpen: true,
         });
     };
+    handleActiveChange = (id) => {
+        this.electionService.updateElection(id)
+            .then(res => {
+            });
+    };
 
     handleRowClick = (id) => {
         this.props.history.push(`/elections/${id}`);
     };
-
-    handleActiveChange = (id) => {
-        const {elections} = this.state;
-        this.electionService.updateElection(id)
-            .then(res => console.log(res));
+    onMessage = (e) => {
+        const data = JSON.parse(e.data);
+        this.setState({elections: data});
     };
 
     handleCodesClick = (election) => {
@@ -49,35 +54,14 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         // TODO show formatted codes in new tab
     };
 
-    componentDidMount() {
-        this.electionService.getElections().then(
-            result => {
-                this.setState({
-                    elections: result,
-                })
-            }
-        );
-        // this.setState({
-        //     elections: [
-        //         {
-        //             id: 0,
-        //             title: "1. Durchgang",
-        //             candidateNames: "Max, Moritz",
-        //             codes: ["cds", "csad"],
-        //             voteCount: 2,
-        //             isActive: false,
-        //
-        //         },
-        //         {
-        //             id: 1,
-        //             title: "2. Durchgang",
-        //             candidateNames: "",
-        //             codes: ["cds", "csad", "dasd", "asdas", "asd"],
-        //             voteCount: 0,
-        //             isActive: true
-        //         }
-        //     ]
-        // })
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            elections: [],
+            modalElection: null,
+            electionModalOpen: false,
+            snackbarOpen: false,
+        };
     }
 
     handleNewElection = () => {
@@ -86,16 +70,18 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         })
     };
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            elections: [],
-            electionModalOpen: false,
-            snackbarOpen: false,
-        }
+    componentDidMount() {
+        const ws = new Sockette('ws://localhost:8000/elections', {
+            timeout: 5e3,
+            maxAttempts: 10,
+            onopen: e => console.log('Connected!', e),
+            onmessage: this.onMessage,
+            onclose: e => console.log('Closed!', e),
+            onerror: e => console.log('Error:', e)
+        });
     }
 
-    public render() {
+    render() {
         const {elections, electionModalOpen, snackbarOpen} = this.state;
         let activeElectionId = undefined;
         const activeElection = elections.filter((election) => election.isActive);
@@ -120,7 +106,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
                                      handleClose={() => {
                                          this.setState({electionModalOpen: false})
                                      }}
-                                     saveElection={this.saveElection}/>
+                                     saveElection={this.createElection}/>
                 }
             </div>
         );

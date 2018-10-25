@@ -1,13 +1,14 @@
 import * as React from "react";
 import {Route, Redirect} from "react-router-dom";
-import {AuthConsumer, AuthInterface} from "./AuthContext";
+import {AuthConsumer} from "./AuthContext";
+import {AuthInterface} from "../interfaces/AuthInterface";
 
 export const ProtectedRoute = ({component: ChildComponent, ...rest}) => {
     return <Route {...rest} render={props => (
         <AuthConsumer>
-            {({isAuthenticated}: AuthInterface) => (
+            {({user}: AuthInterface) => (
                 <div>
-                    {isAuthenticated ? (
+                    {user ? (
                         <ChildComponent {...props}/>
                     ) : (
                         <Redirect to="/login/"/>

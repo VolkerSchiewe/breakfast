@@ -3,7 +3,9 @@ export const methods = {
     PATCH: 'PATCH',
     POST: 'POST',
     PUT: 'PUT',
+    DELETE: 'DELETE',
 };
+
 
 export function sendRequest(endpoint: string, method: string, body?: object, headers?, authHeaders: boolean = true): Promise<any> {
     if (authHeaders)
@@ -14,13 +16,13 @@ export function sendRequest(endpoint: string, method: string, body?: object, hea
         headers: headers,
         body: JSON.stringify(body),
     }).then((response) => {
-        if (response.ok)
+        if (response.ok) {
             if (response.status !== 204)
                 return response.json();
             else
                 return '';
-        response.json().then((res) => console.error('Error', res));
-        throw Error(response.statusText);
+        }
+        throw response;
     });
 }
 
@@ -34,10 +36,12 @@ export function authHeader() {
 export const TOKEN = 'token';
 
 export function storeToken(token: string) {
+    //todo store creation date
     localStorage.setItem(TOKEN, token)
 }
 
 export function getToken() {
+    // todo validate creation date
     return localStorage.getItem(TOKEN)
 }
 

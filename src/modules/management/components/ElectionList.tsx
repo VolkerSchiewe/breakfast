@@ -12,7 +12,6 @@ import {
 } from "@material-ui/core";
 import {style} from "typestyle";
 import {theme} from "../../layout/styles/styles";
-import {Link} from "react-router-dom";
 import {OpenInNew, Add} from "@material-ui/icons"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -76,6 +75,7 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                         <TableCell numeric>Abgegebene Stimmen</TableCell>
                         <TableCell>Aktiv</TableCell>
                         <TableCell/>
+                        <TableCell/>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -117,6 +117,5 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                 </Button>
             </Grid>
         </Paper>
-
     </div>
 );

@@ -36,7 +36,7 @@ class CandidateSerializer(serializers.ModelSerializer):
                 if image_name:
                     instance.image.name = image_name
             instance.image.save()
-        else:
+        elif instance.image:
             instance.image.delete()
             instance.image = None
         instance.save()

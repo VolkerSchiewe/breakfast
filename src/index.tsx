@@ -13,5 +13,4 @@ ReactDOM.render(
         </BrowserRouter>
     </MuiThemeProvider>,
     document.getElementById("container")
-)
-;
+);

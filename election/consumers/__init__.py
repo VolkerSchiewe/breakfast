@@ -1,2 +1,0 @@
-from election.consumers.election import ElectionConsumer
-from election.consumers.election_list import ElectionListConsumer

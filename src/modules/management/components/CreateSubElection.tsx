@@ -5,7 +5,6 @@ import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button/Button";
 import Paper from "@material-ui/core/Paper/Paper";
 import {style} from "typestyle";
-import {ElectionService} from "../services/management-service";
 
 interface CreateElectionState {
     name?: string
@@ -25,7 +24,16 @@ const styles = {
     }),
 };
 
-export class CreateElection extends React.Component<CreateElectionProps, CreateElectionState> {
+export class CreateSubElection extends React.Component<CreateElectionProps, CreateElectionState> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            nameError: false,
+            name: ''
+        }
+    }
+
     handleNewElection = () => {
         const {name} = this.state;
         if (name !== '' && name !== undefined) {
@@ -35,14 +43,6 @@ export class CreateElection extends React.Component<CreateElectionProps, CreateE
         } else
             this.setState({nameError: true})
     };
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            nameError: false,
-            name: ''
-        }
-    }
 
     handleNameChange = (newValue) => {
         this.setState({name: newValue})

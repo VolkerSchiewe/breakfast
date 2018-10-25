@@ -8,12 +8,17 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
 import {defaultImage, UploadImage} from "../../misc/components/UploadImage";
 import {Candidate} from "../interfaces/Candidate";
+import {style} from "typestyle";
+import {Delete} from "@material-ui/icons";
 
 interface CandidateModalProps {
     isOpen: boolean
     candidate: Candidate
+    isNew: boolean
 
     handleClose()
+
+    handleDelete(candidate)
 
     saveCandidate(candidate)
 }
@@ -24,6 +29,15 @@ interface CandidateModalState {
 }
 
 export class CandidateModal extends React.Component<CandidateModalProps, CandidateModalState> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            candidate: props.candidate,
+            nameError: false,
+        };
+    }
+
     handleNameChange = (value) => {
         const {candidate} = this.state;
         let image = null;
@@ -78,16 +92,8 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
             this.setState({nameError: true});
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            candidate: props.candidate,
-            nameError: false,
-        };
-    }
-
     render() {
-        const {isOpen, handleClose} = this.props;
+        const {isOpen, isNew, handleClose, handleDelete} = this.props;
         const {candidate, nameError} = this.state;
         return (
             <div>
@@ -112,6 +118,11 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
                         </Grid>
                     </DialogContent>
                     <DialogActions>
+                        {!isNew &&
+                        <Button onClick={() => handleDelete(candidate)}>
+                            <Delete/>
+                        </Button>
+                        }
                         <Button onClick={handleClose} color="default">
                             Abbrechen
                         </Button>
