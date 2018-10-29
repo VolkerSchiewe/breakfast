@@ -17,6 +17,7 @@ interface NavBarProps {
 const styles = {
     root: style({
         flexGrow: 1,
+        marginBottom: 50
     }),
     img: style({
         width: 50,
@@ -39,14 +40,14 @@ export const NavBar = ({title}: NavBarProps) => (
     <div className={styles.root}>
         <AuthConsumer>
             {({user, logout}: AuthInterface) => (
-                <AppBar position="static">
+                <AppBar position="fixed">
                     <Toolbar>
                         <img className={styles.img}
                              src={'/static/images/jugend_schaf.png'}/>
                         <Typography variant="h6" className={styles.text} component={MainLink}>
                             {title}
                         </Typography>
-                        {user &&
+                        {user && user.isAdmin &&
                         <Button className={styles.logout} onClick={() => logout()}>{"Logout " + user.username}</Button>
                         }
                     </Toolbar>

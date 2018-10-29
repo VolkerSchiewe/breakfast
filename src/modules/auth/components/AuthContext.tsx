@@ -32,7 +32,8 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
                     user: res.user,
                     isLoading: false,
                 });
-                this.props.history.push('/elections');
+                this.props.history.push('');
+
             })
             .catch(err => {
                 err.json().then(res =>
@@ -66,7 +67,8 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
         super(props);
         const token = getToken();
         this.state = {
-            user: token ? {username: '', isAdmin: true} : null,
+            // TODO init user
+            user: token ? {username: '', isAdmin: false} : null,
             error: null,
             isLoading: false,
             snackbarOpen: false,
