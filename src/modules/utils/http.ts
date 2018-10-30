@@ -1,3 +1,5 @@
+import {getToken} from "./auth";
+
 export const methods = {
     GET: 'GET',
     PATCH: 'PATCH',
@@ -31,21 +33,4 @@ export function authHeader() {
         'content-type': 'application/json',
         'authorization': 'Token ' + getToken(),
     };
-}
-
-export const TOKEN = 'token';
-
-export function storeToken(token: string) {
-    //todo store creation date
-    localStorage.setItem(TOKEN, token)
-}
-
-export function getToken() {
-    // todo validate creation date
-    return localStorage.getItem(TOKEN)
-}
-
-export function deleteToken() {
-    localStorage.removeItem(TOKEN);
-    localStorage.clear();
 }

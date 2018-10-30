@@ -86,7 +86,6 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
     submit = () => {
         const {candidate} = this.state;
         if (candidate.name !== '') {
-            console.log(candidate);
             this.props.saveCandidate(candidate);
         } else
             this.setState({nameError: true});

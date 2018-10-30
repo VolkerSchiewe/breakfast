@@ -3,7 +3,6 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from api.consumers.elections import on_election_save
 from election.models import Election
 from api.serializers.election import ElectionSerializer
 

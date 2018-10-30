@@ -30,7 +30,7 @@ export class ResultView extends React.Component<ResultViewProps, {}> {
             }
         };
         const votes = subElection.candidates.map((c) => c.votes);
-        const hasResults = votes.some(x => x !== null) && votes.every(x => x !== 0);
+        const hasResults = votes.every(x => x !== null) && votes.some(x => x !== 0);
         return (
             <div className={className}>
                 <Typography variant={"h5"}>Ergebnisse</Typography>

@@ -110,12 +110,16 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
     saveSubElection = () => {
         this.electionService.updateSubElection(this.state.modalSubElection)
-            .then(() => this.setState({editDialogOpen: false}));
+            .then(() =>
+                this.setState({editDialogOpen: false})
+            );
     };
 
     deleteSubElection = () => {
         this.electionService.deleteSubElection(this.state.modalSubElection.id)
-            .then(() => this.setState({editDialogOpen: false}));
+            .then(() =>
+                this.setState({editDialogOpen: false})
+            );
     };
 
     constructor(props: any) {
@@ -137,9 +141,10 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
         this.electionService.getElection(electionId)
             .then(res => {
-                console.log(res);
                 this.setState({election: res})
-            }).catch(() => this.props.history.push('/elections'));
+            })
+            .catch(() =>
+                this.props.history.push('/elections/'));
     }
 
     render() {

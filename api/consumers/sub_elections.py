@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from rest_framework.renderers import JSONRenderer
 
 from api.serializers.subelection import SubElectionSerializer
-from election.models import SubElection, Candidate
+from election.models import SubElection, Candidate, Ballot
 
 
 class SubElectionConsumer(AsyncWebsocketConsumer):
@@ -50,6 +50,7 @@ class SubElectionConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=data.decode('utf-8'))
 
 
+@receiver(post_save, sender=Ballot)
 @receiver(post_save, sender=SubElection)
 @receiver(post_delete, sender=SubElection)
 @receiver(post_delete, sender=Candidate)
@@ -59,6 +60,8 @@ def on_sub_election_save(sender, instance, **kwargs):
         election_id = instance.election.id
     elif isinstance(instance, Candidate):
         election_id = instance.sub_election.election.id
+    elif isinstance(instance, Ballot):
+        election_id = instance.user.election.id
     else:
         raise Exception('Wrong instance type')
 

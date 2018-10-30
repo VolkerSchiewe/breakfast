@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {AuthInterface} from "../interfaces/AuthInterface";
-import {deleteToken, getToken, storeToken} from "../../utils/http";
 import {AuthService} from "../services/auth-service";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import {deleteUserData, getUserData, storeUserData} from "../../utils/auth";
 
 interface AuthProviderState extends AuthInterface {
     snackbarOpen: boolean
@@ -11,7 +11,7 @@ interface AuthProviderState extends AuthInterface {
 
 const {Provider, Consumer} = React.createContext<AuthInterface>({
     isLoading: false,
-    login: (user, password) => {
+    login: (user: string, password: string) => {
         throw new Error('login() not implemented');
     },
     logout: () => {
@@ -27,12 +27,13 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
         this.setState({isLoading: false, error: null});
         this.authService.login(name, password)
             .then(res => {
-                storeToken(res.token);
+                storeUserData(res.user, res.token);
                 this.setState({
                     user: res.user,
                     isLoading: false,
                 });
-                this.props.history.push('');
+                const to = res.user.isAdmin ? '/elections/' : '/';
+                this.props.history.push(to);
 
             })
             .catch(err => {
@@ -48,27 +49,27 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
             error: null,
         });
         this.authService.logout()
-            .then(res => {
-                deleteToken();
+            .then(() => {
+                deleteUserData();
                 this.setState({isLoading: false, error: null});
-                this.props.history.push('/login/')
+                this.props.history.replace('/login/')
             })
             .catch(err => {
                 err.json().then(res =>
-                    this.setState({isLoading: false, error: err.message, snackbarOpen: true})
+                    this.setState({isLoading: false, error: res, snackbarOpen: true})
                 )
             })
     };
+
     onSnackbarClose = () => {
         this.setState({snackbarOpen: false})
     };
 
     constructor(props) {
         super(props);
-        const token = getToken();
+        const user = getUserData();
         this.state = {
-            // TODO init user
-            user: token ? {username: '', isAdmin: false} : null,
+            user: user,
             error: null,
             isLoading: false,
             snackbarOpen: false,

@@ -35,7 +35,8 @@ const styles = {
     }),
 };
 
-const MainLink = props => (<Link to={'/elections'} {...props}/>);
+const AdminLink = props => (<Link to={'/elections/'} {...props}/>);
+const LoginLink = props => (<Link to={'/login/'} {...props}/>);
 export const NavBar = ({title}: NavBarProps) => (
     <div className={styles.root}>
         <AuthConsumer>
@@ -44,7 +45,8 @@ export const NavBar = ({title}: NavBarProps) => (
                     <Toolbar>
                         <img className={styles.img}
                              src={'/static/images/jugend_schaf.png'}/>
-                        <Typography variant="h6" className={styles.text} component={MainLink}>
+                        <Typography variant="h6" className={styles.text}
+                                    component={user && user.isAdmin ? AdminLink : LoginLink}>
                             {title}
                         </Typography>
                         {user && user.isAdmin &&
