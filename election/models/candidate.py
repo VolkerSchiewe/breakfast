@@ -12,17 +12,8 @@ class Candidate(models.Model):
         ordering = ['name']
 
     def __str__(self):
-        return str(self.sub_election) + ' - ' + str(self.name)
+        return '{} - {}'.format(self.sub_election, self.name)
 
     @property
     def votes(self):
         return self.ballot_set.count()
-
-    def edit(self, name=None, image=None, set_default_image=False):
-        if name:
-            self.name = name
-        if image:
-            self.image = image
-        if set_default_image:
-            self.image = None
-        self.save()

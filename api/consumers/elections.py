@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from rest_framework.renderers import JSONRenderer
 
 from api.serializers.election import ElectionSerializer
-from election.models import Election, ElectionUser
+from election.models import Election, ElectionUser, Ballot
 
 ROOM_NAME = 'elections'
 
@@ -24,6 +24,9 @@ class ElectionConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        if not self.scope.get('user').is_staff:
+            await self.close()
+            return
 
         await self.accept()
 
@@ -45,6 +48,7 @@ class ElectionConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=data.decode('utf-8'))
 
 
+@receiver(post_save, sender=Ballot)
 @receiver(post_save, sender=ElectionUser)
 @receiver(post_delete, sender=Election)
 @receiver(post_save, sender=Election)

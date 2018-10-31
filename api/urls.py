@@ -2,10 +2,10 @@ from django.conf.urls import url
 from django.urls import include
 from rest_framework.routers import DefaultRouter
 
-from api.view_sets.candidate import CandidateViewSet
-from api.view_sets.election import ElectionViewSet
-from api.view_sets.subelection import SubElectionViewSet
-from api.views import LoginView
+from api.views.candidate import CandidateViewSet
+from api.views.election import ElectionViewSet
+from api.views.login import LoginView
+from api.views.subelection import SubElectionViewSet
 
 router = DefaultRouter()
 router.register(r'elections', ElectionViewSet)

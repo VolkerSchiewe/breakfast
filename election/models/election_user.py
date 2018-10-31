@@ -49,7 +49,6 @@ class ElectionUser(models.Model):
 
 
 @receiver(post_save, sender=User)
-def create_election_user(sender, **kwargs):
-    user = kwargs["instance"]
-    if kwargs["created"]:
-        ElectionUser.objects.get_or_create(user=user)
+def create_election_user(sender, instance, created, **kwargs):
+    if created:
+        ElectionUser.objects.get_or_create(user=instance)

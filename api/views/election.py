@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from django.utils.translation import ugettext as _
 
 from election.models import Election
 from api.serializers.election import ElectionSerializer
@@ -18,8 +19,9 @@ class ElectionViewSet(viewsets.ModelViewSet):
     def create_election(self, request):
         title = request.data.get('title')
         number_of_codes = int(request.data.get('number'))
-        if not number_of_codes:
-            raise ValidationError('Title or Number missing')
+        if not (number_of_codes or title):
+            raise ValidationError(_('Title or Number missing'))
+
         election = Election.objects.create(title=title)
         election.create_users(number_of_codes)
         return Response("")

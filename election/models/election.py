@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from election.models import Ballot
-from election.models.candidate import Candidate
 from election.util import generate_random_string
 
 
@@ -13,22 +12,11 @@ class Election(models.Model):
     active = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title + str(self.active)
+        return self.title
 
     @property
     def codes(self):
         return self.electionuser_set.select_related('user').values_list('user__username', flat=True)
-
-    @staticmethod
-    def get_next_title():
-        return str(len(Election.objects.all()) + 1) + '. Durchgang'
-
-    def toggle_active(self):
-        if len(Election.objects.filter(active=True)) >= 1 and not self.active:
-            raise AttributeError('Only on active election is allowed')
-
-        self.active = not self.active
-        self.save()
 
     def ballots_count(self):
         if self.subelection_set.all().count() == 0:
@@ -36,14 +24,6 @@ class Election(models.Model):
             # raise ValueError('Election {} has no SubElections'.format(self))
         return int(len(set(Ballot.objects.filter(choice__sub_election__election=self).values_list(
             'choice__sub_election', 'user'))) / len(self.subelection_set.all()))
-
-    def get_sub_elections_with_candidates(self):
-        elections = []
-        for sub_election in self.subelection_set.all():
-            candidates = Candidate.objects.filter(sub_election=sub_election)
-            if candidates:
-                elections.append(candidates)
-        return elections
 
     # def clone(self):
     #     election = Election()
@@ -70,9 +50,6 @@ class Election(models.Model):
                 sub_election.title,
                 ', '.join(sub_election.candidate_set.all().values_list('name', flat=True)))
         return result
-
-    def sub_election_sorted(self):
-        return ', '.join(self.subelection_set.all().values_list('title', flat=True))
 
     def create_users(self, number):
         i = 0

@@ -1,7 +1,6 @@
 from django.db import models
 
 from election.models.election import Election
-from election.util import normalize_string
 
 
 class SubElection(models.Model):
@@ -11,10 +10,6 @@ class SubElection(models.Model):
 
     class Meta:
         ordering = ['title']
-
-    @property
-    def short(self):
-        return normalize_string(self.title)
 
     def __str__(self):
         return '{} - {}'.format(self.title, self.election)

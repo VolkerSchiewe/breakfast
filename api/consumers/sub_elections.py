@@ -25,6 +25,10 @@ class SubElectionConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        if not self.scope.get('user').is_staff:
+            await self.close()
+            return
+
         # accept connection
         await self.accept()
 
