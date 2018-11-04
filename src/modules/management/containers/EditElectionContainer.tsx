@@ -8,7 +8,7 @@ import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import {CandidateModal} from "../components/CandidateModal";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Grid from "@material-ui/core/Grid/Grid";
-import {ElectionService} from "../services/management-service";
+import {ManagementService} from "../services/management-service";
 import {AlertDialog} from "../../layout/components/AlertDialog";
 import TextField from "@material-ui/core/TextField/TextField";
 import {openWebsocket} from "../../utils/websocket";
@@ -28,7 +28,7 @@ interface EditElectionState {
 const emptyCandidate: Candidate = {name: ''};
 
 export class EditElectionContainer extends Component<any, EditElectionState> {
-    electionService = new ElectionService();
+    electionService = new ManagementService();
     ws = null;
 
     handleDeleteCandidate = (candidate: Candidate) => {

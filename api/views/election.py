@@ -37,3 +37,11 @@ class ElectionViewSet(viewsets.ModelViewSet):
             election.active = True
             election.save()
         return Response("")
+
+    @action(methods=['get'], detail=True, permission_classes=[permissions.IsAdminUser])
+    def codes(self, request, pk):
+        election = Election.objects.get(pk=pk)
+        return Response({
+            "title": election.title,
+            "codes": election.electionuser_set.values_list('user__username', flat=True),
+        })

@@ -2,12 +2,13 @@ import {methods, sendRequest} from "../../utils/http";
 import {Election} from "../interfaces/Election";
 import {SubElection} from "../interfaces/SubElection";
 import {Candidate} from "../interfaces/Candidate";
+import {CodesResponse} from "../interfaces/CodesResponse";
 
 const ELECTIONS_API = '/api/elections/';
 const SUB_ELECTIONS_API = '/api/subelections/';
 const CANDIDATES_API = '/api/candidates/';
 
-export class ElectionService {
+export class ManagementService {
     getElections(): Promise<Election[]> {
         return sendRequest(ELECTIONS_API, methods.GET);
     }
@@ -60,7 +61,11 @@ export class ElectionService {
         return sendRequest(CANDIDATES_API + candidate.id + '/', methods.PATCH, candidate)
     }
 
-    deleteCandidate(candidate: Candidate) {
+    deleteCandidate(candidate: Candidate): Promise<any> {
         return sendRequest(CANDIDATES_API + candidate.id + '/', methods.DELETE)
+    }
+
+    getCodes(electionId: number): Promise<CodesResponse> {
+        return sendRequest(ELECTIONS_API + electionId + '/codes/', methods.GET)
     }
 }

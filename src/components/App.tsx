@@ -11,6 +11,7 @@ import {MuiThemeProvider} from "@material-ui/core";
 import {theme} from "../modules/layout/styles/styles";
 import {ElectionContainerWithRouter} from "../modules/election/container/ElectionContainer";
 import {AdminRoute} from "../modules/auth/components/AdminRoute";
+import {CodesContainer} from "../modules/management/containers/CodesContainer";
 
 interface AppState {
     user?: User
@@ -21,14 +22,25 @@ class App extends React.Component<RouteComponentProps, AppState> {
         return (
             <MuiThemeProvider theme={theme}>
                 <AuthProvider>
-                    <NavBar title={"Wahlen"}/>
                     <Switch>
-                        <Route exact path="/login/" component={Login}/>
-                        <ProtectedRoute exact path="/" component={ElectionContainerWithRouter}/>
-                        <AdminRoute exact path="/elections/:electionId/"
-                                    component={EditElectionContainer}/>
-                        <AdminRoute exact path="/elections/"
-                                    component={ElectionListContainerWithRouter}/>
+                        <AdminRoute exact path="/elections/:electionId/codes/"
+                                    component={CodesContainer}/>
+                        <Route path={""} render={() => {
+                            return (
+                                <div>
+                                    <NavBar title={"Wahlen"}/>
+                                    <Switch>
+                                        <Route exact path="/login/" component={Login}/>
+                                        <ProtectedRoute exact path="/" component={ElectionContainerWithRouter}/>
+                                        <AdminRoute exact path="/elections/:electionId/"
+                                                    component={EditElectionContainer}/>
+                                        <AdminRoute exact path="/elections/"
+                                                    component={ElectionListContainerWithRouter}/>
+
+                                    </Switch>
+                                </div>
+                            )
+                        }}/>
                     </Switch>
                 </AuthProvider>
             </MuiThemeProvider>

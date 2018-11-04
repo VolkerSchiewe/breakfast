@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^elections/$', views.home, name='home'),
     url(r'^login/$', views.home, name='home'),
     url(r'^elections/(?P<id>\d+)/$', views.home, name='home'),
+    url(r'^elections/(?P<id>\d+)/codes/$', views.home, name='home'),
 ]

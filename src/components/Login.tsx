@@ -22,7 +22,10 @@ const styles = {
     paper: style({
         padding: 30,
         marginTop: 20,
-    })
+    }),
+    button: style({
+        marginTop: 15,
+    }),
 };
 
 export class Login extends React.Component<LoginProps, LoginState> {
@@ -64,7 +67,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                             error={error != null}
                                             label={userLabel}
                                             variant={"outlined"}
-                                            margin={"normal"}
+                                            margin={"dense"}
                                             onChange={(event) => this.setState({username: event.target.value})}
                                         />
                                     </Grid>
@@ -75,13 +78,14 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                             value={password}
                                             error={error != null}
                                             label="Password"
-                                            margin="normal"
+                                            margin={"dense"}
                                             variant={"outlined"}
                                             onChange={(event) => this.setState({password: event.target.value})}
                                         />
                                     </Grid>
                                     }
-                                    <Button variant={"outlined"} type="submit" fullWidth> Login</Button>
+                                    <Button className={styles.button} variant={"outlined"} type="submit"
+                                            fullWidth> Login</Button>
                                 </Grid>
                             </form>
                         </Paper>
