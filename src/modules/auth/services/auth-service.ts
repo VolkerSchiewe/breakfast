@@ -1,8 +1,8 @@
-import {authHeader, methods, sendRequest} from "../../utils/http";
+import {methods, sendRequest} from "../../utils/http";
 import {LoginResponse} from "../interfaces/LoginResponse";
 
 const LOGIN_API = '/api/login/';
-const LOGOUT_API = '/api/auth/logout/';
+const LOGOUT_API = '/api/auth/logoutall/';
 
 export class AuthService {
     login(username: string, password: string): Promise<LoginResponse> {

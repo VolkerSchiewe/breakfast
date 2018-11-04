@@ -29,6 +29,7 @@ const emptyCandidate: Candidate = {name: ''};
 
 export class EditElectionContainer extends Component<any, EditElectionState> {
     electionService = new ElectionService();
+    ws = null;
 
     handleDeleteCandidate = (candidate: Candidate) => {
         this.electionService.deleteCandidate(candidate)
@@ -122,6 +123,17 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
             );
     };
 
+    refreshData = () => {
+        this.setState({
+            subElections: [],
+        }, () => {
+            if (this.ws != null) {
+                this.ws.send('Update Data')
+            }
+        });
+
+    };
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -137,8 +149,7 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
 
     componentDidMount() {
         const electionId = this.props.match.params.electionId;
-        openWebsocket('elections/' + electionId, this.onSubElectionMessage);
-
+        this.ws = openWebsocket('elections/' + electionId, this.onSubElectionMessage);
         this.electionService.getElection(electionId)
             .then(res => {
                 this.setState({election: res})
@@ -158,6 +169,7 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                               saveSubElection={this.createSubElection}
                               deleteElection={this.openDeleteElectionModal}
                               editSubElection={this.editSubElection}
+                              refreshData={this.refreshData}
                 />
                 }
                 <Snackbar open={snackbarOpen}

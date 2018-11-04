@@ -37,6 +37,11 @@ class SubElectionConsumer(AsyncWebsocketConsumer):
             'type': 'sub_election_list',
         })
 
+    async def receive(self, text_data=None, bytes_data=None):
+        await self.channel_layer.group_send("elections_%s" % self.election_id, {
+            'type': 'sub_election_list',
+        })
+
     async def disconnect(self, close_code):
         # Leave room group
         await self.channel_layer.group_discard(

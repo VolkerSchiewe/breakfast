@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import {style} from "typestyle";
 import {theme} from "../../layout/styles/styles";
-import {OpenInNew, Add} from "@material-ui/icons"
+import {OpenInNew, Add, Refresh} from "@material-ui/icons"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Typography from "@material-ui/core/Typography/Typography";
 import Grid from "@material-ui/core/Grid/Grid";
@@ -28,6 +28,8 @@ interface ElectionListProps {
     handleRowClick(id)
 
     handleNewElection()
+
+    refreshData()
 }
 
 const styles = ({
@@ -56,7 +58,7 @@ const styles = ({
     }),
 });
 
-export const ElectionList = ({elections, activeElectionId, handleActiveChange, handleRowClick, handleCodesClick, handleNewElection}: ElectionListProps) => (
+export const ElectionList = ({elections, activeElectionId, handleActiveChange, handleRowClick, handleCodesClick, handleNewElection, refreshData}: ElectionListProps) => (
     <div className={styles.root}>
         <Paper className={styles.paper}>
             <Toolbar>
@@ -113,6 +115,9 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                 <Button variant={"contained"} color={"default"} onClick={handleNewElection}>
                     <Add/>
                     Neu
+                </Button>
+                <Button onClick={refreshData}>
+                    <Refresh/>
                 </Button>
             </Grid>
         </Paper>

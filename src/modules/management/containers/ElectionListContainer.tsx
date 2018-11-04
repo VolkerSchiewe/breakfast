@@ -20,7 +20,7 @@ interface ElectionListContainerState {
 
 class ElectionListContainer extends Component<RouteComponentProps, ElectionListContainerState> {
     electionService = new ElectionService();
-
+    ws = null;
     handleActiveChange = (id) => {
         this.electionService.updateElection(id)
             .then();
@@ -57,6 +57,15 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
             snackbarOpen: true,
         });
     };
+    refreshData = () => {
+        this.setState({
+            elections: [],
+        }, () => {
+            if (this.ws != null) {
+                this.ws.send('Updata Data')
+            }
+        });
+    };
 
     constructor(props: any) {
         super(props);
@@ -69,7 +78,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
     }
 
     componentDidMount() {
-        openWebsocket('elections', this.onMessage)
+        this.ws = openWebsocket('elections', this.onMessage)
     }
 
     render() {
@@ -84,7 +93,8 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
                               handleActiveChange={this.handleActiveChange}
                               handleRowClick={this.handleRowClick}
                               handleCodesClick={this.handleCodesClick}
-                              handleNewElection={this.openNewElection}/>
+                              handleNewElection={this.openNewElection}
+                              refreshData={this.refreshData}/>
                 <Snackbar open={snackbarOpen}
                           message={(
                               <Grid container alignItems={"center"}>

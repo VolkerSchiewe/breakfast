@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import Paper from "@material-ui/core/Paper/Paper";
 import {CandidateView} from "./CandidateView";
-import {Add, Delete, Edit} from "@material-ui/icons";
+import {Add, Delete, Edit, Refresh} from "@material-ui/icons";
 import {ResultView} from "./ResultView";
 import cc from "classcat"
 import {CreateSubElection} from "./CreateSubElection";
@@ -26,6 +26,8 @@ interface ElectionListProps {
     saveSubElection(name: string)
 
     editSubElection(subElection: SubElection)
+
+    refreshData()
 }
 
 const styles = ({
@@ -56,18 +58,21 @@ const styles = ({
     }),
 });
 
-export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, deleteElection}: ElectionListProps) => (
+export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, deleteElection, refreshData}: ElectionListProps) => (
     <div>
         <Responsive edgeSize={2}>
             <div className={styles.header}>
                 <Typography variant="h3" gutterBottom>
                     {election.title}
                 </Typography>
-                {!election.isActive ?
-                    <Button onClick={deleteElection}><Delete/></Button>
-                    :
-                    <Typography variant={"h6"}>Aktiv</Typography>
-                }
+                <div>
+                    <Button onClick={refreshData}><Refresh/></Button>
+                    {!election.isActive ?
+                        <Button onClick={deleteElection}><Delete/></Button>
+                        :
+                        <Typography variant={"h6"}>Aktiv</Typography>
+                    }
+                </div>
             </div>
             <Grid container>
                 {subElections.map(subElection => (

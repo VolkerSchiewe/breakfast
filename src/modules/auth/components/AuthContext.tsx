@@ -55,9 +55,15 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
                 this.props.history.replace('/login/')
             })
             .catch(err => {
-                err.json().then(res =>
-                    this.setState({isLoading: false, error: res, snackbarOpen: true})
-                )
+                if (err.status == 401) {
+                    deleteUserData()
+                } else {
+                    err.json()
+                        .then(res => {
+                                this.setState({isLoading: false, error: res.detail, snackbarOpen: true})
+                            }
+                        )
+                }
             })
     };
 
