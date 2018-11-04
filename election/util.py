@@ -1,25 +1,6 @@
 import random
 import string
 
-import magic
-from django.http import HttpResponse
-from django.http import HttpResponseNotFound
-
-
-def serve_file(file, file_name=None, content_type=None):
-    if not file:
-        return HttpResponseNotFound()
-
-    if content_type is None:
-        content_type = magic.from_file(file.name, mime=True)
-
-    response = HttpResponse(file, content_type=content_type)
-    if not file_name:
-        file_name = file.name.split('/')[-1]
-    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
-    response['Content-Length'] = file.size
-    return response
-
 
 def generate_random_string(length, number=1):
     codes = []
@@ -28,7 +9,3 @@ def generate_random_string(length, number=1):
         codes.append(item)
 
     return codes[0] if len(codes) == 1 else codes
-
-
-def normalize_string(string: str):
-    return string.lower().replace(' ', '_').replace('-', '_')

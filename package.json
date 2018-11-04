@@ -4,9 +4,8 @@
   "description": "Election Tool",
   "main": "index.tsx",
   "scripts": {
-    "start": "parcel watch src/index.tsx -d election/static/build/ --public-url ./",
-    "build": "parcel build src/index.tsx -d election/static/build/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel watch src/index.tsx -d static/build/ --public-url ./",
+    "build": "parcel build src/index.tsx -d static/build/ --detailed-report --no-source-maps"
   },
   "repository": {
     "type": "git",
@@ -21,25 +20,25 @@
   "dependencies": {
     "@material-ui/core": "^3.3.2",
     "@material-ui/icons": "^3.0.1",
-    "@types/react": "^16.4.15",
-    "@types/react-dom": "^16.0.8",
-    "chart.js": "^2.7.2",
+    "chart.js": "^2.7.3",
     "classcat": "^3.2.3",
     "google-palette": "^1.1.0",
-    "parcel-bundler": "^1.10.2",
-    "react": "^16.5.2",
+    "react": "^16.6.0",
     "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.5.2",
-    "react-dropzone": "^6.1.1",
+    "react-dropzone": "^7.0.1",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "sockette": "^2.0.0",
     "typestyle": "^2.0.1"
   },
   "devDependencies": {
+    "@types/react": "^16.4.15",
+    "@types/react-dom": "^16.0.8",
     "@types/react-router": "^4.0.32",
     "@types/react-router-dom": "^4.3.1",
-    "sass": "^1.14.2",
+    "parcel-bundler": "^1.10.2",
+    "sass": "^1.14.3",
     "typescript": "^3.1.1"
   }
 }

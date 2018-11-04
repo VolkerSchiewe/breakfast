@@ -1,21 +1,19 @@
 import * as React from "react";
 import {Election} from "../interfaces/Election";
-import {
-    Button,
-    Checkbox,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-} from "@material-ui/core";
 import {style} from "typestyle";
 import {theme} from "../../layout/styles/styles";
 import {OpenInNew, Add, Refresh} from "@material-ui/icons"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Typography from "@material-ui/core/Typography/Typography";
 import Grid from "@material-ui/core/Grid/Grid";
+import Paper from "@material-ui/core/Paper/Paper";
+import Table from "@material-ui/core/Table/Table";
+import TableHead from "@material-ui/core/TableHead/TableHead";
+import TableRow from "@material-ui/core/TableRow/TableRow";
+import TableCell from "@material-ui/core/TableCell/TableCell";
+import TableBody from "@material-ui/core/TableBody/TableBody";
+import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import Button from "@material-ui/core/Button/Button";
 
 interface ElectionListProps {
     elections: Election[]

@@ -77,6 +77,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                             required
                                             value={password}
                                             error={error != null}
+                                            type={"password"}
                                             label="Password"
                                             margin={"dense"}
                                             variant={"outlined"}

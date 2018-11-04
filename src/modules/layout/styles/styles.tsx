@@ -1,14 +1,7 @@
-import {createMuiTheme} from '@material-ui/core';
-import {grey, teal} from '@material-ui/core/colors';
+import {grey, teal} from "@material-ui/core/colors";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 export const theme = createMuiTheme({
-    // overrides:{
-    //     MuiButton:{
-    //         root:{
-    //             textTransform: "none",
-    //         }
-    //     }
-    // },
     typography: {
         useNextVariants: true,
     },

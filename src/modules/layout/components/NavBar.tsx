@@ -2,9 +2,9 @@ import * as React from "react";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Button from "@material-ui/core/Button/Button";
 import {style} from 'typestyle';
 import {Link} from "react-router-dom";
-import Button from "@material-ui/core/Button/Button";
 import {AuthConsumer} from "../../auth/components/AuthContext";
 import {AuthInterface} from "../../auth/interfaces/AuthInterface";
 

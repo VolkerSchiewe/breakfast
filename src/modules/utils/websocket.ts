@@ -1,14 +1,30 @@
 import Sockette from "sockette"
 
 export function openWebsocket(endpoint: string, onMessage: (e) => void) {
-    //TODO wss:// support
-    const url = "ws://localhost:8000/" + endpoint;
+
+    const protocol = location.protocol == 'https' ? 'wss' : 'ws';
+    const url = `${protocol}://${location.host}/${endpoint}`;
+
+    const onOpen = () => {
+        if (process.env.NODE_ENV !== 'production')
+            console.log(endpoint + ' Connected!')
+    };
+
+    const onClose = () => {
+        if (process.env.NODE_ENV !== 'production')
+            console.log(endpoint + ' Closed!!')
+    };
+
+    const onError = (e) => {
+        console.log(endpoint + ' Error!', e)
+    };
+
     return new Sockette(url, {
         timeout: 3000,
         maxAttempts: 10,
-        onopen: () => console.log(endpoint + ' Connected!'),
+        onopen: () => onOpen(),
         onmessage: onMessage,
-        onclose: () => console.log(endpoint + ' Elections Closed!'),
-        onerror: e => console.log(endpoint + ' Elections Error:', e)
+        onclose: () => onClose(),
+        onerror: e => onError(e),
     });
 }
