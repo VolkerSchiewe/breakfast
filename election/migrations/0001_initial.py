@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
             name='Candidate',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=250)),
+                ('title', models.CharField(max_length=250)),
             ],
         ),
         migrations.CreateModel(
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             name='Image',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
+                ('title', models.CharField(max_length=128)),
                 ('file', models.FileField(upload_to='uploads/')),
             ],
         ),

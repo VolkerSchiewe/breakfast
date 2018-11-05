@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='candidate',
-            options={'ordering': ['name']},
+            options={'ordering': ['title']},
         ),
         migrations.AlterModelOptions(
             name='subelection',

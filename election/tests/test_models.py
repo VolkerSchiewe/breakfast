@@ -1,19 +1,11 @@
-from election.models import Election, SubElection, Candidate, Ballot, ElectionUser
-from election.tests.test_case import ElectionTestCase, BallotsTestCase
+from election.models import Election, Candidate, Ballot, ElectionUser
+from election.tests.test_case import ElectionTestCase
 
 
 class ActiveElectionTests(ElectionTestCase):
     def setUp(self):
         super().setUp()
         Election.objects.create(title='ActiveElection', active=True)
-
-    def test_toggle_active(self):
-        active = Election.objects.get(title='ActiveElection')
-        not_active = Election.objects.get(pk=1)
-        active.toggle_active()
-        not_active.toggle_active()
-        self.assertIs(active.active, False)
-        self.assertIs(not_active.active, True)
 
     def test_only_one_active_election(self):
         not_active = Election.objects.get(pk=1)
@@ -29,18 +21,8 @@ class CreateElectionTest(ElectionTestCase):
         election.create_users(10)
         self.assertIs(election.electionuser_set.count(), 35)
 
-    def test_plain_codes(self):
-        election = Election.objects.get(pk=1)
-        election.create_users(25)
-        self.assertIs(election.get_plain_codes().count('</br>'), election.electionuser_set.count() - 1)
-
 
 class ElectionUtilsTest(ElectionTestCase):
-    def test_next_title(self):
-        election = Election.objects.get(pk=1)
-        next_title = election.get_next_title()
-        self.assertEqual(next_title, '{}. Durchgang'.format(Election.objects.all().count() + 1))
-
     def test_candidates_sorted(self):
         election = Election.objects.get(pk=1)
         candidates_sorted = election.candidates_sorted()
@@ -51,12 +33,6 @@ class ElectionUtilsTest(ElectionTestCase):
         for sub_election in election.subelection_set.all():
             count += sub_election.candidate_set.count() - 1
         self.assertIs(candidates_sorted.count(','), count)
-
-    def test_sub_election_sorted(self):
-        election = Election.objects.get(pk=1)
-        sub_election_sorted = election.sub_election_sorted()
-        self.assertIs('AeJ' in sub_election_sorted, True)
-        self.assertIs(sub_election_sorted.count(','), SubElection.objects.count() - 1)
 
 
 class SelectionTest(ElectionTestCase):
@@ -84,13 +60,3 @@ class SelectionTest(ElectionTestCase):
         election_user.select_candidate(candidate_1)
         with self.assertRaises(ValueError):
             election_user.select_candidate(candidate_2)
-
-
-class ElectionResultsTest(BallotsTestCase):
-    def test_results(self):
-        election = Election.objects.first()  # type: Election
-        results = election.get_results()
-        self.assertEqual(election.subelection_set.count(), len(results))
-        for sub_election in results:
-            self.assertIn(sub_election.get('title'), election.subelection_set.all().values_list('title', flat=True))
-
