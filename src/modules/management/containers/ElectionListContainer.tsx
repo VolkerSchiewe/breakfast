@@ -80,6 +80,10 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         this.ws = openWebsocket('elections', this.onMessage)
     }
 
+    componentWillUnmount() {
+        this.ws.close()
+    }
+
     render() {
         const {elections, electionModalOpen, snackbarOpen} = this.state;
         let activeElectionId = undefined;

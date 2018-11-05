@@ -5,7 +5,6 @@ import {theme} from "../../layout/styles/styles";
 import {OpenInNew, Add, Refresh} from "@material-ui/icons"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Typography from "@material-ui/core/Typography/Typography";
-import Grid from "@material-ui/core/Grid/Grid";
 import Paper from "@material-ui/core/Paper/Paper";
 import Table from "@material-ui/core/Table/Table";
 import TableHead from "@material-ui/core/TableHead/TableHead";
@@ -40,6 +39,12 @@ const styles = ({
         marginTop: theme.spacing.unit * 3,
         overflowX: 'auto',
     }),
+    spacer: style({
+        flex: '1 1 100%',
+    }),
+    tableButtons: style({
+        flex: '0 0 auto',
+    }),
     table: style({
         minWidth: 700,
     }),
@@ -61,9 +66,18 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
         <Paper className={styles.paper}>
             <Toolbar>
                 <div>
-                    <Typography variant="h6" id="tableTitle">
+                    <Typography variant="h6">
                         Wahlgänge
                     </Typography>
+                </div>
+                <div className={styles.spacer}/>
+                <div className={styles.tableButtons}>
+                    <Button onClick={handleNewElection}>
+                        <Add/>
+                    </Button>
+                    <Button onClick={refreshData}>
+                        <Refresh/>
+                    </Button>
                 </div>
             </Toolbar>
             <Table className={styles.table}>
@@ -109,15 +123,6 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                     )}
                 </TableBody>
             </Table>
-            <Grid className={styles.footer}>
-                <Button variant={"contained"} color={"default"} onClick={handleNewElection}>
-                    <Add/>
-                    Neu
-                </Button>
-                <Button onClick={refreshData}>
-                    <Refresh/>
-                </Button>
-            </Grid>
         </Paper>
     </div>
 );

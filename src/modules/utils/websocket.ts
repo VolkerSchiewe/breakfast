@@ -12,7 +12,7 @@ export function openWebsocket(endpoint: string, onMessage: (e) => void) {
 
     const onClose = () => {
         if (process.env.NODE_ENV !== 'production')
-            console.log(endpoint + ' Closed!!')
+            console.log(endpoint + ' Closed!')
     };
 
     const onError = (e) => {

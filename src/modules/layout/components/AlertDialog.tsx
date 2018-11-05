@@ -23,16 +23,21 @@ interface AlertDialogProps {
 
 export const AlertDialog = ({isOpen, title, body, okText, cancelText, deleteButton, handleClose, handleOk, handleDelete}: AlertDialogProps) => (
     <Dialog open={isOpen} onClose={handleClose}>
-        <DialogTitle>{title}</DialogTitle>
-        {body &&
-        <DialogContent>{body}</DialogContent>
-        }
-        <DialogActions>
-            {deleteButton &&
-            <Button onClick={handleDelete}><Delete/></Button>
+        <form onSubmit={e => {
+            e.preventDefault();
+            handleOk();
+        }}>
+            <DialogTitle>{title}</DialogTitle>
+            {body &&
+            <DialogContent>{body}</DialogContent>
             }
-            <Button onClick={handleClose}>{cancelText || 'Abbrechen'}</Button>
-            <Button onClick={handleOk}>{okText || 'Ok'}</Button>
-        </DialogActions>
+            <DialogActions>
+                {deleteButton &&
+                <Button onClick={handleDelete}><Delete/></Button>
+                }
+                <Button onClick={handleClose}>{cancelText || 'Abbrechen'}</Button>
+                <Button type="submit">{okText || 'Ok'}</Button>
+            </DialogActions>
+        </form>
     </Dialog>
 );

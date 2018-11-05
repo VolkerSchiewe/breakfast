@@ -5,7 +5,7 @@
   "main": "index.tsx",
   "scripts": {
     "start": "parcel watch src/index.tsx -d static/build/ --public-url ./",
-    "build": "parcel build src/index.tsx -d static/build/ --detailed-report --no-source-maps"
+    "build": "parcel build src/index.tsx -d static/build/ --no-source-maps"
   },
   "repository": {
     "type": "git",

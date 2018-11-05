@@ -18,8 +18,6 @@ interface CreateElectionModalProps {
 interface CreateElectionModalState {
     title?: string
     number?: number | string
-    titleError: boolean
-    numberError: boolean
 }
 
 export class CreateElectionModal extends React.Component<CreateElectionModalProps, CreateElectionModalState> {
@@ -28,8 +26,6 @@ export class CreateElectionModal extends React.Component<CreateElectionModalProp
         this.state = {
             title: '',
             number: '',
-            titleError: false,
-            numberError: false,
         }
     }
 
@@ -41,56 +37,49 @@ export class CreateElectionModal extends React.Component<CreateElectionModalProp
         this.setState({number: value})
     };
 
-    submit = () => {
+    submit = (e) => {
+        e.preventDefault();
         const {title, number} = this.state;
-        let titleError = title === '';
-        let numberError = number === 0 || number == undefined || number === '';
-
-        if (!titleError && !numberError)
-            this.props.saveElection(title, number);
-        else
-            this.setState({
-                titleError: titleError,
-                numberError: numberError
-            })
+        this.props.saveElection(title, number);
     };
 
     render() {
         const {isOpen, handleClose} = this.props;
-        const {title, number, titleError, numberError} = this.state;
+        const {title, number} = this.state;
         return (
             <div>
                 <Dialog open={isOpen}>
-                    <DialogTitle>Wahl erstellen</DialogTitle>
-                    <DialogContent>
-                        <Grid container direction={"column"} justify={"center"}>
-                            <TextField
-                                variant={"outlined"}
-                                onChange={(e) => this.handleTitleChange(e.target.value)}
-                                value={title}
-                                error={titleError}
-                                autoFocus
-                                required
-                                label="Wahl Titel"
-                                margin={"normal"}/>
-                            <TextField
-                                variant={"outlined"}
-                                onChange={(e) => this.handleNumberChange(e.target.value)}
-                                value={number}
-                                error={numberError}
-                                label="Wahlberechtigte"
-                                type="number"
-                                margin={"normal"}/>
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose} color="default">
-                            Abbrechen
-                        </Button>
-                        <Button onClick={this.submit} color="primary">
-                            Speichern
-                        </Button>
-                    </DialogActions>
+                    <form onSubmit={this.submit}>
+                        <DialogTitle>Wahl erstellen</DialogTitle>
+                        <DialogContent>
+                            <Grid container direction={"column"} justify={"center"}>
+                                <TextField
+                                    variant={"outlined"}
+                                    onChange={(e) => this.handleTitleChange(e.target.value)}
+                                    value={title}
+                                    autoFocus
+                                    required
+                                    label="Wahl Titel"
+                                    margin={"normal"}/>
+                                <TextField
+                                    variant={"outlined"}
+                                    onChange={(e) => this.handleNumberChange(e.target.value)}
+                                    value={number}
+                                    label="Wahlberechtigte"
+                                    type="number"
+                                    required
+                                    margin={"normal"}/>
+                            </Grid>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="default">
+                                Abbrechen
+                            </Button>
+                            <Button type="submit" color="primary">
+                                Speichern
+                            </Button>
+                        </DialogActions>
+                    </form>
                 </Dialog>
             </div>
         )

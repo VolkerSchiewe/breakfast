@@ -158,6 +158,10 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                 this.props.history.push('/elections/'));
     }
 
+    componentWillUnmount() {
+        this.ws.close()
+    }
+
     render() {
         const {election, subElections, modalCandidate, modalSubElection, candidateModalOpen, deleteDialogOpen, editDialogOpen, snackbarOpen} = this.state;
         return (
@@ -200,6 +204,7 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                                               label={'Name'}
                                               margin={"normal"}
                                               value={modalSubElection.title}
+                                              required
                                               onChange={(e) => this.changeSubElectionModal(e.target.value)}/>}
                              deleteButton={true}
                              handleClose={this.handleDialogClose}

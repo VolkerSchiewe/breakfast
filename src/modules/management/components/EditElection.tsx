@@ -66,12 +66,12 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                     {election.title}
                 </Typography>
                 <div>
-                    <Button onClick={refreshData}><Refresh/></Button>
                     {!election.isActive ?
                         <Button onClick={deleteElection}><Delete/></Button>
                         :
                         <Typography variant={"h6"}>Aktiv</Typography>
                     }
+                    <Button onClick={refreshData}><Refresh/></Button>
                 </div>
             </div>
             <Grid container>

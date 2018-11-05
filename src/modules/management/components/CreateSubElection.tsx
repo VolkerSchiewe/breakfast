@@ -8,7 +8,6 @@ import {style} from "typestyle";
 
 interface CreateElectionState {
     name?: string
-    nameError: boolean
 }
 
 interface CreateElectionProps {
@@ -29,19 +28,15 @@ export class CreateSubElection extends React.Component<CreateElectionProps, Crea
     constructor(props) {
         super(props);
         this.state = {
-            nameError: false,
             name: ''
         }
     }
 
-    handleNewElection = () => {
+    submit = (e) => {
+        e.preventDefault();
         const {name} = this.state;
-        if (name !== '' && name !== undefined) {
-            this.props.saveSubElection(name);
-            this.setState({name: '', nameError: false});
-
-        } else
-            this.setState({nameError: true})
+        this.props.saveSubElection(name);
+        this.setState({name: ''});
     };
 
     handleNameChange = (newValue) => {
@@ -49,21 +44,23 @@ export class CreateSubElection extends React.Component<CreateElectionProps, Crea
     };
 
     render() {
-        const {name, nameError} = this.state;
+        const {name} = this.state;
         return (
-            <Paper className={styles.paper}>
-                <Typography variant={"h6"}>
-                    Wahl hinzufügen
-                </Typography>
-                <Grid container>
-                    <TextField variant={"outlined"}
-                               label={"Titel"}
-                               value={name}
-                               error={nameError}
-                               onChange={(e) => this.handleNameChange(e.target.value)}/>
-                    <Button className={styles.button} onClick={this.handleNewElection}>Speichern</Button>
-                </Grid>
-            </Paper>
+            <form onSubmit={this.submit}>
+                <Paper className={styles.paper}>
+                    <Typography variant={"h6"}>
+                        Wahl hinzufügen
+                    </Typography>
+                    <Grid container>
+                        <TextField variant={"outlined"}
+                                   label={"Titel"}
+                                   value={name}
+                                   required
+                                   onChange={(e) => this.handleNameChange(e.target.value)}/>
+                        <Button className={styles.button} type="submit">Speichern</Button>
+                    </Grid>
+                </Paper>
+            </form>
         )
     }
 }
