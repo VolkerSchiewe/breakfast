@@ -22,5 +22,7 @@ class Base64StringField(serializers.Field):
             extension = extension if extension.lower() is not 'jpg' else 'jpeg'
             with open(file.path, 'rb') as f:
                 return 'data:image/{};base64,{}'.format(extension.lower(), base64.b64encode(f.read()).decode())
+        except FileNotFoundError:
+            return ''
         except Exception as e:
-            raise IOError("Error encoding file" + e)
+            raise IOError("Error encoding file" + str(e))
