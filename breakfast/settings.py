@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'knox',
+    'raven.contrib.django.raven_compat',
 ]
 
 MIDDLEWARE = [
@@ -172,3 +173,8 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+RAVEN_CONFIG = {
+    'dsn': os.environ.get('SENTRY_DSN', ''),
+    'release': "2.0.0",
+}
