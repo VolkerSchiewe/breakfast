@@ -9,10 +9,10 @@ class Base64StringField(serializers.Field):
     def to_internal_value(self, data):
         if data.startswith('data:image'):
             # base64 encoded image - decode
-            format, imgstr = data.split(';base64,')  # format ~= data:image/X,
-            ext = format.split('/')[-1]  # guess file extension
+            img_format, img_str = data.split(';base64,')  # img_format ~= data:image/X,
+            ext = img_format.split('/')[-1]  # guess file extension
 
-            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            data = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
 
         return data
 
