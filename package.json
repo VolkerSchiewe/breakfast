@@ -30,6 +30,7 @@
     "google-palette": "^1.1.0",
     "react": "^16.6.0",
     "react-chartjs-2": "^2.7.4",
+    "react-connect-context": "^1.1.0",
     "react-dom": "^16.5.2",
     "react-dropzone": "^7.0.1",
     "react-router": "^4.3.1",

@@ -12,6 +12,11 @@ import {ManagementService} from "../services/management-service";
 import {AlertDialog} from "../../layout/components/AlertDialog";
 import TextField from "@material-ui/core/TextField/TextField";
 import {openWebsocket} from "../../utils/websocket";
+import {AuthInterface} from "../../auth/interfaces/AuthInterface";
+import {connectContext} from "react-connect-context";
+import {AuthConsumer} from "../../auth/components/AuthContext";
+import {RouteComponentProps} from "react-router";
+import {handle401} from "../../utils/auth";
 
 interface EditElectionState {
     election?: Election
@@ -25,15 +30,21 @@ interface EditElectionState {
     snackbarOpen: boolean
 }
 
+interface EditElectionProps extends RouteComponentProps, AuthInterface {
+
+}
+
 const emptyCandidate: Candidate = {name: ''};
 
-export class EditElectionContainer extends Component<any, EditElectionState> {
+export class EditElectionContainer extends Component<EditElectionProps, EditElectionState> {
     electionService = new ManagementService();
     ws = null;
 
     handleDeleteCandidate = (candidate: Candidate) => {
         this.electionService.deleteCandidate(candidate)
             .then(() => this.setState({candidateModalOpen: false}))
+            .catch(res => handle401(res, this.props.logout))
+
     };
 
     saveCandidate = (candidate: Candidate) => {
@@ -46,13 +57,17 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
             this.electionService.updateCandidate(candidate)
                 .then(() =>
                     this.setState({snackbarOpen: false})
-                );
+                )
+                .catch(res => handle401(res, this.props.logout))
+            ;
         } else {
             this.electionService.createCandidate(candidate)
                 .then(() =>
                     this.setState({snackbarOpen: false}
                     )
-                );
+                )
+                .catch(res => handle401(res, this.props.logout))
+            ;
         }
     };
 
@@ -80,16 +95,20 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
         this.setState({deleteDialogOpen: false});
         this.electionService.deleteElection(election)
             .then(() =>
-                this.props.history.push('/elections'));
+                this.props.history.push('/elections'))
+            .catch(res => handle401(res, this.props.logout))
+        ;
     };
 
     handleDialogClose = () => {
         this.setState({deleteDialogOpen: false, editDialogOpen: false})
     };
     createSubElection = (name) => {
-        const electionId = this.props.match.params.electionId;
+        const electionId = this.props.match.params["electionId"];
         this.electionService.createSubElection(name, electionId)
-            .then();
+            .then()
+            .catch(res => handle401(res, this.props.logout))
+        ;
     };
     onSubElectionMessage = (e) => {
         const data = JSON.parse(e.data);
@@ -113,14 +132,16 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
         this.electionService.updateSubElection(this.state.modalSubElection)
             .then(() =>
                 this.setState({editDialogOpen: false})
-            );
+            )
+            .catch(res => handle401(res, this.props.logout));
     };
 
     deleteSubElection = () => {
         this.electionService.deleteSubElection(this.state.modalSubElection.id)
             .then(() =>
                 this.setState({editDialogOpen: false})
-            );
+            )
+            .catch(res => handle401(res, this.props.logout));
     };
 
     refreshData = () => {
@@ -131,7 +152,6 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
                 this.ws.send('Update Data')
             }
         });
-
     };
 
     constructor(props: any) {
@@ -148,14 +168,13 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
     }
 
     componentDidMount() {
-        const electionId = this.props.match.params.electionId;
+        const electionId = this.props.match.params["electionId"];
         this.ws = openWebsocket('elections/' + electionId, this.onSubElectionMessage);
         this.electionService.getElection(electionId)
             .then(res => {
                 this.setState({election: res})
             })
-            .catch(() =>
-                this.props.history.push('/elections/'));
+            .catch(res => handle401(res, this.props.logout))
     }
 
     componentWillUnmount() {
@@ -215,3 +234,6 @@ export class EditElectionContainer extends Component<any, EditElectionState> {
         )
     }
 }
+
+// @ts-ignore
+export const EditElectionContainerContext = connectContext<AuthInterface, EditElectionProps>(AuthConsumer)(EditElectionContainer);

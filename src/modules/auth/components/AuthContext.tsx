@@ -11,7 +11,7 @@ interface AuthProviderState extends AuthInterface {
 
 const {Provider, Consumer} = React.createContext<AuthInterface>({
     isLoading: false,
-    login: (user: string, password: string) => {
+    login: () => {
         throw new Error('login() not implemented');
     },
     logout: () => {
@@ -56,7 +56,8 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
             })
             .catch(err => {
                 if (err.status == 401) {
-                    deleteUserData()
+                    deleteUserData();
+                    this.props.history.replace('/login/')
                 } else {
                     err.json()
                         .then(res => {
@@ -73,7 +74,12 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
 
     constructor(props) {
         super(props);
-        const user = getUserData();
+        let user = null;
+        try {
+            user = getUserData();
+        } catch (e) {
+            deleteUserData();
+        }
         this.state = {
             user: user,
             error: null,
