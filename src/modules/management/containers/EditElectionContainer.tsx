@@ -17,6 +17,7 @@ import {connectContext} from "react-connect-context";
 import {AuthConsumer} from "../../auth/components/AuthContext";
 import {RouteComponentProps} from "react-router";
 import {handle401} from "../../utils/auth";
+import {ResultModal} from "../components/ResultModal";
 
 interface EditElectionState {
     election?: Election
@@ -28,6 +29,7 @@ interface EditElectionState {
     deleteDialogOpen: boolean
     editDialogOpen: boolean
     snackbarOpen: boolean
+    resultModalOpen: boolean
 }
 
 interface EditElectionProps extends RouteComponentProps, AuthInterface {
@@ -154,6 +156,13 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
         });
     };
 
+    showResultModal = (subElection: SubElection) => {
+        this.setState({
+            resultModalOpen: true,
+            modalSubElection: subElection,
+        })
+    };
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -164,6 +173,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
             deleteDialogOpen: false,
             editDialogOpen: false,
             snackbarOpen: false,
+            resultModalOpen: false
         }
     }
 
@@ -182,7 +192,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
     }
 
     render() {
-        const {election, subElections, modalCandidate, modalSubElection, candidateModalOpen, deleteDialogOpen, editDialogOpen, snackbarOpen} = this.state;
+        const {election, subElections, modalCandidate, modalSubElection, candidateModalOpen, deleteDialogOpen, editDialogOpen, snackbarOpen, resultModalOpen} = this.state;
         return (
             <div>
                 {election &&
@@ -193,6 +203,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                               deleteElection={this.openDeleteElectionModal}
                               editSubElection={this.editSubElection}
                               refreshData={this.refreshData}
+                              handleResultClick={this.showResultModal}
                 />
                 }
                 <Snackbar open={snackbarOpen}
@@ -229,6 +240,10 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                              handleClose={this.handleDialogClose}
                              handleOk={this.saveSubElection}
                              handleDelete={this.deleteSubElection}/>
+                }
+                {resultModalOpen &&
+                <ResultModal subElection={modalSubElection}
+                             handleClose={() => this.setState({resultModalOpen: false})}/>
                 }
             </div>
         )

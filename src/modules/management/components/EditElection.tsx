@@ -26,6 +26,8 @@ interface ElectionListProps {
     editSubElection(subElection: SubElection)
 
     refreshData()
+
+    handleResultClick(subElection: SubElection)
 }
 
 const styles = ({
@@ -58,7 +60,7 @@ const styles = ({
     }),
 });
 
-export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, deleteElection, refreshData}: ElectionListProps) => (
+export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, deleteElection, refreshData, handleResultClick}: ElectionListProps) => (
     <Grid container justify={"center"}>
         <div className={styles.root}>
             <div className={styles.header}>
@@ -114,7 +116,8 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                                 </Grid>
                                 }
                             </Grid>
-                            <ResultView className={styles.results} subElection={subElection}/>
+                            <ResultView className={styles.results} subElection={subElection}
+                                        onClick={handleResultClick}/>
                         </Paper>
                     </Grid>
                 ))}
