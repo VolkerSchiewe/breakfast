@@ -1,9 +1,7 @@
 import * as React from "react";
 import {Election} from "../interfaces/Election";
 import {style} from "typestyle";
-import {theme} from "../../layout/styles/styles";
 import {SubElection} from "../interfaces/SubElection";
-import {Responsive} from "../../layout/components/Responsive";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import Paper from "@material-ui/core/Paper/Paper";
@@ -32,9 +30,8 @@ interface ElectionListProps {
 
 const styles = ({
     root: style({
-        width: '100%',
-        marginTop: theme.spacing.unit * 3,
-        overflowX: 'auto',
+        marginTop: 20,
+        maxWidth: 1000,
     }),
     paper: style({
         padding: 15,
@@ -56,13 +53,16 @@ const styles = ({
         display: "flex",
         justifyContent: "space-between",
     }),
+    votes: style({
+        marginLeft: 5,
+    }),
 });
 
 export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, deleteElection, refreshData}: ElectionListProps) => (
-    <div>
-        <Responsive edgeSize={2}>
+    <Grid container justify={"center"}>
+        <div className={styles.root}>
             <div className={styles.header}>
-                <Typography variant="h3" gutterBottom>
+                <Typography variant={"h3"} gutterBottom>
                     {election.title}
                 </Typography>
                 <div>
@@ -74,14 +74,21 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                     <Button onClick={refreshData}><Refresh/></Button>
                 </div>
             </div>
+            {election.voteCount > 0 && subElections.length > 0 &&
+            <Typography variant={"h6"}
+                        className={styles.votes}>{subElections[0].candidates.map(c => c.votes).reduce((ac, v) => ac + v)}{" Stimmen"}</Typography>
+            }
             <Grid container>
                 {subElections.map(subElection => (
                     <Grid item xs={6} className={styles.grid} key={subElection.id}>
                         <Paper className={styles.paper}>
-                            <Grid container direction={"row"} justify={"space-between"}>
+                            <Grid container direction={"row"} justify={"space-between"} alignItems={"center"}>
                                 <Typography variant={"h4"} align={"center"}>
                                     {subElection.title}
                                 </Typography>
+                                {!subElection.candidates.some(c => c.name == 'Enthaltung') &&
+                                <Typography color={"error"}>Enthaltung fehlt.</Typography>
+                                }
                                 {!election.isActive &&
                                 <Button onClick={() => editSubElection(subElection)}>
                                     <Edit/>
@@ -117,6 +124,6 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                 </Grid>
                 }
             </Grid>
-        </Responsive>
-    </div>
+        </div>
+    </Grid>
 );

@@ -29,7 +29,6 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
             electionModalOpen: true
         })
     };
-
     handleRowClick = (id) => {
         this.props.history.push(`/elections/${id}`);
     };
@@ -37,7 +36,6 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         const data = JSON.parse(e.data);
         this.setState({elections: data});
     };
-
     handleCodesClick = (election) => {
         console.log(election.codes);
         window.open(`/elections/${election.id}/codes/`, "_blank")
@@ -60,7 +58,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         this.setState({
             elections: [],
         }, () => {
-            if (this.ws != null) {
+            if (this.ws != null && this.ws.ws.readyState == this.ws.ws.OPEN) {
                 this.ws.send('Updata Data')
             }
         });

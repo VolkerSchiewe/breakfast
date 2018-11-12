@@ -5,7 +5,6 @@ import {style} from "typestyle";
 import Typography from "@material-ui/core/Typography/Typography";
 import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button/Button";
-import {Responsive} from "../modules/layout/components/Responsive";
 import {AuthConsumer} from "../modules/auth/components/AuthContext";
 import {AuthInterface} from "../modules/auth/interfaces/AuthInterface";
 
@@ -20,7 +19,9 @@ interface LoginState {
 
 const styles = {
     paper: style({
-        padding: 30,
+        padding: 50,
+        paddingRight: 80,
+        paddingLeft: 80,
         marginTop: 20,
     }),
     button: style({
@@ -50,7 +51,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
         return (
             <AuthConsumer>
                 {({login, error}: AuthInterface) => (
-                    <Responsive edgeSize={4}>
+                    <Grid container alignItems={"center"} direction={"column"}>
                         <Paper className={styles.paper}>
                             <form onSubmit={(e) => {
                                 e.preventDefault();
@@ -91,7 +92,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                             </form>
                         </Paper>
                         <Typography onClick={this.toggleAdminView}>Admin</Typography>
-                    </Responsive>
+                    </Grid>
                 )}
             </AuthConsumer>
         );

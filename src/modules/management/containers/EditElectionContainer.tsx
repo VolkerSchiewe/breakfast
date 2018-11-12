@@ -148,7 +148,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
         this.setState({
             subElections: [],
         }, () => {
-            if (this.ws != null) {
+            if (this.ws != null && this.ws.ws.readyState == this.ws.ws.OPEN) {
                 this.ws.send('Update Data')
             }
         });
