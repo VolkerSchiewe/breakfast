@@ -4,12 +4,13 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from election.models import Ballot
+from election.models.state import ElectionState
 from election.util import generate_random_string
 
 
 class Election(models.Model):
     title = models.CharField(max_length=128)
-    active = models.BooleanField(default=False)
+    state = models.IntegerField(default=ElectionState.NOT_ACTIVE, choices=ElectionState.choices)
 
     def __str__(self):
         return self.title

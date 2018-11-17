@@ -7,7 +7,7 @@ import {Route, RouteComponentProps, Switch, withRouter} from "react-router-dom";
 import {ProtectedRoute} from "../modules/auth/components/ProtectedRoute";
 import {User} from "../modules/auth/services/user";
 import {AuthProvider} from "../modules/auth/components/AuthContext";
-import {MuiThemeProvider} from "@material-ui/core";
+import {MuiThemeProvider} from "@material-ui/core/styles";
 import {theme} from "../modules/layout/styles/styles";
 import {ElectionContainerWithRouter} from "../modules/election/container/ElectionContainer";
 import {AdminRoute} from "../modules/auth/components/AdminRoute";

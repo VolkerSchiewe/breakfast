@@ -18,6 +18,7 @@ import {AuthConsumer} from "../../auth/components/AuthContext";
 import {RouteComponentProps} from "react-router";
 import {handle401} from "../../utils/auth";
 import {ResultModal} from "../components/ResultModal";
+import {ElectionState} from "../interfaces/ElectionState";
 
 interface EditElectionState {
     election?: Election
@@ -25,9 +26,11 @@ interface EditElectionState {
     modalCandidate?: Candidate
     modalSubElection?: SubElection
 
+    electionTitle: string
     candidateModalOpen: boolean
     deleteDialogOpen: boolean
-    editDialogOpen: boolean
+    editSubElectionOpen: boolean
+    editElectionOpen: boolean
     snackbarOpen: boolean
     resultModalOpen: boolean
 }
@@ -103,7 +106,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
     };
 
     handleDialogClose = () => {
-        this.setState({deleteDialogOpen: false, editDialogOpen: false})
+        this.setState({deleteDialogOpen: false, editSubElectionOpen: false, editElectionOpen: false})
     };
     createSubElection = (name) => {
         const electionId = this.props.match.params["electionId"];
@@ -118,7 +121,11 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
     };
 
     editSubElection = (subElection: SubElection) => {
-        this.setState({editDialogOpen: true, modalSubElection: subElection})
+        this.setState({editSubElectionOpen: true, modalSubElection: subElection})
+    };
+
+    editElection = () => {
+        this.setState({editElectionOpen: true, electionTitle: this.state.election.title})
     };
 
     changeSubElectionModal = (value: string) => {
@@ -130,10 +137,26 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
         })
     };
 
+    changeElectionModal = (value: string) => {
+        this.setState({
+            electionTitle: value
+        })
+    };
+
     saveSubElection = () => {
         this.electionService.updateSubElection(this.state.modalSubElection)
             .then(() =>
-                this.setState({editDialogOpen: false})
+                this.setState({editSubElectionOpen: false})
+            )
+            .catch(res => handle401(res, this.props.logout));
+    };
+
+    saveElection = () => {
+        this.electionService.updateElection({id: this.state.election.id, title: this.state.electionTitle})
+            .then(() => {
+                    this.fetchData();
+                    this.setState({editElectionOpen: false});
+                }
             )
             .catch(res => handle401(res, this.props.logout));
     };
@@ -141,19 +164,32 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
     deleteSubElection = () => {
         this.electionService.deleteSubElection(this.state.modalSubElection.id)
             .then(() =>
-                this.setState({editDialogOpen: false})
+                this.setState({editSubElectionOpen: false})
             )
             .catch(res => handle401(res, this.props.logout));
     };
 
-    refreshData = () => {
-        this.setState({
-            subElections: [],
-        }, () => {
-            if (this.ws != null && this.ws.ws.readyState == this.ws.ws.OPEN) {
-                this.ws.send('Update Data')
+    handleMenuItemSelected = (item: number) => {
+        switch (item) {
+            case 0: {
+                this.setState({
+                    subElections: [],
+                }, () => {
+                    if (this.ws != null && this.ws.ws.readyState == this.ws.ws.OPEN) {
+                        this.ws.send('Update Data')
+                    }
+                });
+                return
             }
-        });
+            case 1: {
+                this.electionService.updateElection({id: this.state.election.id, state: ElectionState.FINISHED})
+                    .then(() =>
+                        this.fetchData()
+                    )
+                    .catch(res => handle401(res, this.props.logout));
+                return
+            }
+        }
     };
 
     showResultModal = (subElection: SubElection) => {
@@ -161,6 +197,15 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
             resultModalOpen: true,
             modalSubElection: subElection,
         })
+    };
+    fetchData = () => {
+        const electionId = this.props.match.params["electionId"];
+        this.ws = openWebsocket('elections/' + electionId, this.onSubElectionMessage);
+        this.electionService.getElection(electionId)
+            .then(res => {
+                this.setState({election: res})
+            })
+            .catch(res => handle401(res, this.props.logout))
     };
 
     constructor(props: any) {
@@ -171,20 +216,16 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
             modalSubElection: null,
             candidateModalOpen: false,
             deleteDialogOpen: false,
-            editDialogOpen: false,
+            editSubElectionOpen: false,
+            editElectionOpen: false,
             snackbarOpen: false,
-            resultModalOpen: false
+            resultModalOpen: false,
+            electionTitle: '',
         }
     }
 
     componentDidMount() {
-        const electionId = this.props.match.params["electionId"];
-        this.ws = openWebsocket('elections/' + electionId, this.onSubElectionMessage);
-        this.electionService.getElection(electionId)
-            .then(res => {
-                this.setState({election: res})
-            })
-            .catch(res => handle401(res, this.props.logout))
+        this.fetchData()
     }
 
     componentWillUnmount() {
@@ -192,7 +233,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
     }
 
     render() {
-        const {election, subElections, modalCandidate, modalSubElection, candidateModalOpen, deleteDialogOpen, editDialogOpen, snackbarOpen, resultModalOpen} = this.state;
+        const {election, subElections, modalCandidate, modalSubElection, electionTitle, candidateModalOpen, deleteDialogOpen, editSubElectionOpen, editElectionOpen, snackbarOpen, resultModalOpen} = this.state;
         return (
             <div>
                 {election &&
@@ -200,10 +241,10 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                               subElections={subElections}
                               openCandidateModal={this.openCandidateModal}
                               saveSubElection={this.createSubElection}
-                              deleteElection={this.openDeleteElectionModal}
                               editSubElection={this.editSubElection}
-                              refreshData={this.refreshData}
+                              handleMenuItemSelected={this.handleMenuItemSelected}
                               handleResultClick={this.showResultModal}
+                              editElection={this.editElection}
                 />
                 }
                 <Snackbar open={snackbarOpen}
@@ -227,8 +268,8 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                              handleClose={this.handleDialogClose}
                              handleOk={this.handleDeleteElection}/>
                 }
-                {editDialogOpen &&
-                <AlertDialog isOpen={editDialogOpen}
+                {editSubElectionOpen &&
+                <AlertDialog isOpen={editSubElectionOpen}
                              title={'Wahl ändern'}
                              body={<TextField variant={"outlined"}
                                               label={'Name'}
@@ -236,10 +277,27 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                                               value={modalSubElection.title}
                                               required
                                               onChange={(e) => this.changeSubElectionModal(e.target.value)}/>}
-                             deleteButton={true}
                              handleClose={this.handleDialogClose}
                              handleOk={this.saveSubElection}
                              handleDelete={this.deleteSubElection}/>
+                }
+                {editElectionOpen &&
+                <AlertDialog isOpen={editElectionOpen}
+                             title={'Wahlgang bearbeiten'}
+                             body={
+                                 <div>
+                                     <TextField variant={"outlined"}
+                                                label={'Name'}
+                                                margin={"normal"}
+                                                value={electionTitle}
+                                                required
+                                                onChange={(e) => this.changeElectionModal(e.target.value)}/>
+                                 </div>
+                             }
+                             handleClose={this.handleDialogClose}
+                             handleOk={this.saveElection}
+                             handleDelete={this.openDeleteElectionModal}
+                />
                 }
                 {resultModalOpen &&
                 <ResultModal subElection={modalSubElection}

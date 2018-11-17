@@ -8,7 +8,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
 import {defaultImage, UploadImage} from "../../misc/components/UploadImage";
 import {Candidate} from "../interfaces/Candidate";
-import {Delete} from "@material-ui/icons";
+import Delete from "@material-ui/icons/Delete";
 
 interface CandidateModalProps {
     isOpen: boolean

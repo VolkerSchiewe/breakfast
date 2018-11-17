@@ -6,18 +6,22 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import Paper from "@material-ui/core/Paper/Paper";
 import {CandidateView} from "./CandidateView";
-import {Add, Delete, Edit, Refresh} from "@material-ui/icons";
+import Add from "@material-ui/icons/Add";
+import Edit from "@material-ui/icons/Edit";
+import Refresh from "@material-ui/icons/Refresh";
 import {ResultView} from "./ResultView";
 import cc from "classcat"
 import {CreateSubElection} from "./CreateSubElection";
 import {Candidate} from "../interfaces/Candidate";
 import Button from "@material-ui/core/Button/Button";
+import {ElectionState} from "../interfaces/ElectionState";
+import {MoreMenu} from "../../layout/components/MoreMenu";
+import {StatusBadge} from "../../layout/components/StatusBadge";
+import Lock from "@material-ui/icons/Lock";
 
 interface ElectionListProps {
     election: Election
     subElections: SubElection[]
-
-    deleteElection(electionId)
 
     openCandidateModal(subElectionId: number, candidate?: Candidate)
 
@@ -25,9 +29,12 @@ interface ElectionListProps {
 
     editSubElection(subElection: SubElection)
 
-    refreshData()
+    handleMenuItemSelected(item: number)
 
     handleResultClick(subElection: SubElection)
+
+    editElection()
+
 }
 
 const styles = ({
@@ -54,27 +61,52 @@ const styles = ({
     header: style({
         display: "flex",
         justifyContent: "space-between",
+        marginBottom: 10,
     }),
     votes: style({
         marginLeft: 5,
     }),
+    headerItems: style({
+        display: 'flex',
+        flexDirection: 'row',
+    }),
 });
+const options = [
+    {
+        id: 0,
+        text: "Refresh",
+        icon: <Refresh/>
+    }, {
+        id: 1,
+        text: "Abschließen",
+        icon: <Lock/>
+    }
+];
 
-export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, deleteElection, refreshData, handleResultClick}: ElectionListProps) => (
+
+export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, editElection, handleMenuItemSelected, handleResultClick}: ElectionListProps) => (
     <Grid container justify={"center"}>
         <div className={styles.root}>
             <div className={styles.header}>
-                <Typography variant={"h3"} gutterBottom>
-                    {election.title}
-                </Typography>
-                <div>
-                    {!election.isActive ?
-                        <Button onClick={deleteElection}><Delete/></Button>
-                        :
-                        <Typography variant={"h6"}>Aktiv</Typography>
+                <div className={styles.headerItems}>
+                    <Typography variant={"h3"}>
+                        {election.title}
+                    </Typography>
+                    {election.state == ElectionState.NOT_ACTIVE &&
+                    <Button onClick={editElection}>
+                        <Edit/>
+                    </Button>
                     }
-                    <Button onClick={refreshData}><Refresh/></Button>
                 </div>
+
+                <div className={styles.headerItems}>
+                    <StatusBadge state={election.state}/>
+
+                    {election.state != ElectionState.FINISHED &&
+                    <MoreMenu options={options} onItemSelected={handleMenuItemSelected}/>
+                    }
+                </div>
+
             </div>
             {election.voteCount > 0 && subElections.length > 0 &&
             <Typography variant={"h6"}
@@ -91,7 +123,7 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                                 {!subElection.candidates.some(c => c.name == 'Enthaltung') &&
                                 <Typography color={"error"}>Enthaltung fehlt.</Typography>
                                 }
-                                {!election.isActive &&
+                                {election.state == ElectionState.NOT_ACTIVE &&
                                 <Button onClick={() => editSubElection(subElection)}>
                                     <Edit/>
                                 </Button>
@@ -101,14 +133,14 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                                 {subElection.candidates.map(candidate => (
                                         <Grid className={styles.candidate}
                                               onClick={() => {
-                                                  if (!election.isActive) openCandidateModal(subElection.id, candidate)
+                                                  if (election.state == ElectionState.NOT_ACTIVE) openCandidateModal(subElection.id, candidate)
                                               }}
                                               key={candidate.id}>
                                             <CandidateView candidate={candidate}/>
                                         </Grid>
                                     )
                                 )}
-                                {!election.isActive &&
+                                {election.state == ElectionState.NOT_ACTIVE &&
                                 <Grid className={cc([styles.addCandidate, styles.candidate])}
                                       onClick={() => openCandidateModal(subElection.id)}>
                                     <Add fontSize={"large"}/>
@@ -121,7 +153,7 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                         </Paper>
                     </Grid>
                 ))}
-                {!election.isActive &&
+                {election.state == ElectionState.NOT_ACTIVE &&
                 <Grid item xs={6} className={styles.grid}>
                     <CreateSubElection saveSubElection={saveSubElection}/>
                 </Grid>

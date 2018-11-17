@@ -22,7 +22,7 @@ export const theme = createMuiTheme({
             primary: '#757575',
             secondary: '#636262',
             disabled: "rgba(0, 0, 0, 0.38)",
-            hint: "rgba(0, 0, 0, 0.38)",
+            hint: "rgba(0, 0, 0, 0.05)",
         },
         background: {
             default: '#f5f7fa',

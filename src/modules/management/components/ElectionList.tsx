@@ -2,7 +2,9 @@ import * as React from "react";
 import {Election} from "../interfaces/Election";
 import {style} from "typestyle";
 import {theme} from "../../layout/styles/styles";
-import {OpenInNew, Add, Refresh} from "@material-ui/icons"
+import OpenInNew from "@material-ui/icons/OpenInNew"
+import Add from "@material-ui/icons/Add"
+import Refresh from "@material-ui/icons/Refresh"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Typography from "@material-ui/core/Typography/Typography";
 import Paper from "@material-ui/core/Paper/Paper";
@@ -11,8 +13,14 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import Button from "@material-ui/core/Button/Button";
+import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import {MoreMenu} from "../../layout/components/MoreMenu";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import cc from "classcat"
+import {ElectionState} from "../interfaces/ElectionState";
+import {StatusBadge} from "../../layout/components/StatusBadge";
+import Lock from "@material-ui/icons/Lock";
 
 interface ElectionListProps {
     elections: Election[]
@@ -26,7 +34,7 @@ interface ElectionListProps {
 
     handleNewElection()
 
-    refreshData()
+    handleMenuItemSelected(item: number)
 }
 
 const styles = ({
@@ -44,6 +52,7 @@ const styles = ({
     }),
     tableButtons: style({
         flex: '0 0 auto',
+        // flexDirection: 'column'
     }),
     table: style({
         minWidth: 700,
@@ -59,9 +68,23 @@ const styles = ({
         bottom: "5%",
         right: "5%",
     }),
+    finished: style({
+        backgroundColor: theme.palette.text.hint,
+    }),
 });
 
-export const ElectionList = ({elections, activeElectionId, handleActiveChange, handleRowClick, handleCodesClick, handleNewElection, refreshData}: ElectionListProps) => (
+const options = [
+    {
+        id: 0,
+        text: "Refresh",
+        icon: <Refresh/>,
+    }, {
+        id: 1,
+        text: "Abgeschlossene anzeigen",
+        icon: <Lock/>
+    }
+];
+export const ElectionList = ({elections, activeElectionId, handleActiveChange, handleRowClick, handleCodesClick, handleNewElection, handleMenuItemSelected}: ElectionListProps) => (
     <div className={styles.root}>
         <Paper className={styles.paper}>
             <Toolbar>
@@ -72,12 +95,10 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                 </div>
                 <div className={styles.spacer}/>
                 <div className={styles.tableButtons}>
-                    <Button onClick={handleNewElection}>
+                    <IconButton onClick={handleNewElection}>
                         <Add/>
-                    </Button>
-                    <Button onClick={refreshData}>
-                        <Refresh/>
-                    </Button>
+                    </IconButton>
+                    <MoreMenu options={options} onItemSelected={handleMenuItemSelected}/>
                 </div>
             </Toolbar>
             <Table className={styles.table}>
@@ -93,7 +114,8 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                 </TableHead>
                 <TableBody>
                     {elections.map(election => (
-                            <TableRow key={election.id} className={styles.row}>
+                        <TableRow key={election.id}
+                                  className={cc([styles.row, election.state == ElectionState.FINISHED && styles.finished])}>
                                 <TableCell component="th" scope="row" onClick={() => handleRowClick(election.id)}>
                                     {election.title}
                                 </TableCell>
@@ -107,11 +129,15 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                                     {election.voteCount}
                                 </TableCell>
                                 <TableCell>
-                                    <Checkbox
-                                        checked={election.id == activeElectionId}
-                                        onChange={() => handleActiveChange(election.id)}
-                                        value={election.id.toString()}
-                                    />
+                                    {election.state == ElectionState.FINISHED ?
+                                        <StatusBadge state={election.state}/>
+                                        :
+                                        <Checkbox
+                                            checked={election.id == activeElectionId}
+                                            onChange={() => handleActiveChange(election.id)}
+                                            value={election.id.toString()}
+                                        />
+                                    }
                                 </TableCell>
                                 <TableCell>
                                     <Button variant="outlined" onClick={() => handleCodesClick(election)}>

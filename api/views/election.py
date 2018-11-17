@@ -1,11 +1,12 @@
+from django.utils.translation import ugettext as _
 from rest_framework import viewsets, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from django.utils.translation import ugettext as _
 
-from election.models import Election
 from api.serializers.election import ElectionSerializer
+from election.models import Election
+from election.models.state import ElectionState
 
 
 class ElectionViewSet(viewsets.ModelViewSet):
@@ -29,12 +30,12 @@ class ElectionViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=True, permission_classes=[permissions.IsAdminUser])
     def set_active(self, request, pk):
         election = Election.objects.get(pk=pk)
-        if election.active:
-            election.active = False
+        if election.state == ElectionState.ACTIVE:
+            election.state = ElectionState.NOT_ACTIVE
             election.save()
         else:
-            Election.objects.filter(active=True).update(active=False)
-            election.active = True
+            Election.objects.filter(state=ElectionState.ACTIVE).update(state=ElectionState.NOT_ACTIVE)
+            election.state = ElectionState.ACTIVE
             election.save()
         return Response("")
 

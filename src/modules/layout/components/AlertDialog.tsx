@@ -4,7 +4,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button/Button";
-import {Delete} from "@material-ui/icons";
+import Delete from "@material-ui/icons/Delete";
 
 interface AlertDialogProps {
     isOpen: boolean
@@ -12,7 +12,6 @@ interface AlertDialogProps {
     body?: string | React.ReactNode
     okText?: string
     cancelText?: string
-    deleteButton?: boolean
 
     handleClose()
 
@@ -21,7 +20,7 @@ interface AlertDialogProps {
     handleDelete?()
 }
 
-export const AlertDialog = ({isOpen, title, body, okText, cancelText, deleteButton, handleClose, handleOk, handleDelete}: AlertDialogProps) => (
+export const AlertDialog = ({isOpen, title, body, okText, cancelText, handleClose, handleOk, handleDelete}: AlertDialogProps) => (
     <Dialog open={isOpen} onClose={handleClose}>
         <form onSubmit={e => {
             e.preventDefault();
@@ -32,7 +31,7 @@ export const AlertDialog = ({isOpen, title, body, okText, cancelText, deleteButt
             <DialogContent>{body}</DialogContent>
             }
             <DialogActions>
-                {deleteButton &&
+                {handleDelete != undefined &&
                 <Button onClick={handleDelete}><Delete/></Button>
                 }
                 <Button onClick={handleClose}>{cancelText || 'Abbrechen'}</Button>

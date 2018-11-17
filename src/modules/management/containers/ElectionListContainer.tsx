@@ -9,19 +9,21 @@ import Grid from "@material-ui/core/Grid/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import {openWebsocket} from "../../utils/websocket";
+import {ElectionState} from "../interfaces/ElectionState";
 
 interface ElectionListContainerState {
     elections: Election[]
     modalElection?: Election
     electionModalOpen: boolean
     snackbarOpen: boolean
+    showClosedElections: boolean
 }
 
 class ElectionListContainer extends Component<RouteComponentProps, ElectionListContainerState> {
     electionService = new ManagementService();
     ws = null;
     handleActiveChange = (id) => {
-        this.electionService.updateElection(id)
+        this.electionService.setElectionActive(id)
             .then();
     };
     openNewElection = () => {
@@ -43,7 +45,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
     createElection = (title, number) => {
         this.electionService.createElection(title, number)
             .then(
-                res => {
+                () => {
                     this.setState({
                         snackbarOpen: false,
                     });
@@ -54,14 +56,25 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
             snackbarOpen: true,
         });
     };
-    refreshData = () => {
-        this.setState({
-            elections: [],
-        }, () => {
-            if (this.ws != null && this.ws.ws.readyState == this.ws.ws.OPEN) {
-                this.ws.send('Updata Data')
+    handleMenuItemSelected = (item: number) => {
+        switch (item) {
+            case 0: {
+                this.setState({
+                    elections: [],
+                }, () => {
+                    if (this.ws != null && this.ws.ws.readyState == this.ws.ws.OPEN) {
+                        this.ws.send('Updata Data')
+                    }
+                });
+                return
             }
-        });
+            case 1: {
+                this.setState({
+                    showClosedElections: !this.state.showClosedElections
+                });
+                return
+            }
+        }
     };
 
     constructor(props: any) {
@@ -71,6 +84,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
             modalElection: null,
             electionModalOpen: false,
             snackbarOpen: false,
+            showClosedElections: false
         };
     }
 
@@ -83,19 +97,20 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
     }
 
     render() {
-        const {elections, electionModalOpen, snackbarOpen} = this.state;
+        const {elections, electionModalOpen, snackbarOpen, showClosedElections} = this.state;
         let activeElectionId = undefined;
-        const activeElection = elections.filter((election) => election.isActive);
+        const activeElection = elections.filter((election) => election.state == ElectionState.ACTIVE);
         if (activeElection.length != 0)
             activeElectionId = activeElection[0].id;
+        const filteredElections = showClosedElections ? elections : elections.filter(e => e.state != ElectionState.FINISHED);
         return (
             <div>
-                <ElectionList elections={elections} activeElectionId={activeElectionId}
+                <ElectionList elections={filteredElections} activeElectionId={activeElectionId}
                               handleActiveChange={this.handleActiveChange}
                               handleRowClick={this.handleRowClick}
                               handleCodesClick={this.handleCodesClick}
                               handleNewElection={this.openNewElection}
-                              refreshData={this.refreshData}/>
+                              handleMenuItemSelected={this.handleMenuItemSelected}/>
                 <Snackbar open={snackbarOpen}
                           message={(
                               <Grid container alignItems={"center"}>
