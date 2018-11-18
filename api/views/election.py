@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from api.serializers.election import ElectionSerializer
-from election.models import Election
+from election.models import Election, Candidate
 from election.models.state import ElectionState
 
 
@@ -18,6 +18,7 @@ class ElectionViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=False, permission_classes=[permissions.IsAdminUser])
     def create_election(self, request):
+        # TODO test
         title = request.data.get('title')
         number_of_codes = int(request.data.get('number'))
         if not (number_of_codes or title):
@@ -29,6 +30,7 @@ class ElectionViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=True, permission_classes=[permissions.IsAdminUser])
     def set_active(self, request, pk):
+        # TODO test
         election = Election.objects.get(pk=pk)
         if election.state == ElectionState.ACTIVE:
             election.state = ElectionState.NOT_ACTIVE
@@ -39,8 +41,20 @@ class ElectionViewSet(viewsets.ModelViewSet):
             election.save()
         return Response("")
 
+    @action(methods=['post'], detail=True, permission_classes=[permissions.IsAdminUser])
+    def close(self, request, pk):
+        election = Election.objects.get(pk=pk)
+        for candidate in Candidate.objects.filter(sub_election__election=election):
+            candidate.saved_votes = candidate.ballot_set.count()
+            candidate.save()
+        election.electionuser_set.all().delete()
+        election.state = ElectionState.CLOSED
+        election.save()
+        return Response('')
+
     @action(methods=['get'], detail=True, permission_classes=[permissions.IsAdminUser])
     def codes(self, request, pk):
+        # TODO test
         election = Election.objects.get(pk=pk)
         return Response({
             "title": election.title,

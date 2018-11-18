@@ -1,7 +1,7 @@
 export enum ElectionState {
     NOT_ACTIVE = 1,
     ACTIVE = 2,
-    FINISHED = 3
+    CLOSED = 3
 }
 
 export function getElectionStateText(state: ElectionState) {
@@ -10,7 +10,7 @@ export function getElectionStateText(state: ElectionState) {
             return 'Nicht Aktiv';
         case ElectionState.ACTIVE:
             return 'Aktiv';
-        case ElectionState.FINISHED:
+        case ElectionState.CLOSED:
             return 'Abgeschlossen';
     }
 }

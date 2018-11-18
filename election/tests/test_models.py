@@ -1,11 +1,12 @@
 from election.models import Election, Candidate, Ballot, ElectionUser
+from election.models.state import ElectionState
 from election.tests.test_case import ElectionTestCase
 
 
 class ActiveElectionTests(ElectionTestCase):
     def setUp(self):
         super().setUp()
-        Election.objects.create(title='ActiveElection', active=True)
+        Election.objects.create(title='ActiveElection', state=ElectionState.ACTIVE)
 
     def test_only_one_active_election(self):
         not_active = Election.objects.get(pk=1)

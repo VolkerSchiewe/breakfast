@@ -1,9 +1,9 @@
 from django.contrib.auth import login
+from django.utils.translation import ugettext as _
 from knox.views import LoginView as KnoxLoginView
 from rest_framework import permissions, status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
-from django.utils.translation import ugettext as _
 
 from election.models import Election
 
@@ -12,6 +12,7 @@ class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
+        # TODO test
         serializer = AuthTokenSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']

@@ -44,6 +44,7 @@ const styles = ({
     }),
     paper: style({
         padding: 15,
+        width: 'max-content'
     }),
     grid: style({
         padding: 5,
@@ -54,6 +55,9 @@ const styles = ({
     }),
     addCandidate: style({
         maxWidth: "min-content",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
     }),
     results: style({
         marginTop: 20,
@@ -102,7 +106,7 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                 <div className={styles.headerItems}>
                     <StatusBadge state={election.state}/>
 
-                    {election.state != ElectionState.FINISHED &&
+                    {election.state != ElectionState.CLOSED &&
                     <MoreMenu options={options} onItemSelected={handleMenuItemSelected}/>
                     }
                 </div>

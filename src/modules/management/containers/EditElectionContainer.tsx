@@ -18,7 +18,6 @@ import {AuthConsumer} from "../../auth/components/AuthContext";
 import {RouteComponentProps} from "react-router";
 import {handle401} from "../../utils/auth";
 import {ResultModal} from "../components/ResultModal";
-import {ElectionState} from "../interfaces/ElectionState";
 
 interface EditElectionState {
     election?: Election
@@ -182,7 +181,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                 return
             }
             case 1: {
-                this.electionService.updateElection({id: this.state.election.id, state: ElectionState.FINISHED})
+                this.electionService.closeElection(this.state.election.id)
                     .then(() =>
                         this.fetchData()
                     )

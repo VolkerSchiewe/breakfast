@@ -1,12 +1,12 @@
 from django.db import transaction
+from django.utils.translation import ugettext as _
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.utils.translation import ugettext as _
 
-from election.models import SubElection, Ballot, Candidate, Election
 from api.serializers.subelection import SubElectionSerializer
+from election.models import SubElection, Ballot, Candidate, Election
 
 
 class SubElectionViewSet(viewsets.ModelViewSet):
@@ -24,21 +24,19 @@ class SubElectionViewSet(viewsets.ModelViewSet):
     @transaction.atomic
     @action(methods=['post'], detail=False, permission_classes=[permissions.IsAuthenticated])
     def vote(self, request):
+        # TODO test, performance test
         active_election = Election.objects.get(active=True)
         election_user = request.user.electionuser
 
-        validate_data(election_user, active_election, request.data)
+        if active_election != election_user.election:
+            return Response(_('User is not part of the active election'), status.HTTP_400_BAD_REQUEST)
+        if active_election.subelection_set.count() != len(request.data.keys()):
+            return Response(_('Number of votes must match the number of sub_elections'), status.HTTP_400_BAD_REQUEST)
 
         for key in request.data:
             candidate = Candidate.objects.get(pk=request.data[key])
             ballot, created = Ballot.objects.get_or_create(user=election_user, choice=candidate)
             if not created:
-                raise Exception(_("This ballot already exists. Please contact the election board."))
+                return Response(_("This ballot already exists. Please contact the election board."),
+                                status.HTTP_400_BAD_REQUEST)
         return Response('')
-
-
-def validate_data(user, active_election, data):
-    if active_election != user.election:
-        raise AttributeError(_('User is not part of the active election'))
-    if active_election.subelection_set.count() != len(data.keys()):
-        raise AttributeError(_('Number of votes must match the number of sub_elections'))

@@ -36,7 +36,7 @@
     "pk": 1,
     "fields": {
       "title": "1. Durchgang",
-      "active": false
+      "state": 1
     }
   },
   {

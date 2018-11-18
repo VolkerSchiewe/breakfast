@@ -3,7 +3,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from django.db import models
 
-from election.models import Ballot
+from election.models import Ballot, Candidate
 from election.models.state import ElectionState
 from election.util import generate_random_string
 
@@ -19,13 +19,19 @@ class Election(models.Model):
     def codes(self):
         return self.electionuser_set.select_related('user').values_list('user__username', flat=True)
 
-    def ballots_count(self):
+    @property
+    def votes_count(self):
+        # TODO test
         if self.subelection_set.all().count() == 0:
             return 0
+        if self.state == ElectionState.CLOSED:
+            return sum(Candidate.objects.filter(sub_election__election=self)
+                       .values_list('saved_votes', flat=True)) / self.subelection_set.count()
         return int(len(set(Ballot.objects.filter(choice__sub_election__election=self).values_list(
             'choice__sub_election', 'user'))) / len(self.subelection_set.all()))
 
     def candidates_sorted(self):
+        # TODO improve
         result = ''
         for sub_election in self.subelection_set.all():
             if sub_election.candidate_set.exists():
@@ -35,6 +41,8 @@ class Election(models.Model):
         return result
 
     def create_users(self, number):
+        # TODO performance test
+        # TODO improve code
         i = 0
         while i < number:
             username = generate_random_string(4)

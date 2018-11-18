@@ -4,7 +4,7 @@ from election.models import Election
 
 
 class ElectionSerializer(serializers.ModelSerializer):
-    voteCount = serializers.IntegerField(source='ballots_count', read_only=True)
+    voteCount = serializers.IntegerField(source='votes_count', read_only=True)
     candidateNames = serializers.CharField(source='candidates_sorted', read_only=True)
 
     class Meta:

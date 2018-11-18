@@ -2,12 +2,12 @@ import logging
 
 from django.contrib.auth.models import User
 from django.db import models, transaction
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from election.models.ballot import Ballot
-from election.models.sub_election import SubElection
 from election.models.election import Election
+from election.models.sub_election import SubElection
 
 log = logging.getLogger(__name__)
 
@@ -49,6 +49,11 @@ class ElectionUser(models.Model):
 
 
 @receiver(post_save, sender=User)
-def create_election_user(sender, instance, created, **kwargs):
+def create_election_user(sender, instance: User, created, **kwargs):
     if created:
         ElectionUser.objects.get_or_create(user=instance)
+
+
+@receiver(post_delete, sender=ElectionUser)
+def delete_users(sender, instance: ElectionUser, **kwargs):
+    instance.user.delete()

@@ -16,11 +16,10 @@ export class ResultView extends React.Component<ResultViewProps, {}> {
     render() {
         const {className, subElection, onClick} = this.props;
         const data = getDataFromSubElection(subElection);
-
         const votes = subElection.candidates.map((c) => c.votes);
         const hasResults = votes.every(x => x !== null) && votes.some(x => x !== 0);
         return (
-            <div className={className} onClick={() => onClick(subElection)}>
+            <div className={className} onClick={() => hasResults && onClick(subElection)}>
                 <Typography variant={"h5"}>Ergebnisse</Typography>
                 {hasResults ?
                     <Pie data={data} options={chartOptions()}/>

@@ -21,6 +21,10 @@ export class ManagementService {
         return sendRequest(ELECTIONS_API + electionId + '/set_active/', methods.POST)
     }
 
+    closeElection(electionId: number): Promise<any> {
+        return sendRequest(ELECTIONS_API + electionId + '/close/', methods.POST)
+    }
+
     updateElection(election: Partial<Election>): Promise<any> {
         return sendRequest(ELECTIONS_API + election.id + '/', methods.PATCH, election)
     }

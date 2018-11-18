@@ -115,7 +115,7 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                 <TableBody>
                     {elections.map(election => (
                         <TableRow key={election.id}
-                                  className={cc([styles.row, election.state == ElectionState.FINISHED && styles.finished])}>
+                                  className={cc([styles.row, election.state == ElectionState.CLOSED && styles.finished])}>
                                 <TableCell component="th" scope="row" onClick={() => handleRowClick(election.id)}>
                                     {election.title}
                                 </TableCell>
@@ -128,8 +128,8 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                                 <TableCell numeric onClick={() => handleRowClick(election.id)}>
                                     {election.voteCount}
                                 </TableCell>
-                                <TableCell>
-                                    {election.state == ElectionState.FINISHED ?
+                            <TableCell padding={"checkbox"}>
+                                {election.state == ElectionState.CLOSED ?
                                         <StatusBadge state={election.state}/>
                                         :
                                         <Checkbox
@@ -140,9 +140,11 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                                     }
                                 </TableCell>
                                 <TableCell>
+                                    {election.state != ElectionState.CLOSED &&
                                     <Button variant="outlined" onClick={() => handleCodesClick(election)}>
                                         Codes<OpenInNew/>
                                     </Button>
+                                    }
                                 </TableCell>
                             </TableRow>
                         )

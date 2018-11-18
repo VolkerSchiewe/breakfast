@@ -102,7 +102,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         const activeElection = elections.filter((election) => election.state == ElectionState.ACTIVE);
         if (activeElection.length != 0)
             activeElectionId = activeElection[0].id;
-        const filteredElections = showClosedElections ? elections : elections.filter(e => e.state != ElectionState.FINISHED);
+        const filteredElections = showClosedElections ? elections : elections.filter(e => e.state != ElectionState.CLOSED);
         return (
             <div>
                 <ElectionList elections={filteredElections} activeElectionId={activeElectionId}
