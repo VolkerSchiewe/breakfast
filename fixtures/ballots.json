@@ -153,7 +153,6 @@
       "last_name": "",
       "email": "",
       "is_staff": true,
-      "state": 2,
       "date_joined": "2017-10-31T11:11:07.251Z",
       "groups": [],
       "user_permissions": []
@@ -171,7 +170,6 @@
       "last_name": "",
       "email": "",
       "is_staff": false,
-      "state": 2,
       "date_joined": "2017-10-31T11:14:51.272Z",
       "groups": [],
       "user_permissions": []
@@ -189,7 +187,6 @@
       "last_name": "",
       "email": "",
       "is_staff": false,
-      "state": 2,
       "date_joined": "2017-10-31T11:14:51.354Z",
       "groups": [],
       "user_permissions": []
@@ -207,7 +204,6 @@
       "last_name": "",
       "email": "",
       "is_staff": false,
-      "state": 2,
       "date_joined": "2017-10-31T11:14:51.428Z",
       "groups": [],
       "user_permissions": []
@@ -225,7 +221,6 @@
       "last_name": "",
       "email": "",
       "is_staff": false,
-      "state": 2,
       "date_joined": "2017-10-31T11:14:51.511Z",
       "groups": [],
       "user_permissions": []
@@ -243,7 +238,6 @@
       "last_name": "",
       "email": "",
       "is_staff": false,
-      "state": 2,
       "date_joined": "2017-10-31T11:14:51.590Z",
       "groups": [],
       "user_permissions": []

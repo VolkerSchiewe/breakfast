@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext as _
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions, filters, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from api.serializers.election import ElectionSerializer
@@ -18,26 +17,28 @@ class ElectionViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=False, permission_classes=[permissions.IsAdminUser])
     def create_election(self, request):
-        # TODO test
         title = request.data.get('title')
-        number_of_codes = int(request.data.get('number'))
-        if not (number_of_codes or title):
-            raise ValidationError(_('Title or Number missing'))
+        number_of_codes = request.data.get('number')
+        if not number_of_codes or not title:
+            return Response(_('Title or Number missing'), status.HTTP_400_BAD_REQUEST)
+        try:
+            number_of_codes = int(number_of_codes)
+        except ValueError:
+            return Response(_('Number must be integer'), status.HTTP_400_BAD_REQUEST)
 
         election = Election.objects.create(title=title)
-        election.create_users(number_of_codes)
+        election.create_users(int(number_of_codes))
         return Response("")
 
     @action(methods=['post'], detail=True, permission_classes=[permissions.IsAdminUser])
     def set_active(self, request, pk):
-        # TODO test
         election = Election.objects.get(pk=pk)
         if election.state == ElectionState.ACTIVE:
             election.state = ElectionState.NOT_ACTIVE
             election.save()
         else:
             Election.objects.filter(state=ElectionState.ACTIVE).update(state=ElectionState.NOT_ACTIVE)
-            election.state = ElectionState.ACTIVE
+            election.state = ElectionState.CLOSED if election.state == ElectionState.CLOSED else ElectionState.ACTIVE
             election.save()
         return Response("")
 
@@ -54,7 +55,6 @@ class ElectionViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=True, permission_classes=[permissions.IsAdminUser])
     def codes(self, request, pk):
-        # TODO test
         election = Election.objects.get(pk=pk)
         return Response({
             "title": election.title,

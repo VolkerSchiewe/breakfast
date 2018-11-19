@@ -6,6 +6,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 
 from election.models import Election
+from election.models.state import ElectionState
 
 
 class LoginView(KnoxLoginView):
@@ -18,9 +19,9 @@ class LoginView(KnoxLoginView):
             user = serializer.validated_data['user']
             if not user.is_staff:
                 # check if user can login or not
-                if not Election.objects.filter(active=True).exists():
+                if not Election.objects.filter(state=ElectionState.ACTIVE).exists():
                     return Response(_('No active Election!'), status.HTTP_400_BAD_REQUEST)
-                if user.electionuser.election != Election.objects.get(active=True):
+                if user.electionuser.election != Election.objects.get(sate=ElectionState.ACTIVE):
                     return Response(_('Wrong Code!'), status.HTTP_401_UNAUTHORIZED)
                 if user.electionuser.already_elected():
                     return Response(_('Already voted!'), status.HTTP_400_BAD_REQUEST)

@@ -6,7 +6,6 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from election.models.ballot import Ballot
-from election.models.election import Election
 from election.models.sub_election import SubElection
 
 log = logging.getLogger(__name__)
@@ -14,7 +13,7 @@ log = logging.getLogger(__name__)
 
 class ElectionUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    election = models.ForeignKey(Election, null=True, blank=True, on_delete=models.CASCADE)
+    election = models.ForeignKey('Election', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} - {}'.format(self.user.username, self.election)

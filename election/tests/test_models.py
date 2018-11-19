@@ -1,3 +1,5 @@
+import time
+
 from election.models import Election, Candidate, Ballot, ElectionUser
 from election.models.state import ElectionState
 from election.tests.test_case import ElectionTestCase
@@ -16,11 +18,13 @@ class ActiveElectionTests(ElectionTestCase):
 
 class CreateElectionTest(ElectionTestCase):
     def test_create_users(self):
+        start_time = time.time()
         election = Election.objects.get(pk=1)
         election.create_users(20)
         self.assertIs(election.electionuser_set.count(), 25)
         election.create_users(10)
         self.assertIs(election.electionuser_set.count(), 35)
+        print("--- %s seconds ---" % (time.time() - start_time))
 
 
 class ElectionUtilsTest(ElectionTestCase):

@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib import auth
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -41,16 +40,11 @@ class Election(models.Model):
         return result
 
     def create_users(self, number):
-        # TODO performance test
-        # TODO improve code
-        i = 0
-        while i < number:
-            username = generate_random_string(4)
-            user = auth.authenticate(username=username, password=settings.PASSWORD)
-            if user is None:
-                user = User.objects.create_user(username=username, password=settings.PASSWORD)
-                election_user = user.electionuser  # ElectionUser.objects.get(user=user)
-                election_user.election = self
-                election_user.save()
-                user.save()
-                i += 1
+        blacklist = User.objects.all().values_list('username', flat=True)
+        user_names = generate_random_string(4, number, blacklist)
+        for name in user_names:
+            user = User.objects.create_user(username=name, password=settings.PASSWORD)
+            election_user = user.electionuser  # ElectionUser.objects.get(user=user)
+            election_user.election = self
+            election_user.save()
+            user.save()
