@@ -4,4 +4,5 @@ export interface SubElection {
     id:number,
     title: string,
     candidates: Candidate[],
+    names?: string[],
 }

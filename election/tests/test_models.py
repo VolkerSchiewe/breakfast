@@ -34,19 +34,6 @@ class CreateElectionTest(ElectionTestCase):
         self.assertEqual(election.electionuser_set.count(), 6)
 
 
-class ElectionUtilsTest(ElectionTestCase):
-    def test_candidates_sorted(self):
-        election = Election.objects.get(pk=1)
-        candidates_sorted = election.candidates_sorted()
-        self.assertIs('Max' in candidates_sorted, True)
-        self.assertIs('Maria Muster' in candidates_sorted, True)
-        self.assertIs('Planungsteam' in candidates_sorted, True)
-        count = 0
-        for sub_election in election.subelection_set.all():
-            count += sub_election.candidate_set.count() - 1
-        self.assertIs(candidates_sorted.count(','), count)
-
-
 class SelectionTest(ElectionTestCase):
     def test_select_candidate(self):
         election_user = ElectionUser.objects.filter(election__isnull=False).first()

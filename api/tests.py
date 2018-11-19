@@ -23,7 +23,10 @@ class AdminApiTest(BallotsTestCase):
             {'id': 1,
              'title': '1. Durchgang',
              'state': 2,
-             'candidateNames': 'AeJ: Max, Moritz\nPlanungsteam:  Maria Muster, Max Muster\n',
+             'candidateNames': [
+                 {'title': 'AeJ', 'names': ['Max', 'Moritz']},
+                 {'title': 'Planungsteam', 'names': ['Maria Muster', 'Max Muster']}
+             ],
              'voteCount': 3,
              'codes': ['OaIE', 'WQky', 'pgmB', 'wumN', 'hnwA']}
         ])
@@ -39,8 +42,10 @@ class AdminApiTest(BallotsTestCase):
             {'id': 1,
              'title': '1. Durchgang',
              'state': 3,
-             'candidateNames': 'AeJ: Max, Moritz\nPlanungsteam:  Maria Muster, Max Muster\n',
-             'voteCount': 3,
+             'candidateNames': [
+                 {'title': 'AeJ', 'names': ['Max', 'Moritz']},
+                 {'title': 'Planungsteam', 'names': ['Maria Muster', 'Max Muster']}
+             ], 'voteCount': 3,
              'codes': []}
         ])
         self.assertEqual(0, Ballot.objects.filter(choice__sub_election__election_id=1).count())

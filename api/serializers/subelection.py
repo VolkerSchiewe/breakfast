@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from election.models import SubElection
 from api.serializers.candidate import CandidateSerializer
+from election.models import SubElection
 
 
 class SubElectionSerializer(serializers.ModelSerializer):
@@ -11,3 +11,11 @@ class SubElectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubElection
         fields = ('id', 'election', 'title', 'isMultiSelect', 'candidates')
+
+
+class SubElectionListSerializer(serializers.ModelSerializer):
+    names = serializers.SlugRelatedField(source='candidate_set', slug_field='name', many=True, read_only=True)
+
+    class Meta:
+        model = SubElection
+        fields = ('title', 'names')

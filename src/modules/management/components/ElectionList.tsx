@@ -52,7 +52,6 @@ const styles = ({
     }),
     tableButtons: style({
         flex: '0 0 auto',
-        // flexDirection: 'column'
     }),
     table: style({
         minWidth: 700,
@@ -120,7 +119,11 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                                     {election.title}
                                 </TableCell>
                                 <TableCell onClick={() => handleRowClick(election.id)}>
-                                    {election.candidateNames}
+                                    {election.candidateNames.map((value, id) =>
+                                        <span key={id}>
+                                            {value.title}: {value.names && value.names.join(', ')}<br/>
+                                        </span>
+                                    )}
                                 </TableCell>
                                 <TableCell numeric onClick={() => handleRowClick(election.id)}>
                                     {election.codes && election.codes.length}

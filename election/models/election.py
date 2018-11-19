@@ -29,16 +29,6 @@ class Election(models.Model):
         return int(len(set(Ballot.objects.filter(choice__sub_election__election=self).values_list(
             'choice__sub_election', 'user'))) / len(self.subelection_set.all()))
 
-    def candidates_sorted(self):
-        # TODO improve
-        result = ''
-        for sub_election in self.subelection_set.all():
-            if sub_election.candidate_set.exists():
-                result += '{}: {}\n'.format(
-                    sub_election.title,
-                    ', '.join(sub_election.candidate_set.all().values_list('name', flat=True)))
-        return result
-
     def create_users(self, number):
         blacklist = User.objects.all().values_list('username', flat=True)
         user_names = generate_random_string(4, number, blacklist)
