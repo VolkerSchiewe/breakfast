@@ -39,12 +39,11 @@ interface ElectionListProps {
 
 const styles = ({
     root: style({
-        marginTop: 20,
         maxWidth: 1000,
+        margin: '80px auto',
     }),
     paper: style({
         padding: 15,
-        width: 'max-content'
     }),
     grid: style({
         padding: 5,
@@ -89,9 +88,9 @@ const options = [
 
 
 export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, editElection, handleMenuItemSelected, handleResultClick}: ElectionListProps) => (
-    <Grid container justify={"center"}>
-        <div className={styles.root}>
-            <div className={styles.header}>
+    <div className={styles.root}>
+        <Grid container>
+            <Grid item xs={12} className={styles.header}>
                 <div className={styles.headerItems}>
                     <Typography variant={"h3"}>
                         {election.title}
@@ -110,8 +109,7 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                     <MoreMenu options={options} onItemSelected={handleMenuItemSelected}/>
                     }
                 </div>
-
-            </div>
+            </Grid>
             {election.voteCount > 0 && subElections.length > 0 &&
             <Typography variant={"h6"}
                         className={styles.votes}>{subElections[0].candidates.map(c => c.votes).reduce((ac, v) => ac + v)}{" Stimmen"}</Typography>
@@ -163,6 +161,6 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                 </Grid>
                 }
             </Grid>
-        </div>
-    </Grid>
+        </Grid>
+    </div>
 );

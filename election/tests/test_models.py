@@ -26,6 +26,13 @@ class CreateElectionTest(ElectionTestCase):
         self.assertIs(election.electionuser_set.count(), 35)
         print("--- %s seconds ---" % (time.time() - start_time))
 
+    def test_create_users_fails(self):
+        election = Election.objects.first()
+        election.create_users(0)
+        self.assertEqual(election.electionuser_set.count(), 5)
+        election.create_users(1)
+        self.assertEqual(election.electionuser_set.count(), 6)
+
 
 class ElectionUtilsTest(ElectionTestCase):
     def test_candidates_sorted(self):
