@@ -37,8 +37,7 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
 
             })
             .catch(err => {
-                err.json().then(res =>
-                    this.setState({isLoading: false, error: res, snackbarOpen: true})
+                this.setState({isLoading: false, error: err.response.data, snackbarOpen: true}
                 )
             });
     };

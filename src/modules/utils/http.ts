@@ -1,4 +1,5 @@
-import {getToken} from "./auth";
+import {deleteUserData, getToken} from "./auth";
+import axios from 'axios'
 
 export const methods = {
     GET: 'GET',
@@ -9,23 +10,26 @@ export const methods = {
 };
 
 
-export function sendRequest(endpoint: string, method: string, body?: object, headers?, authHeaders: boolean = true): Promise<any> {
+export function sendRequest(endpoint: string, method: string, body?: object, headers?, authHeaders: boolean = true, throwException: boolean = false): Promise<any> {
     if (authHeaders)
         headers = authHeader();
-    return fetch(endpoint, {
+    return axios.request({
+        url: endpoint,
         method: method,
-        credentials: 'same-origin',
         headers: headers,
-        body: JSON.stringify(body),
-    }).then((response) => {
-        if (response.ok) {
-            if (response.status !== 204)
-                return response.json();
-            else
-                return '';
+        data: body,
+    }).then(
+        response => response.data
+    ).catch(err => {
+        if (throwException)
+            throw err;
+        else if (err.response.status == 401) {
+            deleteUserData();
+            // redirect to login page
+            location.href = '/login/';
         }
-        throw response;
-    });
+        }
+    );
 }
 
 export function authHeader() {

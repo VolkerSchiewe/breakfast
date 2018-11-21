@@ -2,7 +2,7 @@ import * as React from "react";
 import {NavBar} from "../modules/layout/components/NavBar";
 import {Login} from "./Login";
 import {ElectionListContainerWithRouter} from "../modules/management/containers/ElectionListContainer";
-import {EditElectionContainerContext} from "../modules/management/containers/EditElectionContainer";
+import {EditElectionContainer} from "../modules/management/containers/EditElectionContainer";
 import {Route, RouteComponentProps, Switch, withRouter} from "react-router-dom";
 import {ProtectedRoute} from "../modules/auth/components/ProtectedRoute";
 import {User} from "../modules/auth/services/user";
@@ -33,7 +33,7 @@ class App extends React.Component<RouteComponentProps, AppState> {
                                         <Route exact path="/login/" component={Login}/>
                                         <ProtectedRoute exact path="/" component={ElectionContainerWithRouter}/>
                                         <AdminRoute exact path="/elections/:electionId/"
-                                                    component={EditElectionContainerContext}/>
+                                                    component={EditElectionContainer}/>
                                         <AdminRoute exact path="/elections/"
                                                     component={ElectionListContainerWithRouter}/>
 

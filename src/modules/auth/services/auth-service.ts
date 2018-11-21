@@ -8,9 +8,15 @@ export class AuthService {
     login(username: string, password: string): Promise<LoginResponse> {
         return sendRequest(LOGIN_API,
             methods.POST,
-            {username: username, password: password},
-            {'content-type': 'application/json'},
-            false
+            {
+                username: username,
+                password: password
+            },
+            {
+                'content-type': 'application/json'
+            },
+            false,
+            true,
         );
     }
 

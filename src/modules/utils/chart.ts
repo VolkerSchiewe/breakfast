@@ -1,14 +1,14 @@
 import {SubElection} from "../management/interfaces/SubElection";
-
-const palette = require("google-palette");
-
+import * as palette from 'google-palette';
 
 export function getDataFromSubElection(subElection: SubElection) {
+    debugger;
+
     return {
         labels: subElection.candidates.map((candidate) => candidate.name),
         datasets: [{
             data: subElection.candidates.map((candidate) => candidate.votes),
-            backgroundColor: palette('tol', subElection.candidates.length).map((hex) => `#${hex}`),
+            backgroundColor: palette.default('tol', subElection.candidates.length).map((hex) => `#${hex}`),
         }]
     };
 }

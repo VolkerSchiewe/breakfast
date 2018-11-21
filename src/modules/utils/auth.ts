@@ -33,9 +33,3 @@ export function deleteUserData() {
 export function getToken() {
     return localStorage.getItem(TOKEN)
 }
-
-export function handle401(res, logout) {
-    if (res.status == 401) {
-        logout();
-    }
-}

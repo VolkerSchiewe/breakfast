@@ -13,10 +13,7 @@ import {AlertDialog} from "../../layout/components/AlertDialog";
 import TextField from "@material-ui/core/TextField/TextField";
 import {openWebsocket} from "../../utils/websocket";
 import {AuthInterface} from "../../auth/interfaces/AuthInterface";
-import {connectContext} from "react-connect-context";
-import {AuthConsumer} from "../../auth/components/AuthContext";
 import {RouteComponentProps} from "react-router";
-import {handle401} from "../../utils/auth";
 import {ResultModal} from "../components/ResultModal";
 
 interface EditElectionState {
@@ -47,7 +44,6 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
     handleDeleteCandidate = (candidate: Candidate) => {
         this.electionService.deleteCandidate(candidate)
             .then(() => this.setState({candidateModalOpen: false}))
-            .catch(res => handle401(res, this.props.logout))
 
     };
 
@@ -62,16 +58,12 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                 .then(() =>
                     this.setState({snackbarOpen: false})
                 )
-                .catch(res => handle401(res, this.props.logout))
-            ;
         } else {
             this.electionService.createCandidate(candidate)
                 .then(() =>
                     this.setState({snackbarOpen: false}
                     )
                 )
-                .catch(res => handle401(res, this.props.logout))
-            ;
         }
     };
 
@@ -100,8 +92,6 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
         this.electionService.deleteElection(election)
             .then(() =>
                 this.props.history.push('/elections'))
-            .catch(res => handle401(res, this.props.logout))
-        ;
     };
 
     handleDialogClose = () => {
@@ -111,8 +101,6 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
         const electionId = this.props.match.params["electionId"];
         this.electionService.createSubElection(name, electionId)
             .then()
-            .catch(res => handle401(res, this.props.logout))
-        ;
     };
     onSubElectionMessage = (e) => {
         const data = JSON.parse(e.data);
@@ -147,7 +135,6 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
             .then(() =>
                 this.setState({editSubElectionOpen: false})
             )
-            .catch(res => handle401(res, this.props.logout));
     };
 
     saveElection = () => {
@@ -157,7 +144,6 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                     this.setState({editElectionOpen: false});
                 }
             )
-            .catch(res => handle401(res, this.props.logout));
     };
 
     deleteSubElection = () => {
@@ -165,7 +151,6 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
             .then(() =>
                 this.setState({editSubElectionOpen: false})
             )
-            .catch(res => handle401(res, this.props.logout));
     };
 
     handleMenuItemSelected = (item: number) => {
@@ -184,8 +169,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
                 this.electionService.closeElection(this.state.election.id)
                     .then(() =>
                         this.fetchData()
-                    )
-                    .catch(res => handle401(res, this.props.logout));
+                    );
                 return
             }
         }
@@ -204,7 +188,6 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
             .then(res => {
                 this.setState({election: res})
             })
-            .catch(res => handle401(res, this.props.logout))
     };
 
     constructor(props: any) {
@@ -306,6 +289,3 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
         )
     }
 }
-
-// @ts-ignore
-export const EditElectionContainerContext = connectContext<AuthInterface, EditElectionProps>(AuthConsumer)(EditElectionContainer);
