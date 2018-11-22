@@ -12,7 +12,6 @@ import {ManagementService} from "../services/management-service";
 import {AlertDialog} from "../../layout/components/AlertDialog";
 import TextField from "@material-ui/core/TextField/TextField";
 import {openWebsocket} from "../../utils/websocket";
-import {AuthInterface} from "../../auth/interfaces/AuthInterface";
 import {RouteComponentProps} from "react-router";
 import {ResultModal} from "../components/ResultModal";
 
@@ -31,7 +30,7 @@ interface EditElectionState {
     resultModalOpen: boolean
 }
 
-interface EditElectionProps extends RouteComponentProps, AuthInterface {
+interface EditElectionProps extends RouteComponentProps {
 
 }
 

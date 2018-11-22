@@ -1,20 +1,11 @@
-# Create your tests here.
 import json
 
-from rest_framework.test import APIClient
-
+from api.tests.test_cases import BallotsApiTestCase
 from election.models import Ballot, Election, ElectionUser
 from election.models.state import ElectionState
-from election.tests.test_case import BallotsTestCase
 
 
-class AdminApiTest(BallotsTestCase):
-    def setUp(self):
-        super().setUp()
-        self.client = APIClient()
-        response = self.client.post('/api/login/', {'username': 'admin', 'password': 'admin'})
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data.get('token'))
-
+class ElectionApiTest(BallotsApiTestCase):
     def test_election_api(self):
         response = self.client.get('/api/elections/')
         self.assertEqual(response.status_code, 200)
@@ -78,12 +69,9 @@ class AdminApiTest(BallotsTestCase):
             self.assertEqual(response.status_code, 400)
 
 
-class ActiveElectionTest(BallotsTestCase):
+class ActiveElectionTest(BallotsApiTestCase):
     def setUp(self):
         super(ActiveElectionTest, self).setUp()
-        self.client = APIClient()
-        response = self.client.post('/api/login/', {'username': 'admin', 'password': 'admin'})
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data.get('token'))
         self.client.post('/api/elections/create_election/', {'title': 'Second', 'number': 5})
 
     def test_set_active(self):

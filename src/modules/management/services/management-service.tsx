@@ -46,11 +46,11 @@ export class ManagementService {
     }
 
     createSubElection(name: string, electionId: number): Promise<any> {
-        return sendRequest(SUB_ELECTIONS_API, methods.POST, {
+        return sendRequest(SUB_ELECTIONS_API, methods.POST,
+            {
                 election: electionId,
                 title: name
-            }
-        )
+            })
     }
 
     updateSubElection(subelection: SubElection) {

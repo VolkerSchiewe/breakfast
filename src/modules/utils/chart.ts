@@ -2,8 +2,6 @@ import {SubElection} from "../management/interfaces/SubElection";
 import * as palette from 'google-palette';
 
 export function getDataFromSubElection(subElection: SubElection) {
-    debugger;
-
     return {
         labels: subElection.candidates.map((candidate) => candidate.name),
         datasets: [{
