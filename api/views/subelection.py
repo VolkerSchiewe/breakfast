@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from api.serializers.subelection import SubElectionSerializer
 from election.models import SubElection, Ballot, Candidate, Election
+from election.models.state import ElectionState
 
 
 class SubElectionViewSet(viewsets.ModelViewSet):
@@ -19,13 +20,13 @@ class SubElectionViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff:
             return SubElection.objects.all()
         else:
-            return SubElection.objects.filter(election__active=True)
+            return SubElection.objects.filter(election__state=ElectionState.ACTIVE)
 
     @transaction.atomic
     @action(methods=['post'], detail=False, permission_classes=[permissions.IsAuthenticated])
     def vote(self, request):
         # TODO test, performance test
-        active_election = Election.objects.get(active=True)
+        active_election = Election.objects.get(state=ElectionState.ACTIVE)
         election_user = request.user.electionuser
 
         if active_election != election_user.election:

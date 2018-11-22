@@ -9,6 +9,6 @@ export class ElectionService {
     }
 
     setVote(selectedCandidates): Promise<any> {
-        return sendRequest(SUB_ELECTIONS_API + 'vote/', methods.POST, selectedCandidates)
+        return sendRequest(SUB_ELECTIONS_API + 'vote/', methods.POST, selectedCandidates, null, true, true)
     }
 }
