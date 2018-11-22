@@ -68,6 +68,18 @@ class ElectionApiTest(BallotsApiTestCase):
             response = self.client.post('/api/elections/create_election/', data)
             self.assertEqual(response.status_code, 400)
 
+    def test_vote_count(self):
+        response = self.client.get('/api/elections/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get('voteCount'), 3)
+
+    def test_vote_count_closed(self):
+        response = self.client.post('/api/elections/1/close/')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/api/elections/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get('voteCount'), 3)
+
 
 class ActiveElectionTest(BallotsApiTestCase):
     def setUp(self):

@@ -21,7 +21,7 @@ class LoginView(KnoxLoginView):
                 # check if user can login or not
                 if not Election.objects.filter(state=ElectionState.ACTIVE).exists():
                     return Response(_('No active Election!'), status.HTTP_400_BAD_REQUEST)
-                if user.electionuser.election != Election.objects.get(sate=ElectionState.ACTIVE):
+                if user.electionuser.election != Election.objects.get(state=ElectionState.ACTIVE):
                     return Response(_('Wrong Code!'), status.HTTP_401_UNAUTHORIZED)
                 if user.electionuser.already_elected():
                     return Response(_('Already voted!'), status.HTTP_400_BAD_REQUEST)
