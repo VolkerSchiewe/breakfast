@@ -53,3 +53,4 @@ election/.DS_Store
 election/static/.DS_Store
 staticfiles
 build
+.cache

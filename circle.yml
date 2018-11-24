@@ -12,3 +12,5 @@ dependencies:
 test:
   override:
     - python manage.py test
+    - coverage run --omit '.env/*,manage.py,*settings.py' manage.py test
+    - coverage report
