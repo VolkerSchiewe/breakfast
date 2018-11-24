@@ -25,7 +25,6 @@ class SubElectionViewSet(viewsets.ModelViewSet):
     @transaction.atomic
     @action(methods=['post'], detail=False, permission_classes=[permissions.IsAuthenticated])
     def vote(self, request):
-        # TODO test, performance test
         active_election = Election.objects.get(state=ElectionState.ACTIVE)
         election_user = request.user.electionuser
 

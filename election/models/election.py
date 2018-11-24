@@ -20,7 +20,6 @@ class Election(models.Model):
 
     @property
     def votes_count(self):
-        # TODO test
         if self.subelection_set.all().count() == 0:
             return 0
         if self.state == ElectionState.CLOSED:
