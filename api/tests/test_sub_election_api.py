@@ -40,3 +40,29 @@ class SubElectionUserApiTest(BallotsTestCase):
         Election.objects.filter(state=ElectionState.ACTIVE).update(state=ElectionState.NOT_ACTIVE)
         with self.assertRaises(Election.DoesNotExist):
             self.client.post('/api/subelections/vote/', {'1': 2, '2': 3})
+
+    def test_wrong_user(self):
+        first_election = Election.objects.get(pk=1)
+        first_election.state = ElectionState.NOT_ACTIVE
+        first_election.save()
+        election = Election.objects.create(title='New', state=ElectionState.ACTIVE)
+        election.create_users(5)
+        response = self.client.post('/api/login/', {'username': election.electionuser_set.first().user.username,
+                                                    'password': settings.PASSWORD})
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data.get('token'))
+        election.state = ElectionState.NOT_ACTIVE
+        first_election.state = ElectionState.ACTIVE
+        election.save()
+        first_election.save()
+        response = self.client.post('/api/subelections/vote/', {'1': 2, '2': 3})
+        self.assertEqual(response.status_code, 400)
+
+    def test_wrong_request_data(self):
+        response = self.client.post('/api/subelections/vote/', {'1': 2})
+        self.assertEqual(response.status_code, 400)
+
+    def test_duplicate_election(self):
+        response = self.client.post('/api/subelections/vote/', {'1': 2, '2': 3})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post('/api/subelections/vote/', {'1': 2, '2': 3})
+        self.assertEqual(response.status_code, 400)

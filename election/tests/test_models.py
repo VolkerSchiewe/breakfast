@@ -1,8 +1,8 @@
 import time
 
-from election.models import Election, Candidate, Ballot, ElectionUser
+from election.models import Election, Candidate, Ballot, ElectionUser, SubElection, Image
 from election.models.state import ElectionState
-from election.tests.test_case import ElectionTestCase
+from election.tests.test_case import ElectionTestCase, BallotsTestCase
 
 
 class ActiveElectionTests(ElectionTestCase):
@@ -33,29 +33,14 @@ class CreateElectionTest(ElectionTestCase):
         election.create_users(1)
         self.assertEqual(election.electionuser_set.count(), 6)
 
+    def test_new_election(self):
+        election = Election.objects.create(title='title')
+        self.assertIs(election.votes_count, 0)
 
-class SelectionTest(ElectionTestCase):
-    def test_select_candidate(self):
-        election_user = ElectionUser.objects.filter(election__isnull=False).first()
-        candidate = Candidate.objects.get(pk=1)
-        election_user.select_candidate(candidate)
-        user_ballots = Ballot.objects.filter(user=election_user)
-        self.assertIs(user_ballots.count(), 1)
-        ballot = user_ballots.first()
-        self.assertEqual(ballot.user, election_user)
-        self.assertEqual(ballot.choice, candidate)
 
-    def test_second_ballot(self):
-        election_user = ElectionUser.objects.filter(election__isnull=False).first()
-        candidate = Candidate.objects.get(pk=1)
-        election_user.select_candidate(candidate)
-        with self.assertRaises(ValueError):
-            election_user.select_candidate(candidate)
-
-    def test_second_ballot_for_sub_election(self):
-        election_user = ElectionUser.objects.filter(election__isnull=False).first()
-        candidate_1 = Candidate.objects.get(pk=1)
-        candidate_2 = Candidate.objects.get(pk=2)
-        election_user.select_candidate(candidate_1)
-        with self.assertRaises(ValueError):
-            election_user.select_candidate(candidate_2)
+class StringRepresentationTests(BallotsTestCase):
+    def test_string_representations(self):
+        models = [Election, Ballot, SubElection, Candidate, Image, ElectionUser]
+        for item in models:
+            obj = item.objects.first()
+            self.assertIsInstance(str(obj), str)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-17 11:04+0100\n"
+"POT-Creation-Date: 2018-11-24 09:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,37 +18,41 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: api/views/election.py:24
-msgid "Title or Number missing"
-msgstr "Titel oder Anzahl fehlt"
-
-#: api/views/login.py:21
+#: api/tests/test_login_api.py:35 api/views/login.py:23
 msgid "No active Election!"
 msgstr "Es geht noch nicht los!"
 
-#: api/views/login.py:23
+#: api/tests/test_login_api.py:46 api/views/login.py:25
 msgid "Wrong Code!"
 msgstr "Falscher Code!"
 
-#: api/views/login.py:25
+#: api/tests/test_login_api.py:53 api/views/login.py:27
 msgid "Already voted!"
 msgstr "Du hast bereits gewählt!"
 
-#: api/views/login.py:29
+#: api/views/election.py:23
+msgid "Title or Number missing"
+msgstr "Titel oder Anzahl fehlt"
+
+#: api/views/election.py:27
+msgid "Number must be integer"
+msgstr ""
+
+#: api/views/login.py:31
 msgid "Wrong credentials"
 msgstr "Falsche Zugangsdaten"
 
-#: api/views/subelection.py:36
-msgid "This ballot already exists. Please contact the election board."
-msgstr "Deine Stimme existiere bereits. Melde dich beim Wahlausschuss."
-
-#: api/views/subelection.py:42
+#: api/views/subelection.py:33
 msgid "User is not part of the active election"
 msgstr "Der Nutzer ist nicht teil der aktiven Wahl"
 
-#: api/views/subelection.py:44
+#: api/views/subelection.py:35
 msgid "Number of votes must match the number of sub_elections"
 msgstr "Die anzahl an Stimmen muss der Anzahl der Wahlen entsprechen"
+
+#: api/views/subelection.py:41
+msgid "This ballot already exists. Please contact the election board."
+msgstr "Deine Stimme existiere bereits. Melde dich beim Wahlausschuss."
 
 #: breakfast/settings.py:97
 msgid "English"
@@ -58,11 +62,18 @@ msgstr "Englisch"
 msgid "German"
 msgstr "Deutsch"
 
+#: election/models/election_user.py:26
+msgid "Something went wrong. Please contact the committee!"
+msgstr "Etwas ist schief gelaufen. Bitte melde Dich beim Wahlausschuss!"
+
+#: election/models/state.py:6
 msgid "not active"
 msgstr "Nicht Aktiv"
 
+#: election/models/state.py:7
 msgid "active"
 msgstr "Aktiv"
 
+#: election/models/state.py:8
 msgid "closed"
 msgstr "Abgeschlossen"

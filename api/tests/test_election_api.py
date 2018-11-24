@@ -80,6 +80,10 @@ class ElectionApiTest(BallotsApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get('voteCount'), 3)
 
+        # Test closed candidate
+        response = self.client.get('/api/candidates/1/')
+        self.assertIs(response.data.get('votes'), 1)
+
 
 class ActiveElectionTest(BallotsApiTestCase):
     def setUp(self):
