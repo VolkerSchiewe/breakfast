@@ -36,6 +36,8 @@ jobs:
             npm install
       - save_cache:
           key: npm-requirements-{{ checksum "package.json" }}
+          paths:
+            - "node_modules"
       - run:
           name: "Build Frontend"
           command: |
