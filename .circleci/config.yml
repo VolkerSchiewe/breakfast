@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/breakfast
     docker:
-      - image: circleci/python:3.6-stretch-node
+      - image: circleci/python:3.6.4-node
         environment:
           PIPENV_VENV_IN_PROJECT: true
           DATABASE_URL: postgresql://root@localhost/breakfast?sslmode=disable
