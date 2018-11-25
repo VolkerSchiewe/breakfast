@@ -18,6 +18,7 @@ jobs:
       - restore_cache:
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
+          name: "Python Dependencies"
           command: |
             sudo pip install pipenv
             pipenv install
@@ -27,10 +28,24 @@ jobs:
             - ".venv"
             - "/usr/local/bin"
             - "/usr/local/lib/python3.6/site-packages"
+      - restore_cache:
+          key: npm-requirements-{{ checksum "package.json" }}
       - run:
+          name: "Node Dependencies"
+          command: |
+            npm install
+      - save_cache:
+          key: npm-requirements-{{ checksum "package.json" }}
+      - run:
+          name: "Build Frontend"
+          command: |
+            npm run build
+      - run:
+          name: "Django collectstatic"
           command: |
             pipenv run "python manage.py collectstatic --no-input"
       - run:
+          name: "Backend tests"
           command: |
             pipenv run "python manage.py test"
       - store_test_results:
