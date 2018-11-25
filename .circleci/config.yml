@@ -49,7 +49,7 @@ jobs:
       - run:
           name: "Backend tests"
           command: |
-            pipenv run "coverage run --omit '.venv/*,*manage.py,*settings.py' manage.py test"
+            pipenv run "coverage run --omit '*/.venv/*,*/manage.py,*/settings.py' manage.py test"
       - run:
           name: "Backend Coverage"
           command: |
