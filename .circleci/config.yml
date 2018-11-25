@@ -53,7 +53,7 @@ jobs:
       - run:
           name: "Backend Coverage"
           command: |
-            pipenv run "coverage xml -o test-results/coverage.xml"
+            pipenv run "coverage report && coverage html -o test-results/coverage.xml"
       - store_test_results:
           path: test-results
       - store_artifacts:
