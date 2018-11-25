@@ -53,3 +53,6 @@ election/.DS_Store
 election/static/.DS_Store
 staticfiles
 build
+node_modules
+dump.rdb
+.cache
