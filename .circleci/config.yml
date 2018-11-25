@@ -53,7 +53,7 @@ jobs:
       - run:
           name: "Backend Coverage"
           command: |
-            pipenv run "python coverage report"
+            pipenv run "coverage report"
       - store_test_results:
           path: test-results
       - store_artifacts:
