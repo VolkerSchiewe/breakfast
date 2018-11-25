@@ -49,7 +49,11 @@ jobs:
       - run:
           name: "Backend tests"
           command: |
-            pipenv run "python manage.py test"
+            pipenv run "python coverage run manage.py test"
+      - run:
+          name: "Backend Coverage"
+          command: |
+            pipenv run "python coverage report"
       - store_test_results:
           path: test-results
       - store_artifacts:
