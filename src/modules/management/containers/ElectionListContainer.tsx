@@ -10,6 +10,8 @@ import CircularProgress from "@material-ui/core/CircularProgress/CircularProgres
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import {openWebsocket} from "../../utils/websocket";
 import {ElectionState} from "../interfaces/ElectionState";
+import {parse} from "qs";
+
 
 interface ElectionListContainerState {
     elections: Election[]
@@ -56,25 +58,25 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
             snackbarOpen: true,
         });
     };
-    handleMenuItemSelected = (item: number) => {
-        switch (item) {
-            case 0: {
-                this.setState({
-                    elections: [],
-                }, () => {
-                    if (this.ws != null && this.ws.ws.readyState == this.ws.ws.OPEN) {
-                        this.ws.send('Updata Data')
-                    }
-                });
-                return
+    handleRefresh = () => {
+        this.setState({
+            elections: [],
+        }, () => {
+            if (this.ws != null && this.ws.ws.readyState == this.ws.ws.OPEN) {
+                this.ws.send('Updata Data')
             }
-            case 1: {
-                this.setState({
-                    showClosedElections: !this.state.showClosedElections
-                });
-                return
-            }
-        }
+        });
+    };
+    handleShowClosedChange = () => {
+        this.props.history.push('/elections/?closed=' + !this.state.showClosedElections);
+        this.setState({
+            showClosedElections: !this.state.showClosedElections
+        });
+    };
+
+    parseShowClosedElections = () => {
+        const params = parse(this.props.location.search, {ignoreQueryPrefix: true});
+        return params['closed'] == "true";
     };
 
     constructor(props: any) {
@@ -84,7 +86,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
             modalElection: null,
             electionModalOpen: false,
             snackbarOpen: false,
-            showClosedElections: false
+            showClosedElections: this.parseShowClosedElections()
         };
     }
 
@@ -93,7 +95,7 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
     }
 
     componentWillUnmount() {
-        this.ws.close()
+        this.ws.close(1000)
     }
 
     render() {
@@ -106,11 +108,13 @@ class ElectionListContainer extends Component<RouteComponentProps, ElectionListC
         return (
             <div>
                 <ElectionList elections={filteredElections} activeElectionId={activeElectionId}
+                              showClosed={showClosedElections}
                               handleActiveChange={this.handleActiveChange}
                               handleRowClick={this.handleRowClick}
                               handleCodesClick={this.handleCodesClick}
                               handleNewElection={this.openNewElection}
-                              handleMenuItemSelected={this.handleMenuItemSelected}/>
+                              handleShowClosedChange={this.handleShowClosedChange}
+                              handleRefresh={this.handleRefresh}/>
                 <Snackbar open={snackbarOpen}
                           message={(
                               <Grid container alignItems={"center"}>

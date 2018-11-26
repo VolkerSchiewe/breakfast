@@ -1,5 +1,6 @@
 # breakfast
-[![CircleCI](https://img.shields.io/circleci/project/github/VolkerSchiewe/breakfast.svg)]()
+[![CircleCI](https://img.shields.io/circleci/project/github/VolkerSchiewe/breakfast.svg)](https://circleci.com/gh/VolkerSchiewe/breakfast)
+[![Coverage](https://img.shields.io/badge/coverage-%3E98%25-brightgreen.svg)]()
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 Small election tool based on django

@@ -15,16 +15,17 @@ import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import Button from "@material-ui/core/Button/Button";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import {MoreMenu} from "../../layout/components/MoreMenu";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import cc from "classcat"
 import {ElectionState} from "../interfaces/ElectionState";
 import {StatusBadge} from "../../layout/components/StatusBadge";
-import Lock from "@material-ui/icons/Lock";
+import Switch from "@material-ui/core/Switch/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 
 interface ElectionListProps {
     elections: Election[]
     activeElectionId?: number
+    showClosed: boolean
 
     handleActiveChange(id)
 
@@ -34,7 +35,9 @@ interface ElectionListProps {
 
     handleNewElection()
 
-    handleMenuItemSelected(item: number)
+    handleShowClosedChange()
+
+    handleRefresh()
 }
 
 const styles = ({
@@ -72,18 +75,7 @@ const styles = ({
     }),
 });
 
-const options = [
-    {
-        id: 0,
-        text: "Refresh",
-        icon: <Refresh/>,
-    }, {
-        id: 1,
-        text: "Abgeschlossene anzeigen",
-        icon: <Lock/>
-    }
-];
-export const ElectionList = ({elections, activeElectionId, handleActiveChange, handleRowClick, handleCodesClick, handleNewElection, handleMenuItemSelected}: ElectionListProps) => (
+export const ElectionList = ({elections, activeElectionId, showClosed, handleActiveChange, handleRowClick, handleCodesClick, handleNewElection, handleRefresh, handleShowClosedChange}: ElectionListProps) => (
     <div className={styles.root}>
         <Paper className={styles.paper}>
             <Toolbar>
@@ -94,10 +86,23 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                 </div>
                 <div className={styles.spacer}/>
                 <div className={styles.tableButtons}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={showClosed}
+                                onChange={() => handleShowClosedChange()}
+                                value="showClosed"
+                                color="primary"
+                            />
+                        }
+                        label="Abgeschlossene anzeigen"
+                    />
                     <IconButton onClick={handleNewElection}>
                         <Add/>
                     </IconButton>
-                    <MoreMenu options={options} onItemSelected={handleMenuItemSelected}/>
+                    <IconButton onClick={handleRefresh}>
+                        <Refresh/>
+                    </IconButton>
                 </div>
             </Toolbar>
             <Table className={styles.table}>
@@ -113,8 +118,8 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                 </TableHead>
                 <TableBody>
                     {elections.map(election => (
-                        <TableRow key={election.id}
-                                  className={cc([styles.row, election.state == ElectionState.CLOSED && styles.finished])}>
+                            <TableRow key={election.id}
+                                      className={cc([styles.row, election.state == ElectionState.CLOSED && styles.spacer])}>
                                 <TableCell component="th" scope="row" onClick={() => handleRowClick(election.id)}>
                                     {election.title}
                                 </TableCell>
@@ -131,8 +136,8 @@ export const ElectionList = ({elections, activeElectionId, handleActiveChange, h
                                 <TableCell numeric onClick={() => handleRowClick(election.id)}>
                                     {election.voteCount}
                                 </TableCell>
-                            <TableCell padding={"checkbox"}>
-                                {election.state == ElectionState.CLOSED ?
+                                <TableCell padding={"checkbox"}>
+                                    {election.state == ElectionState.CLOSED ?
                                         <StatusBadge state={election.state}/>
                                         :
                                         <Checkbox

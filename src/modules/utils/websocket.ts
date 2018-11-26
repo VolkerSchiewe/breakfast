@@ -4,7 +4,7 @@ export function openWebsocket(endpoint: string, onMessage: (e) => void) {
 
     const protocol = location.protocol == 'https:' ? 'wss:' : 'ws:';
     const url = `${protocol}//${location.host}/${endpoint}`;
-    const sochkette = new Sockette(url, {
+    const socket = new Sockette(url, {
         timeout: 3000,
         maxAttempts: 10,
         onopen: e => onOpen(e),
@@ -13,7 +13,7 @@ export function openWebsocket(endpoint: string, onMessage: (e) => void) {
         onerror: e => onError(e),
     });
     const onOpen = (e) => {
-        sochkette.ws = e.target;
+        socket.ws = e.target;
         if (process.env.NODE_ENV !== 'production')
             console.log(endpoint + ' Connected!')
     };
@@ -27,5 +27,5 @@ export function openWebsocket(endpoint: string, onMessage: (e) => void) {
         console.log(endpoint + ' Error!', e)
     };
 
-    return sochkette
+    return socket
 }

@@ -210,7 +210,7 @@ export class EditElectionContainer extends Component<EditElectionProps, EditElec
     }
 
     componentWillUnmount() {
-        this.ws.close()
+        this.ws.close(1000)
     }
 
     render() {
