@@ -119,7 +119,7 @@ export const ElectionList = ({elections, activeElectionId, showClosed, handleAct
                 <TableBody>
                     {elections.map(election => (
                             <TableRow key={election.id}
-                                      className={cc([styles.row, election.state == ElectionState.CLOSED && styles.spacer])}>
+                                      className={cc([styles.row, election.state == ElectionState.CLOSED && styles.finished])}>
                                 <TableCell component="th" scope="row" onClick={() => handleRowClick(election.id)}>
                                     {election.title}
                                 </TableCell>

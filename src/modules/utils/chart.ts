@@ -11,9 +11,11 @@ export function getDataFromSubElection(subElection: SubElection) {
     };
 }
 
-export function chartOptions(fontSize: number = 12, animation: boolean = true) {
-    const boxWidth = fontSize * 20 / 12;
-    const padding = fontSize * 10 / 12;
+export function chartOptions(adaptToView: boolean = false, animation: boolean = true) {
+    // const width = window.innerWidth
+    const boxWidth = adaptToView ? window.innerWidth / 40 : 12;
+    const padding = adaptToView ?  window.innerWidth / 50 : 12;
+    const fontSize = adaptToView ? window.innerWidth / 40 : 12;
     let data = {
         legend: {
             position: 'right',

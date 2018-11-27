@@ -13,7 +13,7 @@ import {AlertDialog} from "../../layout/components/AlertDialog";
 import TextField from "@material-ui/core/TextField/TextField";
 import {openWebsocket} from "../../utils/websocket";
 import {RouteComponentProps} from "react-router";
-import {ResultModal} from "../components/ResultModal";
+import ResultModal from "../components/ResultModal";
 
 interface EditElectionState {
     election?: Election

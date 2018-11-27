@@ -46,10 +46,13 @@ const styles = ({
         padding: 15,
     }),
     grid: style({
+        width: "100%",
         padding: 5,
     }),
     candidate: style({
         margin: 10,
+    }),
+    pointer: style({
         cursor: "pointer",
     }),
     addCandidate: style({
@@ -61,17 +64,8 @@ const styles = ({
     results: style({
         marginTop: 20,
     }),
-    header: style({
-        display: "flex",
-        justifyContent: "space-between",
-        marginBottom: 10,
-    }),
     votes: style({
         marginLeft: 5,
-    }),
-    headerItems: style({
-        display: 'flex',
-        flexDirection: 'row',
     }),
 });
 const options = [
@@ -90,25 +84,28 @@ const options = [
 export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, editElection, handleMenuItemSelected, handleResultClick}: ElectionListProps) => (
     <div className={styles.root}>
         <Grid container>
-            <Grid item xs={12} className={styles.header}>
-                <div className={styles.headerItems}>
-                    <Typography variant={"h3"}>
-                        {election.title}
-                    </Typography>
-                    {election.state == ElectionState.NOT_ACTIVE &&
-                    <Button onClick={editElection}>
-                        <Edit/>
-                    </Button>
-                    }
-                </div>
+            <Grid container item xs={12} justify={"space-between"}>
+                <Grid  item>
+                    <Grid container >
+                        <Typography variant={"h3"}>
+                            {election.title}
+                        </Typography>
+                        {election.state == ElectionState.NOT_ACTIVE &&
+                        <Button onClick={editElection}>
+                            <Edit/>
+                        </Button>
+                        }
+                    </Grid>
+                </Grid>
+                <Grid  item>
+                    <Grid container >
+                        <StatusBadge state={election.state}/>
 
-                <div className={styles.headerItems}>
-                    <StatusBadge state={election.state}/>
-
-                    {election.state != ElectionState.CLOSED &&
-                    <MoreMenu options={options} onItemSelected={handleMenuItemSelected}/>
-                    }
-                </div>
+                        {election.state != ElectionState.CLOSED &&
+                        <MoreMenu options={options} onItemSelected={handleMenuItemSelected}/>
+                        }
+                    </Grid>
+                </Grid>
             </Grid>
             {election.voteCount > 0 && subElections.length > 0 &&
             <Typography variant={"h6"}
@@ -116,7 +113,7 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
             }
             <Grid container>
                 {subElections.map(subElection => (
-                    <Grid item xs={6} className={styles.grid} key={subElection.id}>
+                    <Grid item sm={6} className={styles.grid} key={subElection.id}>
                         <Paper className={styles.paper}>
                             <Grid container direction={"row"} justify={"space-between"} alignItems={"center"}>
                                 <Typography variant={"h4"} align={"center"}>
@@ -133,17 +130,18 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                             </Grid>
                             <Grid container>
                                 {subElection.candidates.map(candidate => (
-                                        <Grid className={styles.candidate}
-                                              onClick={() => {
-                                                  if (election.state == ElectionState.NOT_ACTIVE) openCandidateModal(subElection.id, candidate)
-                                              }}
-                                              key={candidate.id}>
+                                        <Grid
+                                            className={cc([styles.candidate, election.state == ElectionState.NOT_ACTIVE && styles.pointer])}
+                                            onClick={() => {
+                                                if (election.state == ElectionState.NOT_ACTIVE) openCandidateModal(subElection.id, candidate)
+                                            }}
+                                            key={candidate.id}>
                                             <CandidateView candidate={candidate}/>
                                         </Grid>
                                     )
                                 )}
                                 {election.state == ElectionState.NOT_ACTIVE &&
-                                <Grid className={cc([styles.addCandidate, styles.candidate])}
+                                <Grid className={cc([styles.addCandidate, styles.candidate, styles.pointer])}
                                       onClick={() => openCandidateModal(subElection.id)}>
                                     <Add fontSize={"large"}/>
                                     <Typography align={"center"}>Neu</Typography>
@@ -156,7 +154,7 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                     </Grid>
                 ))}
                 {election.state == ElectionState.NOT_ACTIVE &&
-                <Grid item xs={6} className={styles.grid}>
+                <Grid item sm={6} className={styles.grid}>
                     <CreateSubElection saveSubElection={saveSubElection}/>
                 </Grid>
                 }
