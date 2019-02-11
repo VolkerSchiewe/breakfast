@@ -4,12 +4,12 @@ import {Election} from "../components/Election";
 import {Candidate} from "../../management/interfaces/Candidate";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import {ElectionService} from "../services/election-service";
-import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Grid from "@material-ui/core/Grid/Grid";
 import {style} from "typestyle";
-import {RouteComponentProps, withRouter} from 'react-router';
+import {Redirect, RouteComponentProps, withRouter} from 'react-router';
 import {AuthConsumer} from "../../auth/components/AuthContext";
 import {AuthInterface} from "../../auth/interfaces/AuthInterface";
+import {LoadingSpinner} from "../../misc/components/LoadingSpinner";
 
 interface ElectionContainerState {
     isLoading: boolean
@@ -111,15 +111,20 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
             <div>
                 {isLoading ?
                     <Grid container justify={"center"} className={styles.spinner}>
-                        <CircularProgress/>
+                        <LoadingSpinner isLoading={isLoading}/>
                     </Grid>
                     :
                     <AuthConsumer>
-                        {({logout}: AuthInterface) => (
-                            <Election subElections={subElections} selectedCandidates={selectedCandidates}
-                                      onCandidateClick={this.onCandidateSelected}
-                                      onSubmit={() => this.onSubmit(logout)}
-                                      onReload={this.fetchData}/>
+                        {({logout, user}: AuthInterface) => (
+                            <React.Fragment>
+                                {user.isAdmin && (
+                                    <Redirect to={"/elections/"}/>
+                                )}
+                                <Election subElections={subElections} selectedCandidates={selectedCandidates}
+                                          onCandidateClick={this.onCandidateSelected}
+                                          onSubmit={() => this.onSubmit(logout)}
+                                          onReload={this.fetchData}/>
+                            </React.Fragment>
                         )}
                     </AuthConsumer>
                 }

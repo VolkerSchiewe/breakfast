@@ -24,7 +24,7 @@ export const AuthConsumer = Consumer;
 class AuthProviderComponent extends React.Component<RouteComponentProps, AuthProviderState> {
     authService = new AuthService();
     login = (name: string, password: string) => {
-        this.setState({isLoading: false, error: null});
+        this.setState({isLoading: true, error: null});
         this.authService.login(name, password)
             .then(res => {
                 storeUserData(res.user, res.token);
