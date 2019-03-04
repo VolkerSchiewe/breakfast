@@ -23,6 +23,7 @@ django-choices = "~=1.6.1"
 Django = "~=2.1.2"
 Pillow = "~=5.3.0"
 service-identity = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.6"
