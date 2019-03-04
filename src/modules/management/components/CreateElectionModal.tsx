@@ -50,7 +50,7 @@ export class CreateElectionModal extends React.Component<CreateElectionModalProp
             <div>
                 <Dialog open={isOpen}>
                     <form onSubmit={this.submit}>
-                        <DialogTitle>Wahl erstellen</DialogTitle>
+                        <DialogTitle>Wahlgang erstellen</DialogTitle>
                         <DialogContent>
                             <Grid container direction={"column"} justify={"center"}>
                                 <TextField
@@ -59,7 +59,7 @@ export class CreateElectionModal extends React.Component<CreateElectionModalProp
                                     value={title}
                                     autoFocus
                                     required
-                                    label="Wahl Titel"
+                                    label="Name"
                                     margin={"normal"}/>
                                 <TextField
                                     variant={"outlined"}
