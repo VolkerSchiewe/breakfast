@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-24 09:54+0100\n"
+"POT-Creation-Date: 2019-03-04 14:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: api/tests/test_login_api.py:35 api/views/login.py:23
+#: api/tests/test_login_api.py:35 api/views/login.py:22
 msgid "No active Election!"
 msgstr "Es geht noch nicht los!"
 
-#: api/tests/test_login_api.py:46 api/views/login.py:25
+#: api/tests/test_login_api.py:46 api/views/login.py:24
 msgid "Wrong Code!"
 msgstr "Falscher Code!"
 
-#: api/tests/test_login_api.py:53 api/views/login.py:27
+#: api/tests/test_login_api.py:53 api/views/login.py:26
 msgid "Already voted!"
 msgstr "Du hast bereits gewählt!"
 
@@ -38,19 +38,23 @@ msgstr "Titel oder Anzahl fehlt"
 msgid "Number must be integer"
 msgstr ""
 
-#: api/views/login.py:31
+#: api/views/login.py:30
 msgid "Wrong credentials"
 msgstr "Falsche Zugangsdaten"
 
 #: api/views/subelection.py:33
+msgid "This election is not active anymore."
+msgstr "Diese Wahl ist nicht mehr aktiv."
+
+#: api/views/subelection.py:35
 msgid "User is not part of the active election"
 msgstr "Der Nutzer ist nicht teil der aktiven Wahl"
 
-#: api/views/subelection.py:35
+#: api/views/subelection.py:37
 msgid "Number of votes must match the number of sub_elections"
 msgstr "Die anzahl an Stimmen muss der Anzahl der Wahlen entsprechen"
 
-#: api/views/subelection.py:41
+#: api/views/subelection.py:43
 msgid "This ballot already exists. Please contact the election board."
 msgstr "Deine Stimme existiere bereits. Melde dich beim Wahlausschuss."
 

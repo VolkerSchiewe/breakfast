@@ -26,9 +26,11 @@ class SubElectionViewSet(viewsets.ModelViewSet):
     @transaction.atomic
     @action(methods=['post'], detail=False, permission_classes=[permissions.IsAuthenticated])
     def vote(self, request):
-        active_election = Election.objects.get(state=ElectionState.ACTIVE)
+        active_election = Election.objects.filter(state=ElectionState.ACTIVE).first()
         election_user = request.user.electionuser
 
+        if not active_election:
+            return Response(_('This election is not active anymore.'), status.HTTP_400_BAD_REQUEST)
         if active_election != election_user.election:
             return Response(_('User is not part of the active election'), status.HTTP_400_BAD_REQUEST)
         if active_election.subelection_set.count() != len(request.data.keys()):

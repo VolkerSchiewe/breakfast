@@ -6,7 +6,6 @@ import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import {deleteUserData, getUserData, storeUserData} from "../../utils/auth";
 
 interface AuthProviderState extends AuthInterface {
-    snackbarOpen: boolean
 }
 
 const {Provider, Consumer} = React.createContext<AuthInterface>({
@@ -37,7 +36,7 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
 
             })
             .catch(err => {
-                this.setState({isLoading: false, error: err.response.data, snackbarOpen: true}
+                this.setState({isLoading: false, error: err.response.data}
                 )
             });
     };
@@ -60,7 +59,7 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
                 } else {
                     err.json()
                         .then(res => {
-                                this.setState({isLoading: false, error: res.detail, snackbarOpen: true})
+                                this.setState({isLoading: false, error: res.detail})
                             }
                         )
                 }
@@ -68,7 +67,7 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
     };
 
     onSnackbarClose = () => {
-        this.setState({snackbarOpen: false})
+        this.setState({error: null})
     };
 
     constructor(props) {
@@ -83,7 +82,6 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
             user: user,
             error: null,
             isLoading: false,
-            snackbarOpen: false,
 
             login: this.login,
             logout: this.logout,
@@ -91,13 +89,13 @@ class AuthProviderComponent extends React.Component<RouteComponentProps, AuthPro
     }
 
     render() {
-        const {snackbarOpen, error} = this.state;
+        const {error} = this.state;
         return (
             <div>
                 <Provider value={this.state}>
                     {this.props.children}
                 </Provider>
-                <Snackbar open={snackbarOpen} message={<span>{error}</span>} autoHideDuration={5000}
+                <Snackbar open={!!error} message={<span>{error}</span>} autoHideDuration={5000}
                           onClose={this.onSnackbarClose}/>
             </div>
         );

@@ -15,7 +15,6 @@ interface ElectionContainerState {
     isLoading: boolean
     subElections: SubElection[]
     selectedCandidates: {}
-    snackbarOpen: boolean
     snackbarMessage: string
 }
 
@@ -45,7 +44,6 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
         const {selectedCandidates, subElections} = this.state;
         if (Object.keys(selectedCandidates).length != subElections.length)
             this.setState({
-                snackbarOpen: true,
                 snackbarMessage: "Du musst überall einen Kandidaten wählen!"
             });
         else {
@@ -53,16 +51,15 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
             this.electionService.setVote(selectedCandidates)
                 .then(() => {
                     this.setState({
-                        snackbarOpen: true,
                         snackbarMessage: "Deine Stimme wurde gespeichert"
                     });
                     setTimeout(() => logout(), 1500)
                 })
                 .catch(e => {
                     this.setState({
-                        snackbarOpen: true,
-                        snackbarMessage: "Etwas ist schief gelaufen. Melde dich bei der Wahlleitung."
+                        snackbarMessage: e.response.data,
                     });
+                    setTimeout(() => logout(), 1500);
                     console.error(e)
                 });
         }
@@ -73,7 +70,6 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
                 if (res.length == 0) {
                     this.setState({
                         snackbarMessage: "Warte noch es geht noch nicht los!",
-                        snackbarOpen: true,
                     });
                 }
                 this.setState({
@@ -83,7 +79,6 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
             })
             .catch(e => {
                 this.setState({
-                    snackbarOpen: true,
                     snackbarMessage: "Etwas ist schief gelaufen. Melde dich bei der Wahlleitung."
                 });
                 console.error(e)
@@ -96,8 +91,7 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
             isLoading: true,
             subElections: [],
             selectedCandidates: {},
-            snackbarOpen: false,
-            snackbarMessage: ""
+            snackbarMessage: null,
         }
     }
 
@@ -106,7 +100,7 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
     }
 
     render() {
-        const {subElections, selectedCandidates, isLoading, snackbarOpen, snackbarMessage} = this.state;
+        const {subElections, selectedCandidates, isLoading, snackbarMessage} = this.state;
         return (
             <div>
                 {isLoading ?
@@ -128,9 +122,9 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
                         )}
                     </AuthConsumer>
                 }
-                <Snackbar open={snackbarOpen} message={<span>{snackbarMessage}</span>}
+                <Snackbar open={!!snackbarMessage} message={<span>{snackbarMessage}</span>}
                           autoHideDuration={5000}
-                          onClose={() => this.setState({snackbarOpen: false})}/>
+                          onClose={() => this.setState({snackbarMessage: null})}/>
             </div>
         )
     }
