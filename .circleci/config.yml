@@ -49,12 +49,12 @@ jobs:
       - run:
           name: "Backend tests"
           command: |
-            pipenv run "coverage run --omit */.venv/* manage.py test"
+            pipenv run coverage run --omit */.venv/* manage.py test
       - run:
           name: "Backend Coverage"
           command: |
-            pipenv run "coverage html -d test-results"
-            pipenv run "coverage report --fail-under 95"
+            pipenv run coverage html -d test-results
+            pipenv run coverage report --fail-under 95
       - store_test_results:
           path: test-results
       - store_artifacts:
