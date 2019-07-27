@@ -45,7 +45,7 @@ jobs:
       - run:
           name: "Django collectstatic"
           command: |
-            pipenv run "python manage.py collectstatic --no-input"
+            pipenv run python manage.py collectstatic --no-input
       - run:
           name: "Backend tests"
           command: |
