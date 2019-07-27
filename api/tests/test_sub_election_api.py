@@ -38,8 +38,8 @@ class SubElectionUserApiTest(BallotsTestCase):
 
     def test_not_active_fails(self):
         Election.objects.filter(state=ElectionState.ACTIVE).update(state=ElectionState.NOT_ACTIVE)
-        with self.assertRaises(Election.DoesNotExist):
-            self.client.post('/api/subelections/vote/', {'1': 2, '2': 3})
+        response = self.client.post('/api/subelections/vote/', {'1': 2, '2': 3})
+        self.assertEqual(response.status_code, 400)
 
     def test_wrong_user(self):
         first_election = Election.objects.get(pk=1)
