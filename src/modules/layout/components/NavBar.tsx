@@ -7,6 +7,7 @@ import {style} from 'typestyle';
 import {Link} from "react-router-dom";
 import {AuthConsumer} from "../../auth/components/AuthContext";
 import {AuthInterface} from "../../auth/interfaces/AuthInterface";
+import {theme} from "../styles/styles";
 
 interface NavBarProps {
     title: string
@@ -18,6 +19,9 @@ const styles = {
     root: style({
         flexGrow: 1,
         marginBottom: 50
+    }),
+    appBar: style({
+        backgroundColor: theme.palette.primary.main
     }),
     img: style({
         width: 50,
@@ -41,10 +45,9 @@ export const NavBar = ({title}: NavBarProps) => (
     <div className={styles.root}>
         <AuthConsumer>
             {({user, logout}: AuthInterface) => (
-                <AppBar position="fixed">
+                <AppBar position="static" className={styles.appBar}>
                     <Toolbar>
-                        <img className={styles.img}
-                             src={'/static/images/jugend_schaf.png'}/>
+                        <img className={styles.img} src={'/static/images/jugend_schaf.png'}/>
                         <Typography variant="h6" className={styles.text}
                                     component={user && user.isAdmin ? AdminLink : LoginLink}>
                             {title}

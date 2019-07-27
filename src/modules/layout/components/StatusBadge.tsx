@@ -14,7 +14,7 @@ const styles = ({
     }),
     statusText: style({
         backgroundColor: theme.palette.text.primary,
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         color: "white",
         borderRadius: 5,
     }),

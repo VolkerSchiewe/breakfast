@@ -1,10 +1,11 @@
 import * as React from 'react';
+import {useCallback} from 'react';
 import {style} from "typestyle";
-import Dropzone from "react-dropzone";
 import Grid from "@material-ui/core/Grid/Grid";
 import Clear from "@material-ui/icons/Clear"
 import Typography from "@material-ui/core/Typography/Typography";
 import Avatar from "@material-ui/core/Avatar/Avatar";
+import {useDropzone} from 'react-dropzone'
 
 interface UploadImageProps {
     imagePreview;
@@ -37,17 +38,20 @@ const styles = {
 };
 export const defaultImage = '/static/images/placeholder.png';
 
-export const UploadImage = ({imagePreview, handleImageChange, handleClearImage}: UploadImageProps) => (
-    <Dropzone onDrop={handleImageChange} accept="image/*" multiple={false}
-              className={styles.dropZone}>
+export const UploadImage = ({imagePreview, handleImageChange, handleClearImage}: UploadImageProps) => {
+    const onDrop = useCallback(handleImageChange, []);
+    const {getRootProps, getInputProps} = useDropzone({onDrop, multiple: false});
+
+    return (
         <Grid container direction={"column"} justify={"center"} alignItems={"center"}>
-            <div className={styles.hoverContainer}>
-                {defaultImage !== imagePreview &&
-                <Clear className={styles.hover} fontSize={"large"} onClick={handleClearImage}/>
-                }
+            <div {...getRootProps()} className={styles.hoverContainer}>
+                {defaultImage !== imagePreview && (
+                    < Clear className={styles.hover} fontSize={"large"} onClick={handleClearImage}/>
+                )}
+                <input {...getInputProps()} />
                 <Avatar src={imagePreview} className={styles.avatar}/>
+                <Typography variant={"button"} align={"center"}>Bild ändern</Typography>
             </div>
-            <Typography variant={"button"} align={"center"}>Bild ändern</Typography>
         </Grid>
-    </Dropzone>
-)
+    );
+};

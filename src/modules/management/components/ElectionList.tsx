@@ -47,7 +47,7 @@ const styles = ({
     }),
     paper: style({
         width: '100%',
-        marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing(3),
         overflowX: 'auto',
     }),
     spacer: style({
@@ -73,6 +73,9 @@ const styles = ({
     finished: style({
         backgroundColor: theme.palette.text.hint,
     }),
+    fixPadding: style({
+        padding: 9
+    })
 });
 
 export const ElectionList = ({elections, activeElectionId, showClosed, handleActiveChange, handleRowClick, handleCodesClick, handleNewElection, handleRefresh, handleShowClosedChange}: ElectionListProps) => (
@@ -93,6 +96,7 @@ export const ElectionList = ({elections, activeElectionId, showClosed, handleAct
                                 onChange={() => handleShowClosedChange()}
                                 value="showClosed"
                                 color="primary"
+                                classes={{switchBase: styles.fixPadding}}
                             />
                         }
                         label="Abgeschlossene anzeigen"
@@ -110,8 +114,8 @@ export const ElectionList = ({elections, activeElectionId, showClosed, handleAct
                     <TableRow>
                         <TableCell>Name</TableCell>
                         <TableCell>Kandidaten</TableCell>
-                        <TableCell numeric>Codes</TableCell>
-                        <TableCell numeric>Abgegebene Stimmen</TableCell>
+                        <TableCell align="right">Codes</TableCell>
+                        <TableCell align="right">Abgegebene Stimmen</TableCell>
                         <TableCell>Aktiv</TableCell>
                         <TableCell/>
                     </TableRow>
@@ -130,10 +134,10 @@ export const ElectionList = ({elections, activeElectionId, showClosed, handleAct
                                         </span>
                                     )}
                                 </TableCell>
-                                <TableCell numeric onClick={() => handleRowClick(election.id)}>
+                                <TableCell align="right" onClick={() => handleRowClick(election.id)}>
                                     {election.codes && election.codes.length}
                                 </TableCell>
-                                <TableCell numeric onClick={() => handleRowClick(election.id)}>
+                                <TableCell align="right" onClick={() => handleRowClick(election.id)}>
                                     {election.voteCount}
                                 </TableCell>
                                 <TableCell padding={"checkbox"}>
@@ -150,7 +154,7 @@ export const ElectionList = ({elections, activeElectionId, showClosed, handleAct
                                 <TableCell>
                                     {election.state != ElectionState.CLOSED &&
                                     <Button variant="outlined" onClick={() => handleCodesClick(election)}>
-                                        Codes<OpenInNew/>
+                                      Codes<OpenInNew/>
                                     </Button>
                                     }
                                 </TableCell>
