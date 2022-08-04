@@ -1,12 +1,11 @@
-[[source]]
-name = "pypi"
-url = "https://pypi.org/simple"
-verify_ssl = true
+[tool.poetry]
+name = "breakfast"
+version = "0.1.0"
+description = ""
+authors = ["Volker <volker@schiewe.dev>"]
 
-[dev-packages]
-coverage = "*"
-
-[packages]
+[tool.poetry.dependencies]
+python = "^3.7"
 channels = "~=2.1"
 daphne = "~=2.2"
 django-bootstrap3 = "~=11.0"
@@ -24,5 +23,9 @@ Django = "~=2.1"
 Pillow = "~=6.1"
 service-identity = "*"
 
-[requires]
-python_version = "3.7"
+[tool.poetry.dev-dependencies]
+coverage = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
