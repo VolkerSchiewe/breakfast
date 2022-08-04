@@ -16,14 +16,14 @@ jobs:
       - run: sudo chown -R circleci:circleci /usr/local/bin
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - restore_cache:
-          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: deps9-{{ .Branch }}-{{ checksum "poetry.lock" }}
       - run:
           name: "Python Dependencies"
           command: |
-            sudo pip install pipenv
-            pipenv install --dev
+            sudo pip install poetry
+            poetry install
       - save_cache:
-          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: deps9-{{ .Branch }}-{{ checksum "poetry.lock" }}
           paths:
             - ".venv"
             - "/usr/local/bin"
@@ -45,16 +45,16 @@ jobs:
       - run:
           name: "Django collectstatic"
           command: |
-            pipenv run python manage.py collectstatic --no-input
+            poetry run python manage.py collectstatic --no-input
       - run:
           name: "Backend tests"
           command: |
-            pipenv run coverage run --omit */.venv/* manage.py test
+            poetry run coverage run --omit */.venv/* manage.py test
       - run:
           name: "Backend Coverage"
           command: |
-            pipenv run coverage html -d test-results
-            pipenv run coverage report --fail-under 95
+            poetry run coverage html -d test-results
+            poetry run coverage report --fail-under 95
       - store_test_results:
           path: test-results
       - store_artifacts:
