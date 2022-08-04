@@ -19,7 +19,7 @@ class Base64StringField(serializers.Field):
     def to_representation(self, file):
         try:
             extension = re.search("(?<=\.)[\w+]+$", file.path).group(0)
-            extension = extension if extension.lower() is not 'jpg' else 'jpeg'
+            extension = extension if extension.lower() != 'jpg' else 'jpeg'
             with open(file.path, 'rb') as f:
                 return 'data:image/{};base64,{}'.format(extension.lower(), base64.b64encode(f.read()).decode())
         except FileNotFoundError:
