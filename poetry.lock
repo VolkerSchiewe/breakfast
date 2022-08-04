@@ -18,9 +18,6 @@ category = "main"
 optional = false
 python-versions = ">=3.7"
 
-[package.dependencies]
-typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
-
 [package.extras]
 tests = ["pytest", "pytest-asyncio", "mypy (>=0.800)"]
 
@@ -31,9 +28,6 @@ description = "Timeout context manager for asyncio programs"
 category = "main"
 optional = false
 python-versions = ">=3.6"
-
-[package.dependencies]
-typing-extensions = {version = ">=3.6.5", markers = "python_version < \"3.8\""}
 
 [[package]]
 name = "attrs"
@@ -329,11 +323,11 @@ python-versions = "*"
 
 [[package]]
 name = "pillow"
-version = "6.2.2"
+version = "8.4.0"
 description = "Python Imaging Library (Fork)"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = ">=3.6"
 
 [[package]]
 name = "psycopg2"
@@ -534,8 +528,8 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = "3.9.13"
-content-hash = "7ff705320bc20ddfcbbbacfe6a8e861efc8baee3646bc2295cea9e039159bb1b"
+python-versions = "3.9.12"
+content-hash = "129c35e12e5f83aa661a010a4ea7106a1816a58b47c8d3ce86079ee383c39a79"
 
 [metadata.files]
 aioredis = []
