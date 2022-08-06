@@ -2,8 +2,10 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import dj_database_url
+import sentry_sdk
 from django.contrib import messages
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
+from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,11 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap3',
     'rest_framework',
     'django_filters',
     'knox',
-    'raven.contrib.django.raven_compat',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +75,8 @@ TEMPLATES = [
 ASGI_APPLICATION = 'breakfast.routing.application'
 
 PASSWORD = 'ebujugend'
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 DATABASES = {
     'default': {
@@ -170,7 +172,10 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-RAVEN_CONFIG = {
-    'dsn': os.environ.get('SENTRY_DSN', ''),
-    'release': "2.0.0",
-}
+
+sentry_sdk.init(
+    dsn=os.environ.get('SENTRY_DSN', ''),
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=0.2,
+    send_default_pii=True,
+)

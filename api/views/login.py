@@ -1,5 +1,5 @@
 from django.contrib.auth import login
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from knox.views import LoginView as KnoxLoginView
 from rest_framework import permissions, status
 from rest_framework.authtoken.serializers import AuthTokenSerializer

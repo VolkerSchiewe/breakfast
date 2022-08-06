@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.decorators import action
@@ -14,7 +14,7 @@ class SubElectionViewSet(viewsets.ModelViewSet):
     queryset = SubElection.objects.all()
     serializer_class = SubElectionSerializer
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
-    filter_fields = ('election',)
+    filterset_fields = ('election',)
     ordering = ('pk',)
 
     def get_queryset(self):

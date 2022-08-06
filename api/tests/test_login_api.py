@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from election.models import Election
 from election.models.state import ElectionState

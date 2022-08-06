@@ -1,5 +1,4 @@
-from django.conf.urls import url
-from django.urls import include
+from django.urls import include, re_path
 from rest_framework.routers import DefaultRouter
 
 from api.views.candidate import CandidateViewSet
@@ -14,6 +13,6 @@ router.register(r'candidates', CandidateViewSet)
 
 urlpatterns = [
     # /api
-    url('^', include(router.urls)),
-    url('^login/$', LoginView.as_view()),
+    re_path('^', include(router.urls)),
+    re_path('^login/$', LoginView.as_view()),
 ]
