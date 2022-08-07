@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from api.views.candidate import CandidateViewSet
 from api.views.election import ElectionViewSet
-from api.views.login import LoginView
+from api.views.login import LoginView, LogoutView
 from api.views.subelection import SubElectionViewSet
 
 router = DefaultRouter()
@@ -15,4 +15,5 @@ urlpatterns = [
     # /api
     re_path('^', include(router.urls)),
     re_path('^login/$', LoginView.as_view()),
+    re_path('^logout/$', LogoutView.as_view()),
 ]

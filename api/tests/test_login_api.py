@@ -23,7 +23,6 @@ class LoginApiTest(ElectionTestCase):
             self.assertIsNotNone(user)
             self.assertIsNotNone(user.get('username'))
             self.assertIsNotNone(user.get('isAdmin'))
-            self.assertIsNotNone(response.data.get('token'))
 
     def test_failed_admin_login(self):
         response = self.client.post('/api/login/', {'username': 'admin', 'password': 'wrong passowrd'})

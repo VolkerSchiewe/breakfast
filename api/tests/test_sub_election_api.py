@@ -18,8 +18,9 @@ class SubElectionUserApiTest(BallotsTestCase):
     def setUp(self):
         super().setUp()
         self.client = APIClient()
-        response = self.client.post('/api/login/', {'username': 'OaIE', 'password': settings.PASSWORD})
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data.get('token'))
+        self.client.login(username="OaIE", password=settings.PASSWORD)
+        # response = self.client.post('/api/login/', {'username': 'OaIE', 'password': settings.PASSWORD})
+        # self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data.get('token'))
 
     def test_get_active_subelection(self):
         response = self.client.get('/api/subelections/')
@@ -47,9 +48,8 @@ class SubElectionUserApiTest(BallotsTestCase):
         first_election.save()
         election = Election.objects.create(title='New', state=ElectionState.ACTIVE)
         election.create_users(5)
-        response = self.client.post('/api/login/', {'username': election.electionuser_set.first().user.username,
-                                                    'password': settings.PASSWORD})
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data.get('token'))
+
+        self.client.login(username=election.electionuser_set.first().user.username, password = settings.PASSWORD)
         election.state = ElectionState.NOT_ACTIVE
         first_election.state = ElectionState.ACTIVE
         election.save()

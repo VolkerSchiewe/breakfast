@@ -1,8 +1,9 @@
 import {methods, sendRequest} from "../../utils/http";
+import {getCsrfToken} from "../../utils/auth";
 import {LoginResponse} from "../interfaces/LoginResponse";
 
 const LOGIN_API = '/api/login/';
-const LOGOUT_API = '/api/auth/logoutall/';
+const LOGOUT_API = '/api/logout/';
 
 export class AuthService {
     login(username: string, password: string): Promise<LoginResponse> {
@@ -14,6 +15,7 @@ export class AuthService {
             },
             {
                 'content-type': 'application/json'
+                'X-CSRFToken': getCsrfToken()
             },
             false,
             true,

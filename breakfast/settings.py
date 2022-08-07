@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
-    'knox',
 ]
 
 MIDDLEWARE = [
@@ -158,12 +157,8 @@ LOGGING = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
-}
-
-REST_KNOX = {
-    'USER_SERIALIZER': 'api.serializers.user.UserSerializer',
 }
 
 if not DEBUG:

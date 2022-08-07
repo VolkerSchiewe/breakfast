@@ -1,4 +1,4 @@
-import {deleteUserData, getToken} from "./auth";
+import {deleteUserData, getToken, getCsrfToken} from "./auth";
 import axios from 'axios'
 
 export const methods = {
@@ -35,6 +35,6 @@ export function sendRequest(endpoint: string, method: string, body?: object, hea
 export function authHeader() {
     return {
         'content-type': 'application/json',
-        'authorization': 'Token ' + getToken(),
+        'X-CSRFToken': getCsrfToken()
     };
 }

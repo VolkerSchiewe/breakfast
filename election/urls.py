@@ -1,12 +1,12 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from . import views
 
 urlpatterns = [
     # /elections
-    url(r'^$', views.react),
-    url(r'^elections/$', views.react),
-    url(r'^login/$', views.react),
-    url(r'^elections/(?P<id>\d+)/$', views.react),
-    url(r'^elections/(?P<id>\d+)/codes/$', views.react),
+    re_path(r'^$', views.react),
+    re_path(r'^elections/$', views.react),
+    re_path(r'^login/$', views.react),
+    re_path(r'^elections/(?P<id>\d+)/$', views.react),
+    re_path(r'^elections/(?P<id>\d+)/codes/$', views.react),
 ]
