@@ -203,14 +203,14 @@ Django = ">3.2"
 
 [[package]]
 name = "django"
-version = "4.1"
+version = "4.0.7"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 category = "main"
 optional = false
 python-versions = ">=3.8"
 
 [package.dependencies]
-asgiref = ">=3.5.2,<4"
+asgiref = ">=3.4.1,<4"
 sqlparse = ">=0.2.2"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
@@ -555,7 +555,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9.12"
-content-hash = "af58c20f81ef62fcedc3a9452727540610aeed9138a8e43a626333f74fc2e786"
+content-hash = "dcf0dd640f8776cbb01edc22de16a226aba4dabc7f284de680c3cc45f02afb33"
 
 [metadata.files]
 aioredis = []
