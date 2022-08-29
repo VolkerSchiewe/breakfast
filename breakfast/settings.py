@@ -21,6 +21,7 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 ALLOWED_HOSTS = [
     'localhost',
     'ebu-breakfast.herokuapp.com',
+    'https://ebu-breakfast.fly.dev'
 ]
 
 # Application definition
