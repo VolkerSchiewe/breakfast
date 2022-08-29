@@ -1,17 +1,24 @@
-FROM node:10-alpine AS node-build
+FROM node:14-alpine AS node-build
+RUN apk add g++ make py3-pip
+
 WORKDIR /app
 
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
 
-# add app
+
 COPY . ./
 
 RUN npm run build
 
 FROM python:3.9.12-slim AS python-base
-
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+        # deps for installing poetry
+        curl \
+        # deps for building python deps
+        build-essential libpq-dev gcc libpq5
     # python
 ENV PYTHONUNBUFFERED=1 \
     # prevents python creating .pyc files
@@ -40,12 +47,6 @@ ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
 # `builder-base` stage is used to build deps + create our virtual environment
 FROM python-base as builder-base
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y \
-        # deps for installing poetry
-        curl \
-        # deps for building python deps
-        build-essential libpq-dev gcc libpq5
 
 # install poetry - respects $POETRY_VERSION & $POETRY_HOME
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
@@ -60,8 +61,6 @@ RUN poetry install --no-dev
 
 # `development` image is used during development / testing
 FROM python-base as development
-ENV FASTAPI_ENV=development
-WORKDIR $PYSETUP_PATH
 
 # copy in our built poetry + venv
 COPY --from=builder-base $POETRY_HOME $POETRY_HOME
@@ -69,14 +68,15 @@ COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 
 # quicker install as runtime deps are already installed
 RUN poetry install
+WORKDIR /app
 
 
 # `production` image used for runtime
 FROM python-base as production
-ARG PORT=8000
-ENV PORT=$PORT
+
 COPY ./ /app/
 COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 COPY --from=node-build /app/static/build/ /app/static/build/
 WORKDIR /app
-CMD ["daphne", "breakfast.asgi:application", "--port", "8000", "--bind","0.0.0.0"]
+RUN python manage.py collectstatic --no-input
+CMD ["daphne", "breakfast.asgi:application", "--port", "8080", "--bind","0.0.0.0"]

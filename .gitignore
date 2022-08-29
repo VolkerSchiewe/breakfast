@@ -56,3 +56,5 @@ build
 node_modules
 dump.rdb
 .cache
+
+data
