@@ -2,9 +2,9 @@ import * as React from 'react';
 import {SubElection} from "../../management/interfaces/SubElection";
 import {Election} from "../components/Election";
 import {Candidate} from "../../management/interfaces/Candidate";
-import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import Snackbar from "@mui/material/Snackbar/Snackbar";
 import {ElectionService} from "../services/election-service";
-import Grid from "@material-ui/core/Grid/Grid";
+import Grid from "@mui/material/Grid/Grid";
 import {style} from "typestyle";
 import {Redirect, RouteComponentProps, withRouter} from 'react-router';
 import {AuthConsumer} from "../../auth/components/AuthContext";
@@ -104,7 +104,7 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
         return (
             <div>
                 {isLoading ?
-                    <Grid container justify={"center"} className={styles.spinner}>
+                    <Grid container justifyContent={"center"} className={styles.spinner}>
                         <LoadingSpinner isLoading={isLoading}/>
                     </Grid>
                     :
@@ -126,7 +126,7 @@ class ElectionContainer extends React.Component<ElectionContainerProps, Election
                           autoHideDuration={5000}
                           onClose={() => this.setState({snackbarMessage: null})}/>
             </div>
-        )
+        );
     }
 }
 

@@ -1,12 +1,11 @@
 import * as React from "react";
-import Grid from "@material-ui/core/Grid/Grid";
-import Paper from "@material-ui/core/Paper/Paper";
-import Typography from "@material-ui/core/Typography/Typography";
+import Grid from "@mui/material/Grid/Grid";
+import Paper from "@mui/material/Paper/Paper";
+import Typography from "@mui/material/Typography/Typography";
 import {CandidateView} from "../../management/components/CandidateView";
-import Button from "@material-ui/core/Button/Button";
+import Button from "@mui/material/Button/Button";
 import {SubElection} from "../../management/interfaces/SubElection";
 import {style} from "typestyle";
-import {theme} from "../../layout/styles/styles";
 import {Candidate} from "../../management/interfaces/Candidate";
 
 interface ElectionProps {
@@ -32,7 +31,6 @@ const styles = {
         marginTop: 10,
     }),
     subElection: style({
-        ...theme.mixins.gutters(),
         marginTop: 20,
         marginBottom: 20,
         padding: 20,
@@ -50,7 +48,7 @@ const styles = {
 export const Election = ({subElections, selectedCandidates, onCandidateClick, onSubmit, onReload}: ElectionProps) => (
     <div>
         {subElections.length == 0 ?
-            <Grid container justify={"center"} alignItems={"center"} className={styles.placeholder}
+            <Grid container justifyContent={"center"} alignItems={"center"} className={styles.placeholder}
                   direction={"column"}>
                 <Typography variant={"h5"} align={"center"}>{"Es geht noch nicht los!"}</Typography>
                 <Button variant={"outlined"} onClick={onReload}>Nochmal versuchen</Button>
@@ -65,7 +63,7 @@ export const Election = ({subElections, selectedCandidates, onCandidateClick, on
                                 <Typography className={styles.subElectionTitle} variant={"h3"} align={"center"}>
                                     {subElection.title}
                                 </Typography>
-                                <Grid container direction={"row"} justify={"space-evenly"}>
+                                <Grid container direction={"row"} justifyContent={"space-evenly"}>
                                     {subElection.candidates.map(candidate => (
                                             <div key={candidate.id}>
                                                 <CandidateView isSelectable candidate={candidate}

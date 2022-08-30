@@ -4,6 +4,9 @@ app = "ebu-breakfast"
   DEBUG = "False"
   ASGI_THREADS = 15
 
+[deploy]
+  release_command = "python manage.py migrate --no-input"
+
 [processes]
   app = "daphne breakfast.asgi:application --port 8080 --bind 0.0.0.0"
   worker = "python manage.py runworker channels -v2"

@@ -1,5 +1,5 @@
 import * as React from "react";
-import Typography from "@material-ui/core/Typography/Typography";
+import Typography from "@mui/material/Typography/Typography";
 import {SubElection} from "../interfaces/SubElection";
 import {Pie} from "react-chartjs-2";
 import {chartOptions, getDataFromSubElection} from "../../utils/chart";

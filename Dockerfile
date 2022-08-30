@@ -5,12 +5,11 @@ WORKDIR /app
 
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci
-
+RUN yarn install --frozen-lockfile
 
 COPY . ./
 
-RUN npm run build
+RUN yarn build
 
 FROM python:3.9.12-slim AS python-base
 RUN apt-get update \
@@ -44,10 +43,6 @@ ENV PYTHONUNBUFFERED=1 \
 
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
-
-# `builder-base` stage is used to build deps + create our virtual environment
-FROM python-base as builder-base
-
 # install poetry - respects $POETRY_VERSION & $POETRY_HOME
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
 
@@ -62,10 +57,6 @@ RUN poetry install --no-dev
 # `development` image is used during development / testing
 FROM python-base as development
 
-# copy in our built poetry + venv
-COPY --from=builder-base $POETRY_HOME $POETRY_HOME
-COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
-
 # quicker install as runtime deps are already installed
 RUN poetry install
 WORKDIR /app
@@ -75,7 +66,7 @@ WORKDIR /app
 FROM python-base as production
 
 COPY ./ /app/
-COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
+# COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 COPY --from=node-build /app/static/build/ /app/static/build/
 WORKDIR /app
 RUN python manage.py collectstatic --no-input

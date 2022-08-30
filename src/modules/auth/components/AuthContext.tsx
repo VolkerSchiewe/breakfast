@@ -2,7 +2,7 @@ import * as React from 'react';
 import {AuthInterface} from "../interfaces/AuthInterface";
 import {AuthService} from "../services/auth-service";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import Snackbar from "@mui/material/Snackbar/Snackbar";
 import {deleteUserData, getUserData, storeUserData} from "../../utils/auth";
 
 interface AuthProviderState extends AuthInterface {

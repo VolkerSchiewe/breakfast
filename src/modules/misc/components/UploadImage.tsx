@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {useCallback} from 'react';
 import {style} from "typestyle";
-import Grid from "@material-ui/core/Grid/Grid";
-import Clear from "@material-ui/icons/Clear"
-import Typography from "@material-ui/core/Typography/Typography";
-import Avatar from "@material-ui/core/Avatar/Avatar";
+import Grid from "@mui/material/Grid/Grid";
+import Clear from "@mui/icons-material/Clear"
+import Typography from "@mui/material/Typography/Typography";
+import Avatar from "@mui/material/Avatar/Avatar";
 import {useDropzone} from 'react-dropzone'
 
 interface UploadImageProps {
@@ -43,7 +43,7 @@ export const UploadImage = ({imagePreview, handleImageChange, handleClearImage}:
     const {getRootProps, getInputProps} = useDropzone({onDrop, multiple: false});
 
     return (
-        <Grid container direction={"column"} justify={"center"} alignItems={"center"}>
+        <Grid container direction={"column"} justifyContent={"center"} alignItems={"center"}>
             <div {...getRootProps()} className={styles.hoverContainer}>
                 {defaultImage !== imagePreview && (
                     < Clear className={styles.hover} fontSize={"large"} onClick={handleClearImage}/>

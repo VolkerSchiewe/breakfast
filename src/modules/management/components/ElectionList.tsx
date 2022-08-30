@@ -2,25 +2,25 @@ import * as React from "react";
 import {Election} from "../interfaces/Election";
 import {style} from "typestyle";
 import {theme} from "../../layout/styles/styles";
-import OpenInNew from "@material-ui/icons/OpenInNew"
-import Add from "@material-ui/icons/Add"
-import Refresh from "@material-ui/icons/Refresh"
-import Toolbar from "@material-ui/core/Toolbar/Toolbar";
-import Typography from "@material-ui/core/Typography/Typography";
-import Paper from "@material-ui/core/Paper/Paper";
-import Table from "@material-ui/core/Table/Table";
-import TableHead from "@material-ui/core/TableHead/TableHead";
-import TableRow from "@material-ui/core/TableRow/TableRow";
-import TableCell from "@material-ui/core/TableCell/TableCell";
-import TableBody from "@material-ui/core/TableBody/TableBody";
-import Button from "@material-ui/core/Button/Button";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import IconButton from "@material-ui/core/IconButton/IconButton";
+import OpenInNew from "@mui/icons-material/OpenInNew"
+import Add from "@mui/icons-material/Add"
+import Refresh from "@mui/icons-material/Refresh"
+import Toolbar from "@mui/material/Toolbar/Toolbar";
+import Typography from "@mui/material/Typography/Typography";
+import Paper from "@mui/material/Paper/Paper";
+import Table from "@mui/material/Table/Table";
+import TableHead from "@mui/material/TableHead/TableHead";
+import TableRow from "@mui/material/TableRow/TableRow";
+import TableCell from "@mui/material/TableCell/TableCell";
+import TableBody from "@mui/material/TableBody/TableBody";
+import Button from "@mui/material/Button/Button";
+import Checkbox from "@mui/material/Checkbox/Checkbox";
+import IconButton from "@mui/material/IconButton/IconButton";
 import cc from "classcat"
 import {ElectionState} from "../interfaces/ElectionState";
 import {StatusBadge} from "../../layout/components/StatusBadge";
-import Switch from "@material-ui/core/Switch/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
+import Switch from "@mui/material/Switch/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel/FormControlLabel";
 
 interface ElectionListProps {
     elections: Election[]
@@ -101,10 +101,10 @@ export const ElectionList = ({elections, activeElectionId, showClosed, handleAct
                         }
                         label="Abgeschlossene anzeigen"
                     />
-                    <IconButton onClick={handleNewElection}>
+                    <IconButton onClick={handleNewElection} size="large">
                         <Add/>
                     </IconButton>
-                    <IconButton onClick={handleRefresh}>
+                    <IconButton onClick={handleRefresh} size="large">
                         <Refresh/>
                     </IconButton>
                 </div>

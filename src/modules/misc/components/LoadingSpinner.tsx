@@ -1,6 +1,6 @@
 import * as React from "react";
-import Fade from "@material-ui/core/Fade/Fade";
-import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Fade from "@mui/material/Fade/Fade";
+import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 
 interface LoadingSpinnerProps {
     size?: number

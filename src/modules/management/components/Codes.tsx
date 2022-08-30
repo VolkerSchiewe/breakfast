@@ -1,6 +1,6 @@
 import * as React from "react";
-import Typography from "@material-ui/core/Typography/Typography";
-import Grid from "@material-ui/core/Grid/Grid";
+import Typography from "@mui/material/Typography/Typography";
+import Grid from "@mui/material/Grid/Grid";
 import {style} from "typestyle";
 
 interface CodesProps {
@@ -20,7 +20,7 @@ const styles = {
     }),
 };
 export const Codes = ({codes, title}: CodesProps) => (
-    <Grid container justify={"space-between"} className={styles.container}>
+    <Grid container justifyContent={"space-between"} className={styles.container}>
         <Grid item xs={12}>
             <Typography className={styles.headline} align={"center"} variant={"h3"}>{title}</Typography>
         </Grid>

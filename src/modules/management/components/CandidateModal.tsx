@@ -1,14 +1,14 @@
 import * as React from "react";
-import TextField from "@material-ui/core/TextField/TextField";
-import Grid from "@material-ui/core/Grid/Grid";
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import Button from "@material-ui/core/Button/Button";
+import TextField from "@mui/material/TextField/TextField";
+import Grid from "@mui/material/Grid/Grid";
+import Dialog from "@mui/material/Dialog/Dialog";
+import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
+import DialogContent from "@mui/material/DialogContent/DialogContent";
+import DialogActions from "@mui/material/DialogActions/DialogActions";
+import Button from "@mui/material/Button/Button";
 import {defaultImage, UploadImage} from "../../misc/components/UploadImage";
 import {Candidate} from "../interfaces/Candidate";
-import Delete from "@material-ui/icons/Delete";
+import Delete from "@mui/icons-material/Delete";
 
 interface CandidateModalProps {
     isOpen: boolean
@@ -97,7 +97,7 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
                     <form onSubmit={this.submit}>
                         <DialogTitle id="form-dialog-title">Kandidat hinzufügen</DialogTitle>
                         <DialogContent>
-                            <Grid container direction={"column"} justify={"space-around"} alignItems={"center"}>
+                            <Grid container direction={"column"} justifyContent={"space-around"} alignItems={"center"}>
                                 <UploadImage
                                     imagePreview={candidate.image && candidate.image.base64Image || defaultImage}
                                     handleImageChange={this.handleImageChange}
@@ -118,7 +118,7 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
                                 <Delete/>
                             </Button>
                             }
-                            <Button onClick={handleClose} color="default">
+                            <Button onClick={handleClose}>
                                 Abbrechen
                             </Button>
                             <Button type="submit" color="primary">
@@ -128,6 +128,6 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
                     </form>
                 </Dialog>
             </div>
-        )
+        );
     }
 }

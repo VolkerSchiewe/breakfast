@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Typography from "@material-ui/core/Typography/Typography";
-import Grid from "@material-ui/core/Grid/Grid";
-import TextField from "@material-ui/core/TextField/TextField";
-import Button from "@material-ui/core/Button/Button";
-import Paper from "@material-ui/core/Paper/Paper";
+import Typography from "@mui/material/Typography/Typography";
+import Grid from "@mui/material/Grid/Grid";
+import TextField from "@mui/material/TextField/TextField";
+import Button from "@mui/material/Button/Button";
+import Paper from "@mui/material/Paper/Paper";
 import {style} from "typestyle";
 
 interface CreateElectionState {

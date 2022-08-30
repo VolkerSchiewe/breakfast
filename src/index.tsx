@@ -1,12 +1,13 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import "./style.scss"
-import {AppWithRouter} from "./components/App";
-import {BrowserRouter} from 'react-router-dom'
+import { createRoot } from "react-dom/client";
 
-ReactDOM.render(
-    <BrowserRouter>
-        <AppWithRouter/>
-    </BrowserRouter>,
-    document.getElementById("container")
+import "./style.scss";
+import { AppWithRouter } from "./components/App";
+import { BrowserRouter } from "react-router-dom";
+import React = require("react");
+
+const root = createRoot(document.getElementById("container"));
+root.render(
+  <BrowserRouter>
+    <AppWithRouter />
+  </BrowserRouter>
 );

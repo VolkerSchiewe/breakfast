@@ -1,10 +1,10 @@
 import * as React from "react";
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import Button from "@material-ui/core/Button/Button";
-import Delete from "@material-ui/icons/Delete";
+import Dialog from "@mui/material/Dialog/Dialog";
+import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
+import DialogContent from "@mui/material/DialogContent/DialogContent";
+import DialogActions from "@mui/material/DialogActions/DialogActions";
+import Button from "@mui/material/Button/Button";
+import Delete from "@mui/icons-material/Delete";
 
 interface AlertDialogProps {
     isOpen: boolean

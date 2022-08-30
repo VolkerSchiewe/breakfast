@@ -1,8 +1,8 @@
 import * as React from "react";
 import {Candidate} from "../interfaces/Candidate";
-import Typography from "@material-ui/core/Typography/Typography";
+import Typography from "@mui/material/Typography/Typography";
 import {defaultImage} from "../../misc/components/UploadImage";
-import Grid from "@material-ui/core/Grid/Grid";
+import Grid from "@mui/material/Grid/Grid";
 import {style} from "typestyle";
 import cc from "classcat"
 
@@ -31,7 +31,7 @@ const styles = {
 };
 
 export const CandidateView = ({candidate, isSelectable, isSelected, onClick}: CandidateViewProps) => (
-    <Grid container direction={"column"} justify={"center"} alignItems={"center"}
+    <Grid container direction={"column"} justifyContent={"center"} alignItems={"center"}
           className={isSelectable && styles.selectable} onClick={onClick}>
         <img src={candidate.image && candidate.image.base64Image || defaultImage}
              className={cc([isSelected && styles.selected, styles.img])}/>

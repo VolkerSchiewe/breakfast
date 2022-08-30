@@ -1,10 +1,10 @@
 import * as React from 'react';
-import IconButton from "@material-ui/core/IconButton/IconButton";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Menu from "@material-ui/core/Menu/Menu";
-import MenuItem from "@material-ui/core/MenuItem/MenuItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import IconButton from "@mui/material/IconButton/IconButton";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu/Menu";
+import MenuItem from "@mui/material/MenuItem/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText/ListItemText";
 
 
 interface MoreMenuState {
@@ -53,7 +53,7 @@ export class MoreMenu extends React.Component<MoreMenuProps, MoreMenuState> {
                     aria-owns={open ? 'long-menu' : undefined}
                     aria-haspopup="true"
                     onClick={this.handleClick}
-                >
+                    size="large">
                     <MoreVertIcon/>
                 </IconButton>
                 <Menu
@@ -71,6 +71,6 @@ export class MoreMenu extends React.Component<MoreMenuProps, MoreMenuState> {
                     ))}
                 </Menu>
             </span>
-        )
+        );
     }
 }

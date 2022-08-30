@@ -2,22 +2,22 @@ import * as React from "react";
 import {Election} from "../interfaces/Election";
 import {style} from "typestyle";
 import {SubElection} from "../interfaces/SubElection";
-import Grid from "@material-ui/core/Grid/Grid";
-import Typography from "@material-ui/core/Typography/Typography";
-import Paper from "@material-ui/core/Paper/Paper";
+import Grid from "@mui/material/Grid/Grid";
+import Typography from "@mui/material/Typography/Typography";
+import Paper from "@mui/material/Paper/Paper";
 import {CandidateView} from "./CandidateView";
-import Add from "@material-ui/icons/Add";
-import Edit from "@material-ui/icons/Edit";
-import Refresh from "@material-ui/icons/Refresh";
+import Add from "@mui/icons-material/Add";
+import Edit from "@mui/icons-material/Edit";
+import Refresh from "@mui/icons-material/Refresh";
 import {ResultView} from "./ResultView";
 import cc from "classcat"
 import {CreateSubElection} from "./CreateSubElection";
 import {Candidate} from "../interfaces/Candidate";
-import Button from "@material-ui/core/Button/Button";
+import Button from "@mui/material/Button/Button";
 import {ElectionState} from "../interfaces/ElectionState";
 import {MoreMenu} from "../../layout/components/MoreMenu";
 import {StatusBadge} from "../../layout/components/StatusBadge";
-import Lock from "@material-ui/icons/Lock";
+import Lock from "@mui/icons-material/Lock";
 
 interface ElectionListProps {
     election: Election
@@ -84,7 +84,7 @@ const options = [
 export const EditElection = ({election, subElections, openCandidateModal, saveSubElection, editSubElection, editElection, handleMenuItemSelected, handleResultClick}: ElectionListProps) => (
     <div className={styles.root}>
         <Grid container>
-            <Grid container item xs={12} justify={"space-between"}>
+            <Grid container item xs={12} justifyContent={"space-between"}>
                 <Grid  item>
                     <Grid container >
                         <Typography variant={"h3"}>
@@ -115,7 +115,7 @@ export const EditElection = ({election, subElections, openCandidateModal, saveSu
                 {subElections.map(subElection => (
                     <Grid item sm={6} className={styles.grid} key={subElection.id}>
                         <Paper className={styles.paper}>
-                            <Grid container direction={"row"} justify={"space-between"} alignItems={"center"}>
+                            <Grid container direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
                                 <Typography variant={"h4"} align={"center"}>
                                     {subElection.title}
                                 </Typography>

@@ -1,10 +1,10 @@
 import * as React from "react";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper/Paper";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper/Paper";
 import {style} from "typestyle";
-import Typography from "@material-ui/core/Typography/Typography";
-import TextField from "@material-ui/core/TextField/TextField";
-import Button from "@material-ui/core/Button/Button";
+import Typography from "@mui/material/Typography/Typography";
+import TextField from "@mui/material/TextField/TextField";
+import Button from "@mui/material/Button/Button";
 import {AuthConsumer} from "../modules/auth/components/AuthContext";
 import {AuthInterface} from "../modules/auth/interfaces/AuthInterface";
 import {LoadingSpinner} from "../modules/misc/components/LoadingSpinner";
@@ -60,7 +60,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                 e.preventDefault();
                                 login(username, pwd)
                             }}>
-                                <Grid container direction={"column"} alignItems={"center"} justify={"center"}>
+                                <Grid container direction={"column"} alignItems={"center"} justifyContent={"center"}>
                                     <Grid>
                                         <Typography variant={"h2"} align={"center"}>Login</Typography>
                                     </Grid>

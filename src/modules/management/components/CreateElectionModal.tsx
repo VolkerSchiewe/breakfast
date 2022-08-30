@@ -1,11 +1,11 @@
 import * as React from "react";
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import TextField from "@material-ui/core/TextField/TextField";
-import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import Button from "@material-ui/core/Button/Button";
-import Grid from "@material-ui/core/Grid/Grid";
+import Dialog from "@mui/material/Dialog/Dialog";
+import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
+import DialogContent from "@mui/material/DialogContent/DialogContent";
+import TextField from "@mui/material/TextField/TextField";
+import DialogActions from "@mui/material/DialogActions/DialogActions";
+import Button from "@mui/material/Button/Button";
+import Grid from "@mui/material/Grid/Grid";
 
 interface CreateElectionModalProps {
     isOpen: boolean
@@ -52,7 +52,7 @@ export class CreateElectionModal extends React.Component<CreateElectionModalProp
                     <form onSubmit={this.submit}>
                         <DialogTitle>Wahlgang erstellen</DialogTitle>
                         <DialogContent>
-                            <Grid container direction={"column"} justify={"center"}>
+                            <Grid container direction={"column"} justifyContent={"center"}>
                                 <TextField
                                     variant={"outlined"}
                                     onChange={(e) => this.handleTitleChange(e.target.value)}
@@ -72,7 +72,7 @@ export class CreateElectionModal extends React.Component<CreateElectionModalProp
                             </Grid>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={handleClose} color="default">
+                            <Button onClick={handleClose}>
                                 Abbrechen
                             </Button>
                             <Button type="submit" color="primary">
@@ -82,6 +82,6 @@ export class CreateElectionModal extends React.Component<CreateElectionModalProp
                     </form>
                 </Dialog>
             </div>
-        )
+        );
     }
 }

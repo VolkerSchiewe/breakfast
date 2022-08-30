@@ -14,7 +14,7 @@ export class AuthService {
                 password: password
             },
             {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
                 'X-CSRFToken': getCsrfToken()
             },
             false,

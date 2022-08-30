@@ -1,6 +1,6 @@
 import * as React from "react";
 import {ElectionState, getElectionStateText} from "../../management/interfaces/ElectionState";
-import Typography from "@material-ui/core/Typography/Typography";
+import Typography from "@mui/material/Typography/Typography";
 import {style} from "typestyle";
 import {theme} from "../styles/styles";
 
