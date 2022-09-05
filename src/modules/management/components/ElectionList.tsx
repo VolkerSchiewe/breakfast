@@ -71,7 +71,7 @@ const styles = ({
         right: "5%",
     }),
     finished: style({
-        backgroundColor: theme.palette.text.hint,
+        backgroundColor: theme.palette.grey[100],
     }),
     fixPadding: style({
         padding: 9

@@ -13,7 +13,7 @@ export class ManagementService {
         return sendRequest(ELECTIONS_API, methods.GET);
     }
 
-    getElection(electionId: number): Promise<Election> {
+    getElection(electionId: string): Promise<Election> {
         return sendRequest(ELECTIONS_API + electionId, methods.GET)
     }
 
@@ -41,11 +41,11 @@ export class ManagementService {
         return sendRequest(ELECTIONS_API + election.id + '/', methods.DELETE)
     }
 
-    getSubElections(electionId: number): Promise<SubElection[]> {
+    getSubElections(electionId: string): Promise<SubElection[]> {
         return sendRequest(`${SUB_ELECTIONS_API}?election=${electionId}`, methods.GET)
     }
 
-    createSubElection(name: string, electionId: number): Promise<any> {
+    createSubElection(name: string, electionId: string): Promise<any> {
         return sendRequest(SUB_ELECTIONS_API, methods.POST,
             {
                 election: electionId,
@@ -73,7 +73,7 @@ export class ManagementService {
         return sendRequest(CANDIDATES_API + candidate.id + '/', methods.DELETE)
     }
 
-    getCodes(electionId: number): Promise<CodesResponse> {
+    getCodes(electionId: string): Promise<CodesResponse> {
         return sendRequest(ELECTIONS_API + electionId + '/codes/', methods.GET)
     }
 }

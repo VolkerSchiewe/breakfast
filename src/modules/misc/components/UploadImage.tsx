@@ -46,7 +46,7 @@ export const UploadImage = ({imagePreview, handleImageChange, handleClearImage}:
         <Grid container direction={"column"} justifyContent={"center"} alignItems={"center"}>
             <div {...getRootProps()} className={styles.hoverContainer}>
                 {defaultImage !== imagePreview && (
-                    < Clear className={styles.hover} fontSize={"large"} onClick={handleClearImage}/>
+                    <Clear className={styles.hover} fontSize={"large"} onClick={handleClearImage}/>
                 )}
                 <input {...getInputProps()} />
                 <Avatar src={imagePreview} className={styles.avatar}/>

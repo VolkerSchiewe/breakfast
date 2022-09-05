@@ -1,4 +1,4 @@
-import {deleteUserData, getToken, getCsrfToken} from "./auth";
+import {deleteUserData, getCsrfToken} from "./auth";
 import axios from 'axios'
 
 export const methods = {

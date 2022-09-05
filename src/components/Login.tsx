@@ -34,7 +34,7 @@ const styles = {
 export class Login extends React.Component<LoginProps, LoginState> {
     toggleAdminView = () => {
         const {showAdminLogin} = this.state;
-        this.setState({showAdminLogin: !showAdminLogin})
+        this.setState({showAdminLogin: !showAdminLogin, username: '', password: ''})
     };
 
     constructor(props) {

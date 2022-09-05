@@ -8,6 +8,8 @@ import { chartOptions, getDataFromSubElection } from "../../utils/chart";
 import DialogActions from "@mui/material/DialogActions/DialogActions";
 import Button from "@mui/material/Button/Button";
 import { useTheme, useMediaQuery } from "@mui/material";
+import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
+Chart.register(ArcElement, Legend, Tooltip);
 
 interface ResultModalProps {
   subElection: SubElection;

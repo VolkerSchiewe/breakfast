@@ -5,9 +5,9 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button/Button";
 import { style } from "typestyle";
 import { Link } from "react-router-dom";
-import { AuthConsumer } from "../../auth/components/AuthContext";
 import { AuthInterface } from "../../auth/interfaces/AuthInterface";
 import { theme } from "../styles/styles";
+import { useAuth } from "../../auth/components/AuthContext";
 
 interface NavBarProps {
   title: string;
@@ -41,31 +41,27 @@ const styles = {
 
 const AdminLink = (props) => <Link to={"/elections/"} {...props} />;
 const LoginLink = (props) => <Link to={"/login/"} {...props} />;
-export const NavBar = ({ title }: NavBarProps) => (
-  <div className={styles.root}>
-    <AuthConsumer>
-      {({ user, logout }: AuthInterface) => (
-        <AppBar position="static" color="primary" className={styles.appBar}>
-          <Toolbar>
-            <img
-              className={styles.img}
-              src={"/static/images/jugend_schaf.png"}
-            />
-            <Typography
-              variant="h6"
-              className={styles.text}
-              component={user && user.isAdmin ? AdminLink : LoginLink}
-            >
-              {title}
-            </Typography>
-            {user && user.isAdmin && (
-              <Button className={styles.logout} onClick={() => logout()}>
-                {"Logout " + user.username}
-              </Button>
-            )}
-          </Toolbar>
-        </AppBar>
-      )}
-    </AuthConsumer>
-  </div>
-);
+export const NavBar = ({ title }: NavBarProps) => {
+  const { user, logout } = useAuth();
+  return (
+    <div className={styles.root}>
+      <AppBar position="static" color="primary" className={styles.appBar}>
+        <Toolbar>
+          <img className={styles.img} src={"/static/images/jugend_schaf.png"} />
+          <Typography
+            variant="h6"
+            className={styles.text}
+            component={user && user.isAdmin ? AdminLink : LoginLink}
+          >
+            {title}
+          </Typography>
+          {user && user.isAdmin && (
+            <Button className={styles.logout} onClick={() => logout()}>
+              {"Logout " + user.username}
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+};

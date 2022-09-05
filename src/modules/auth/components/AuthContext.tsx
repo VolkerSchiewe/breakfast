@@ -1,105 +1,89 @@
-import * as React from 'react';
-import {AuthInterface} from "../interfaces/AuthInterface";
-import {AuthService} from "../services/auth-service";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import * as React from "react";
 import Snackbar from "@mui/material/Snackbar/Snackbar";
-import {deleteUserData, getUserData, storeUserData} from "../../utils/auth";
+import { FC, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { deleteUserData, getUserData, storeUserData } from "../../utils/auth";
+import { AuthInterface } from "../interfaces/AuthInterface";
+import { AuthService } from "../services/auth-service";
+import { User } from "../services/user";
 
-interface AuthProviderState extends AuthInterface {
-}
 
-const {Provider, Consumer} = React.createContext<AuthInterface>({
-    isLoading: false,
-    login: () => {
-        throw new Error('login() not implemented');
-    },
-    logout: () => {
-        throw new Error('logout() not implemented');
-    }
+const AuthContext = React.createContext<AuthInterface>({
+  isLoading: false,
+  login: () => {
+    throw new Error("login() not implemented");
+  },
+  logout: () => {
+    throw new Error("logout() not implemented");
+  },
 });
 
-export const AuthConsumer = Consumer;
-
-class AuthProviderComponent extends React.Component<RouteComponentProps, AuthProviderState> {
-    authService = new AuthService();
-    login = (name: string, password: string) => {
-        this.setState({isLoading: true, error: null});
-        this.authService.login(name, password)
-            .then(res => {
-                storeUserData(res.user, res.token);
-                this.setState({
-                    user: res.user,
-                    isLoading: false,
-                });
-                const to = res.user.isAdmin ? '/elections/' : '/';
-                this.props.history.push(to);
-
-            })
-            .catch(err => {
-                this.setState({isLoading: false, error: err.response.data}
-                )
-            });
-    };
-    logout = () => {
-        this.setState({
-            user: null,
-            isLoading: true,
-            error: null,
-        });
-        this.authService.logout()
-            .then(() => {
-                deleteUserData();
-                this.setState({isLoading: false, error: null});
-                this.props.history.replace('/login/')
-            })
-            .catch(err => {
-                if (err.status == 401) {
-                    deleteUserData();
-                    this.props.history.replace('/login/')
-                } else {
-                    err.json()
-                        .then(res => {
-                                this.setState({isLoading: false, error: res.detail})
-                            }
-                        )
-                }
-            })
-    };
-
-    onSnackbarClose = () => {
-        this.setState({error: null})
-    };
-
-    constructor(props) {
-        super(props);
-        let user = null;
-        try {
-            user = getUserData();
-        } catch (e) {
-            deleteUserData();
+export const useAuth = () => useContext(AuthContext);
+export const AuthConsumer = AuthContext.Consumer
+export const AuthProvider: FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const authService = new AuthService();
+  const initialUser = getUserData();
+  const navigate = useNavigate();
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | undefined>(initialUser);
+  const login = (name: string, password: string) => {
+    setError(null);
+    setIsLoading(true);
+    authService
+      .login(name, password)
+      .then((res) => {
+        storeUserData(res.user, res.token);
+        setUser(res.user);
+        setIsLoading(false);
+        navigate(res.user.isAdmin ? "/elections/" : "/");
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setError(err.response.data);
+      });
+  };
+  const logout = () => {
+    setError(null);
+    setUser(null);
+    setIsLoading(true);
+    authService
+      .logout()
+      .then(() => {
+        deleteUserData();
+        setIsLoading(false);
+        setError(null);
+        navigate("/login/", {replace: true});
+      })
+      .catch((err) => {
+        if (err.status == 401) {
+          deleteUserData();
+          navigate("/login/", {replace: true});
+        } else {
+          err.json().then((res) => {
+            setIsLoading(false);
+            setError(res.detail);
+          });
         }
-        this.state = {
-            user: user,
-            error: null,
-            isLoading: false,
+      });
+  };
 
-            login: this.login,
-            logout: this.logout,
-        }
-    }
-
-    render() {
-        const {error} = this.state;
-        return (
-            <div>
-                <Provider value={this.state}>
-                    {this.props.children}
-                </Provider>
-                <Snackbar open={!!error} message={<span>{error}</span>} autoHideDuration={5000}
-                          onClose={this.onSnackbarClose}/>
-            </div>
-        );
-    }
-}
-
-export const AuthProvider = withRouter((AuthProviderComponent));
+  const onSnackbarClose = () => {
+    setError(null);
+  };
+  return (
+    <div>
+      <AuthContext.Provider value={{ error, isLoading, user, login, logout }}>
+        {children}
+      </AuthContext.Provider>
+      <Snackbar
+        open={!!error}
+        message={<span>{error}</span>}
+        autoHideDuration={5000}
+        onClose={onSnackbarClose}
+      />
+    </div>
+  );
+};

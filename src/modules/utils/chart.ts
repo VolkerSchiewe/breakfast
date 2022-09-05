@@ -16,17 +16,19 @@ export function chartOptions(adaptToView: boolean = false, animation: boolean = 
     const boxWidth = adaptToView ? window.innerWidth / 40 : 12;
     const padding = adaptToView ?  window.innerWidth / 50 : 12;
     const fontSize = adaptToView ? window.innerWidth / 40 : 12;
-    let data = {
-        legend: {
-            position: 'right',
-            labels: {
-                boxWidth: boxWidth,
-                fontSize: fontSize,
-                padding: padding,
-            },
+    let options = {
+        plugins:{
+            legend: {
+                position: 'right' as 'right',
+                labels: {
+                    boxWidth: boxWidth,
+                    fontSize: fontSize,
+                    padding: padding,
+                },
+            }
         }
     };
     if (!animation)
-        data["animation"] = false;
-    return data;
+        options["animation"] = false;
+    return options;
 }

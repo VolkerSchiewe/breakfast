@@ -72,7 +72,7 @@ export class CandidateModal extends React.Component<CandidateModalProps, Candida
                         ...this.state.candidate,
                         image: {
                             name: this.state.candidate.name,
-                            base64Image: reader.result,
+                            base64Image: reader.result.toString(),
                         }
                     },
                 });
