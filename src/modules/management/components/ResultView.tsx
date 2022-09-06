@@ -10,11 +10,11 @@ interface ResultViewProps {
   className: string;
   subElection: SubElection;
 
-  onClick(subElection: SubElection);
+  onClick: (subElection: SubElection) => any;
 }
 
 export class ResultView extends React.Component<ResultViewProps, {}> {
-  render() {
+  render(): React.ReactElement {
     const { className, subElection, onClick } = this.props;
     const data = getDataFromSubElection(subElection);
     const votes = subElection.candidates.map((c) => c.votes);

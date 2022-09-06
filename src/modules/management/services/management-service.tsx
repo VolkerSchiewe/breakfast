@@ -1,79 +1,119 @@
-import {methods, sendRequest} from "../../utils/http";
-import {Election} from "../interfaces/Election";
-import {SubElection} from "../interfaces/SubElection";
-import {Candidate} from "../interfaces/Candidate";
-import {CodesResponse} from "../interfaces/CodesResponse";
+import { methods, sendRequest } from "../../utils/http";
+import { Election } from "../interfaces/Election";
+import { SubElection } from "../interfaces/SubElection";
+import { Candidate } from "../interfaces/Candidate";
+import { CodesResponse } from "../interfaces/CodesResponse";
 
-const ELECTIONS_API = '/api/elections/';
-const SUB_ELECTIONS_API = '/api/subelections/';
-const CANDIDATES_API = '/api/candidates/';
+const ELECTIONS_API = "/api/elections/";
+const SUB_ELECTIONS_API = "/api/subelections/";
+const CANDIDATES_API = "/api/candidates/";
 
 export class ManagementService {
-    getElections(): Promise<Election[]> {
-        return sendRequest(ELECTIONS_API, methods.GET);
-    }
+  async getElections(): Promise<Election[]> {
+    return await sendRequest(ELECTIONS_API, methods.GET);
+  }
 
-    getElection(electionId: string): Promise<Election> {
-        return sendRequest(ELECTIONS_API + electionId, methods.GET)
-    }
+  async getElection(electionId: string): Promise<Election> {
+    return await sendRequest(ELECTIONS_API + electionId, methods.GET);
+  }
 
-    setElectionActive(electionId: number): Promise<any> {
-        return sendRequest(ELECTIONS_API + electionId + '/set_active/', methods.POST)
-    }
+  async setElectionActive(electionId: string): Promise<any> {
+    return await sendRequest(
+      ELECTIONS_API + electionId + "/set_active/",
+      methods.POST
+    );
+  }
 
-    closeElection(electionId: number): Promise<any> {
-        return sendRequest(ELECTIONS_API + electionId + '/close/', methods.POST)
-    }
+  async closeElection(electionId: string): Promise<any> {
+    return await sendRequest(
+      ELECTIONS_API + electionId + "/close/",
+      methods.POST
+    );
+  }
 
-    updateElection(election: Partial<Election>): Promise<any> {
-        return sendRequest(ELECTIONS_API + election.id + '/', methods.PATCH, election)
-    }
+  async updateElection(
+    electionId: string,
+    election: Partial<Election>
+  ): Promise<any> {
+    return await sendRequest(
+      `${ELECTIONS_API}${electionId}/`,
+      methods.PATCH,
+      election
+    );
+  }
 
-    createElection(title: string, number: number): Promise<any> {
-        return sendRequest(ELECTIONS_API + 'create_election/', methods.POST,
-            {
-                title: title,
-                number: number,
-            })
-    }
+  async createElection(title: string, number: number): Promise<any> {
+    return await sendRequest(ELECTIONS_API + "create_election/", methods.POST, {
+      title,
+      number,
+    });
+  }
 
-    deleteElection(election: Election): Promise<any> {
-        return sendRequest(ELECTIONS_API + election.id + '/', methods.DELETE)
-    }
+  async deleteElection(election: Election): Promise<any> {
+    return await sendRequest(
+      ELECTIONS_API + election.id.toString() + "/",
+      methods.DELETE
+    );
+  }
 
-    getSubElections(electionId: string): Promise<SubElection[]> {
-        return sendRequest(`${SUB_ELECTIONS_API}?election=${electionId}`, methods.GET)
-    }
+  async getSubElections(electionId: string): Promise<SubElection[]> {
+    return await sendRequest(
+      `${SUB_ELECTIONS_API}?election=${electionId}`,
+      methods.GET
+    );
+  }
 
-    createSubElection(name: string, electionId: string): Promise<any> {
-        return sendRequest(SUB_ELECTIONS_API, methods.POST,
-            {
-                election: electionId,
-                title: name
-            })
-    }
+  async createSubElection(name: string, electionId: string): Promise<any> {
+    return await sendRequest(SUB_ELECTIONS_API, methods.POST, {
+      election: electionId,
+      title: name,
+    });
+  }
 
-    updateSubElection(subelection: SubElection) {
-        return sendRequest(SUB_ELECTIONS_API + subelection.id + '/', methods.PATCH, subelection)
-    }
+  async updateSubElection(
+    subElectionId: number,
+    subElection: Partial<SubElection>
+  ): Promise<any> {
+    return await sendRequest(
+      `${SUB_ELECTIONS_API}${subElectionId}/`,
+      methods.PATCH,
+      subElection
+    );
+  }
 
-    deleteSubElection(subelectionId: number) {
-        return sendRequest(SUB_ELECTIONS_API + subelectionId + '/', methods.DELETE)
-    }
+  async deleteSubElection(subelectionId: number): Promise<any> {
+    return await sendRequest(
+      `${SUB_ELECTIONS_API}${subelectionId}/`,
+      methods.DELETE
+    );
+  }
 
-    createCandidate(candidate: Candidate): Promise<any> {
-        return sendRequest(CANDIDATES_API, methods.POST, candidate)
-    }
+  async createCandidate(candidate: Candidate): Promise<any> {
+    return await sendRequest(CANDIDATES_API, methods.POST, candidate);
+  }
 
-    updateCandidate(candidate: Candidate): Promise<any> {
-        return sendRequest(CANDIDATES_API + candidate.id + '/', methods.PATCH, candidate)
-    }
+  async updateCandidate(
+    candidateId: number,
+    candidate: Candidate
+  ): Promise<any> {
+    return await sendRequest(
+      `${CANDIDATES_API}${candidateId}/`,
+      methods.PATCH,
+      candidate
+    );
+  }
 
-    deleteCandidate(candidate: Candidate): Promise<any> {
-        return sendRequest(CANDIDATES_API + candidate.id + '/', methods.DELETE)
-    }
+  async deleteCandidate(candidateId: number): Promise<any> {
+    return await sendRequest(
+      `${CANDIDATES_API}${candidateId}/`,
+      methods.DELETE
+    );
+  }
 
-    getCodes(electionId: string): Promise<CodesResponse> {
-        return sendRequest(ELECTIONS_API + electionId + '/codes/', methods.GET)
-    }
+  async getCodes(electionId: string): Promise<CodesResponse> {
+    return await sendRequest(
+      `${ELECTIONS_API}${electionId}/codes/`,
+      methods.GET
+    );
+  }
 }

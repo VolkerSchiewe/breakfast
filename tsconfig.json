@@ -3,9 +3,8 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "jsx": "react"
+    "jsx": "react",
+    "strictNullChecks": true
   },
-  "include": [
-    "./src/**/*"
-  ]
+  "include": ["./src/**/*"]
 }

@@ -3,9 +3,7 @@ import Grid from "@mui/material/Grid/Grid";
 import Snackbar from "@mui/material/Snackbar/Snackbar";
 import * as React from "react";
 import { FC, useEffect, useMemo, useState } from "react";
-import {
-    useNavigate, useLocation
-} from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { CreateElectionModal } from "../components/CreateElectionModal";
 import { ElectionList } from "../components/ElectionList";
 import { Election } from "../interfaces/Election";
@@ -25,48 +23,48 @@ export const ElectionListContainer: FC = () => {
   const [electionModalOpen, setElectionModalOpen] = useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
-  const handleActiveChange = (id) => {
-    electionService.setElectionActive(id).then(fetchData);
+  const handleActiveChange = (id): void => {
+    void electionService.setElectionActive(id).then(fetchData);
   };
-  const openNewElection = () => {
+  const openNewElection = (): void => {
     setElectionModalOpen(true);
   };
-  const handleRowClick = (id) => {
+  const handleRowClick = (id: string): void => {
     navigate(`/elections/${id}`);
   };
-  const fetchData = () => {
-    electionService.getElections().then(setElections);
+  const fetchData = (): void => {
+    void electionService.getElections().then(setElections);
   };
-  const handleCodesClick = (election) => {
+  const handleCodesClick = (election: Election): void => {
     window.open(`/elections/${election.id}/codes/`, "_blank");
   };
-  const createElection = (title, number) => {
-    electionService.createElection(title, number).then(() => {
+  const createElection = (title: string, number: number): void => {
+    void electionService.createElection(title, number).then(() => {
       fetchData();
       setSnackbarOpen(false);
     });
     setElectionModalOpen(false);
     setSnackbarOpen(true);
   };
-  const handleRefresh = () => {
+  const handleRefresh = (): void => {
     setElections([]);
     fetchData();
   };
-  const handleShowClosedChange = () => {
-    navigate("/elections/?closed=" + !showClosedElections);
+  const handleShowClosedChange = (): void => {
+    navigate(`/elections/?closed=${(!showClosedElections).toString()}`);
   };
   useEffect(() => {
     fetchData();
   }, []);
 
-  let activeElectionId = undefined;
+  let activeElectionId;
   const activeElection = elections.filter(
-    (election) => election.state == ElectionState.ACTIVE
+    (election) => election.state === ElectionState.ACTIVE
   );
-  if (activeElection.length != 0) activeElectionId = activeElection[0].id;
+  if (activeElection.length !== 0) activeElectionId = activeElection[0].id;
   const filteredElections = showClosedElections
     ? elections
-    : elections.filter((e) => e.state != ElectionState.CLOSED);
+    : elections.filter((e) => e.state !== ElectionState.CLOSED);
   return (
     <div>
       <ElectionList

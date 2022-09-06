@@ -7,7 +7,6 @@ import { AuthInterface } from "../interfaces/AuthInterface";
 import { AuthService } from "../services/auth-service";
 import { User } from "../services/user";
 
-
 const AuthContext = React.createContext<AuthInterface>({
   isLoading: false,
   login: () => {
@@ -18,8 +17,8 @@ const AuthContext = React.createContext<AuthInterface>({
   },
 });
 
-export const useAuth = () => useContext(AuthContext);
-export const AuthConsumer = AuthContext.Consumer
+export const useAuth = (): AuthInterface => useContext(AuthContext);
+export const AuthConsumer = AuthContext.Consumer;
 export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -29,8 +28,8 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   const [error, setError] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<User | undefined>(initialUser);
-  const login = (name: string, password: string) => {
-    setError(null);
+  const login = (name: string, password: string): void => {
+    setError(undefined);
     setIsLoading(true);
     authService
       .login(name, password)
@@ -45,22 +44,22 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         setError(err.response.data);
       });
   };
-  const logout = () => {
-    setError(null);
-    setUser(null);
+  const logout = (): void => {
+    setError(undefined);
+    setUser(undefined);
     setIsLoading(true);
     authService
       .logout()
       .then(() => {
         deleteUserData();
         setIsLoading(false);
-        setError(null);
-        navigate("/login/", {replace: true});
+        setError(undefined);
+        navigate("/login/", { replace: true });
       })
       .catch((err) => {
-        if (err.status == 401) {
+        if (err.status === 401) {
           deleteUserData();
-          navigate("/login/", {replace: true});
+          navigate("/login/", { replace: true });
         } else {
           err.json().then((res) => {
             setIsLoading(false);
@@ -70,8 +69,8 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       });
   };
 
-  const onSnackbarClose = () => {
-    setError(null);
+  const onSnackbarClose = (): void => {
+    setError(undefined);
   };
   return (
     <div>
@@ -79,7 +78,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         {children}
       </AuthContext.Provider>
       <Snackbar
-        open={!!error}
+        open={Boolean(error)}
         message={<span>{error}</span>}
         autoHideDuration={5000}
         onClose={onSnackbarClose}

@@ -1,4 +1,4 @@
 export interface CodesResponse {
-    title: string
-    codes: string[]
+  title: string;
+  codes: string[];
 }

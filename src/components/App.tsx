@@ -20,7 +20,7 @@ interface AppState {
 }
 
 export class App extends React.Component<{}, AppState> {
-  render() {
+  render(): React.ReactElement {
     return (
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>

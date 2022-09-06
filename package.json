@@ -6,6 +6,8 @@
   "scripts": {
     "start": "parcel watch src/index.tsx -d static/build/ --public-url ./",
     "build": "parcel build src/index.tsx -d static/build/ --no-source-maps --detailed-report",
+    "lint": "eslint src",
+    "format": "prettier src --write",
     "heroku-postbuild": "npm run build"
   },
   "repository": {
@@ -46,8 +48,17 @@
     "@types/react-dom": "^18.0.6",
     "@types/react-router": "^5.1.18",
     "@types/react-router-dom": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^22.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.31.6",
     "parcel-bundler": "^1.12.3",
+    "prettier": "^2.7.1",
     "sass": "^1.22.7",
-    "typescript": "^4.8.2"
+    "typescript": "*"
   }
 }

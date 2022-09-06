@@ -5,14 +5,14 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button/Button";
 import { style } from "typestyle";
 import { Link } from "react-router-dom";
-import { AuthInterface } from "../../auth/interfaces/AuthInterface";
 import { theme } from "../styles/styles";
 import { useAuth } from "../../auth/components/AuthContext";
+import { FC } from "react";
 
 interface NavBarProps {
   title: string;
 
-  onClick?();
+  onClick?: () => any;
 }
 
 const styles = {
@@ -39,9 +39,13 @@ const styles = {
   }),
 };
 
-const AdminLink = (props) => <Link to={"/elections/"} {...props} />;
-const LoginLink = (props) => <Link to={"/login/"} {...props} />;
-export const NavBar = ({ title }: NavBarProps) => {
+const AdminLink = (props): React.ReactElement => (
+  <Link to={"/elections/"} {...props} />
+);
+const LoginLink = (props): React.ReactElement => (
+  <Link to={"/login/"} {...props} />
+);
+export const NavBar: FC<NavBarProps> = ({ title }) => {
   const { user, logout } = useAuth();
   return (
     <div className={styles.root}>
@@ -51,11 +55,11 @@ export const NavBar = ({ title }: NavBarProps) => {
           <Typography
             variant="h6"
             className={styles.text}
-            component={user && user.isAdmin ? AdminLink : LoginLink}
+            component={user?.isAdmin === true ? AdminLink : LoginLink}
           >
             {title}
           </Typography>
-          {user && user.isAdmin && (
+          {user?.isAdmin === true && (
             <Button className={styles.logout} onClick={() => logout()}>
               {"Logout " + user.username}
             </Button>

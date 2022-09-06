@@ -9,15 +9,16 @@ import DialogActions from "@mui/material/DialogActions/DialogActions";
 import Button from "@mui/material/Button/Button";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
+import { FC } from "react";
 Chart.register(ArcElement, Legend, Tooltip);
 
 interface ResultModalProps {
   subElection: SubElection;
 
-  handleClose();
+  handleClose: () => any;
 }
 
-const ResultModal = ({ subElection, handleClose }: ResultModalProps) => {
+const ResultModal: FC<ResultModalProps> = ({ subElection, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (

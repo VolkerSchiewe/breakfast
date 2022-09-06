@@ -8,80 +8,85 @@ import Button from "@mui/material/Button/Button";
 import Grid from "@mui/material/Grid/Grid";
 
 interface CreateElectionModalProps {
-    isOpen: boolean
+  isOpen: boolean;
 
-    handleClose()
+  handleClose: () => any;
 
-    saveElection(title, number)
+  saveElection: (title: string, number: number) => void;
 }
 
 interface CreateElectionModalState {
-    title?: string
-    number?: number | string
+  title: string;
+  number?: number;
 }
 
-export class CreateElectionModal extends React.Component<CreateElectionModalProps, CreateElectionModalState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: '',
-            number: '',
-        }
-    }
-
-    handleTitleChange = (value) => {
-        this.setState({title: value})
+export class CreateElectionModal extends React.Component<
+  CreateElectionModalProps,
+  CreateElectionModalState
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "",
+      number: undefined,
     };
+  }
 
-    handleNumberChange = (value) => {
-        this.setState({number: value})
-    };
+  handleTitleChange = (value: string): void => {
+    this.setState({ title: value });
+  };
 
-    submit = (e) => {
-        e.preventDefault();
-        const {title, number} = this.state;
-        this.props.saveElection(title, number);
-    };
+  handleNumberChange = (value: number): void => {
+    this.setState({ number: value });
+  };
 
-    render() {
-        const {isOpen, handleClose} = this.props;
-        const {title, number} = this.state;
-        return (
-            <div>
-                <Dialog open={isOpen}>
-                    <form onSubmit={this.submit}>
-                        <DialogTitle>Wahlgang erstellen</DialogTitle>
-                        <DialogContent>
-                            <Grid container direction={"column"} justifyContent={"center"}>
-                                <TextField
-                                    variant={"outlined"}
-                                    onChange={(e) => this.handleTitleChange(e.target.value)}
-                                    value={title}
-                                    autoFocus
-                                    required
-                                    label="Name"
-                                    margin={"normal"}/>
-                                <TextField
-                                    variant={"outlined"}
-                                    onChange={(e) => this.handleNumberChange(e.target.value)}
-                                    value={number}
-                                    label="Wahlberechtigte"
-                                    type="number"
-                                    required
-                                    margin={"normal"}/>
-                            </Grid>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose}>
-                                Abbrechen
-                            </Button>
-                            <Button type="submit" color="primary">
-                                Speichern
-                            </Button>
-                        </DialogActions>
-                    </form>
-                </Dialog>
-            </div>
-        );
-    }
+  submit = (e: React.FormEvent): void => {
+    e.preventDefault();
+    const { title, number } = this.state;
+    this.props.saveElection(title, number as number);
+  };
+
+  render(): React.ReactElement {
+    const { isOpen, handleClose } = this.props;
+    const { title, number } = this.state;
+    return (
+      <div>
+        <Dialog open={isOpen}>
+          <form onSubmit={this.submit}>
+            <DialogTitle>Wahlgang erstellen</DialogTitle>
+            <DialogContent>
+              <Grid container direction={"column"} justifyContent={"center"}>
+                <TextField
+                  variant={"outlined"}
+                  onChange={(e) => this.handleTitleChange(e.target.value)}
+                  value={title}
+                  autoFocus
+                  required
+                  label="Name"
+                  margin={"normal"}
+                />
+                <TextField
+                  variant={"outlined"}
+                  onChange={(e) =>
+                    this.handleNumberChange(parseInt(e.target.value))
+                  }
+                  value={number}
+                  label="Wahlberechtigte"
+                  type="number"
+                  required
+                  margin={"normal"}
+                />
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Abbrechen</Button>
+              <Button type="submit" color="primary">
+                Speichern
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+      </div>
+    );
+  }
 }

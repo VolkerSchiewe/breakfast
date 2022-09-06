@@ -1,9 +1,9 @@
-import {Image} from "./Image";
+import { Image } from "./Image";
 
 export interface Candidate {
-    id?: number
-    name: string
-    image?: Image
-    votes?: number
-    subElection?: number
+  id: number;
+  name: string;
+  image?: Image;
+  votes?: number;
+  subElection?: number;
 }

@@ -15,7 +15,7 @@ interface ElectionContainerState {
   isLoading: boolean;
   subElections: SubElection[];
   selectedCandidates: {};
-  snackbarMessage: string;
+  snackbarMessage: string | null;
 }
 
 const styles = {
@@ -30,22 +30,25 @@ export class ElectionContainer extends React.Component<
 > {
   electionService = new ElectionService();
 
-  onCandidateSelected = (subElection: SubElection, candidate: Candidate) => {
+  onCandidateSelected = (
+    subElection: SubElection,
+    candidate: Candidate
+  ): void => {
     const { selectedCandidates } = this.state;
-    let selected = selectedCandidates;
+    const selected = selectedCandidates;
     selected[subElection.id] = candidate.id;
     this.setState({
       selectedCandidates: selected,
     });
   };
 
-  onSubmit = (logout: () => void) => {
+  onSubmit = (logout: () => void): void => {
     const { selectedCandidates, subElections } = this.state;
-    if (Object.keys(selectedCandidates).length != subElections.length)
+    if (Object.keys(selectedCandidates).length !== subElections.length) {
       this.setState({
         snackbarMessage: "Du musst überall einen Kandidaten wählen!",
       });
-    else {
+    } else {
       this.setState({ isLoading: true });
       this.electionService
         .setVote(selectedCandidates)
@@ -64,11 +67,12 @@ export class ElectionContainer extends React.Component<
         });
     }
   };
-  fetchData = () => {
+
+  fetchData = (): void => {
     this.electionService
       .getSubElections()
       .then((res) => {
-        if (res.length == 0) {
+        if (res.length === 0) {
           this.setState({
             snackbarMessage: "Warte noch es geht noch nicht los!",
           });
@@ -97,11 +101,11 @@ export class ElectionContainer extends React.Component<
     };
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.fetchData();
   }
 
-  render() {
+  render(): React.ReactElement {
     const { subElections, selectedCandidates, isLoading, snackbarMessage } =
       this.state;
     return (
@@ -114,7 +118,7 @@ export class ElectionContainer extends React.Component<
           <AuthConsumer>
             {({ logout, user }: AuthInterface) => (
               <React.Fragment>
-                {user.isAdmin && <Navigate to={"/elections/"} />}
+                {user?.isAdmin === true && <Navigate to={"/elections/"} />}
                 <Election
                   subElections={subElections}
                   selectedCandidates={selectedCandidates}
@@ -127,7 +131,7 @@ export class ElectionContainer extends React.Component<
           </AuthConsumer>
         )}
         <Snackbar
-          open={!!snackbarMessage}
+          open={Boolean(snackbarMessage)}
           message={<span>{snackbarMessage}</span>}
           autoHideDuration={5000}
           onClose={() => this.setState({ snackbarMessage: null })}

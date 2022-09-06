@@ -5,38 +5,50 @@ import DialogContent from "@mui/material/DialogContent/DialogContent";
 import DialogActions from "@mui/material/DialogActions/DialogActions";
 import Button from "@mui/material/Button/Button";
 import Delete from "@mui/icons-material/Delete";
+import { FC } from "react";
 
 interface AlertDialogProps {
-    isOpen: boolean
-    title: string
-    body?: string | React.ReactNode
-    okText?: string
-    cancelText?: string
+  isOpen: boolean;
+  title: string;
+  body?: string | React.ReactNode;
+  okText?: string;
+  cancelText?: string;
 
-    handleClose()
+  handleClose: () => any;
 
-    handleOk()
+  handleOk: () => any;
 
-    handleDelete?()
+  handleDelete?: () => any;
 }
 
-export const AlertDialog = ({isOpen, title, body, okText, cancelText, handleClose, handleOk, handleDelete}: AlertDialogProps) => (
-    <Dialog open={isOpen} onClose={handleClose}>
-        <form onSubmit={e => {
-            e.preventDefault();
-            handleOk();
-        }}>
-            <DialogTitle>{title}</DialogTitle>
-            {body &&
-            <DialogContent>{body}</DialogContent>
-            }
-            <DialogActions>
-                {handleDelete != undefined &&
-                <Button onClick={handleDelete}><Delete/></Button>
-                }
-                <Button onClick={handleClose}>{cancelText || 'Abbrechen'}</Button>
-                <Button type="submit">{okText || 'Ok'}</Button>
-            </DialogActions>
-        </form>
-    </Dialog>
+export const AlertDialog: FC<AlertDialogProps> = ({
+  isOpen,
+  title,
+  body,
+  okText,
+  cancelText,
+  handleClose,
+  handleOk,
+  handleDelete,
+}) => (
+  <Dialog open={isOpen} onClose={handleClose}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleOk();
+      }}
+    >
+      <DialogTitle>{title}</DialogTitle>
+      {body !== null && <DialogContent>{body}</DialogContent>}
+      <DialogActions>
+        {handleDelete !== undefined && (
+          <Button onClick={handleDelete}>
+            <Delete />
+          </Button>
+        )}
+        <Button onClick={handleClose}>{cancelText ?? "Abbrechen"}</Button>
+        <Button type="submit">{okText ?? "Ok"}</Button>
+      </DialogActions>
+    </form>
+  </Dialog>
 );

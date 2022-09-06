@@ -14,30 +14,17 @@ import { Election } from "../interfaces/Election";
 import { SubElection } from "../interfaces/SubElection";
 import { ManagementService } from "../services/management-service";
 
-interface EditElectionState {
-  election?: Election;
-  subElections: SubElection[];
-  modalCandidate?: Candidate;
-  modalSubElection?: SubElection;
-
-  electionTitle: string;
-  candidateModalOpen: boolean;
-  deleteDialogOpen: boolean;
-  editSubElectionOpen: boolean;
-  editElectionOpen: boolean;
-  snackbarOpen: boolean;
-  resultModalOpen: boolean;
-}
-
-const emptyCandidate: Candidate = { name: "" };
+const emptyCandidate: Partial<Candidate> = { name: "" };
 
 export const EditElectionContainer: FC = () => {
   const electionService = new ManagementService();
 
-  const [election, setElection] = useState<Election>(null);
+  const [election, setElection] = useState<Election | null>(null);
   const [subElections, setSubElection] = useState<SubElection[]>([]);
-  const [modalCandidate, setModalCandidate] = useState<Candidate>(null);
-  const [modalSubElection, setModalSubElection] = useState<SubElection>(null);
+  const [modalCandidate, setModalCandidate] =
+    useState<Partial<Candidate> | null>(null);
+  const [modalSubElection, setModalSubElection] =
+    useState<Partial<SubElection> | null>(null);
   const [electionTitle, setElectionTitle] = useState<string>("");
   const [candidateModalOpen, setCandidateModalOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
@@ -50,91 +37,100 @@ export const EditElectionContainer: FC = () => {
   const navigate = useNavigate();
   const { electionId } = useParams<{ electionId: string }>();
 
-  const handleDeleteCandidate = (candidate: Candidate) => {
-    electionService
-      .deleteCandidate(candidate)
-      .then(() => setCandidateModalOpen(false));
+  const handleDeleteCandidate = (candidate: Candidate): void => {
+    void electionService.deleteCandidate(candidate.id).then(() => {
+      fetchData();
+      setCandidateModalOpen(false);
+    });
   };
 
-  const saveCandidate = (candidate: Candidate) => {
+  const saveCandidate = (candidate: Candidate): void => {
     setCandidateModalOpen(false);
     setSnackbarOpen(false);
 
     if (candidate.id !== undefined) {
-      electionService.updateCandidate(candidate).then(() => {
+      void electionService.updateCandidate(candidate.id, candidate).then(() => {
         fetchData();
         setSnackbarOpen(false);
       });
     } else {
-      electionService.createCandidate(candidate).then(() => {
+      void electionService.createCandidate(candidate).then(() => {
         setSnackbarOpen(false);
         fetchData();
       });
     }
   };
 
-  const openCandidateModal = (subElectionId: number, candidate?: Candidate) => {
+  const openCandidateModal = (
+    subElectionId: number,
+    candidate?: Candidate
+  ): void => {
     if (candidate !== undefined) candidate.subElection = subElectionId;
     else emptyCandidate.subElection = subElectionId;
-    const candidateModal = candidate ? candidate : emptyCandidate;
+    const candidateModal = candidate ?? emptyCandidate;
     setCandidateModalOpen(true);
     setModalCandidate(candidateModal);
   };
 
-  const handleCandidateModalClose = () => {
+  const handleCandidateModalClose = (): void => {
     setCandidateModalOpen(false);
   };
-  const openDeleteElectionModal = () => {
+  const openDeleteElectionModal = (): void => {
     setDeleteDialogOpen(true);
   };
-  const handleDeleteElection = () => {
+  const handleDeleteElection = (): void => {
     setDeleteDialogOpen(false);
-    electionService
-      .deleteElection(election)
+    void electionService
+      .deleteElection(election as Election)
       .then(() => navigate("/elections"));
   };
 
-  const handleDialogClose = () => {
+  const handleDialogClose = (): void => {
     setDeleteDialogOpen(false);
     setEditElectionOpen(false);
     setEditElectionOpen(false);
   };
 
-  const createSubElection = (name: string) => {
-    electionService.createSubElection(name, electionId).then(fetchData);
+  const createSubElection = (name: string): void => {
+    void electionService
+      .createSubElection(name, electionId as string)
+      .then(fetchData);
   };
 
-  const editSubElection = (subElection: SubElection) => {
+  const editSubElection = (subElection: SubElection): void => {
     setEditSubElectionOpen(true);
     setModalSubElection(subElection);
   };
 
-  const editElection = () => {
+  const editElection = (): void => {
     setEditElectionOpen(true);
-    setElectionTitle(election.title);
+    setElectionTitle((election as Election).title);
   };
 
-  const changeSubElectionModal = (value: string) => {
+  const changeSubElectionModal = (value: string): void => {
     setModalSubElection({ ...modalSubElection, title: value });
   };
 
-  const changeElectionModal = (value: string) => {
+  const changeElectionModal = (value: string): void => {
     setElectionTitle(value);
   };
 
-  const saveSubElection = () => {
-    electionService
-      .updateSubElection(modalSubElection)
+  const saveSubElection = (): void => {
+    void electionService
+      .updateSubElection(
+        modalSubElection?.id as number,
+        modalSubElection as SubElection
+      )
       .then(() => {
-        fetchData()
+        fetchData();
         setEditSubElectionOpen(false);
       });
   };
 
-  const saveElection = () => {
-    electionService
-      .updateElection({
-        id: election.id,
+  const saveElection = (): void => {
+    void electionService
+      .updateElection(electionId as string, {
+        id: parseInt(electionId as string),
         title: electionTitle,
       })
       .then(() => {
@@ -143,37 +139,38 @@ export const EditElectionContainer: FC = () => {
       });
   };
 
-  const deleteSubElection = () => {
-    electionService
-      .deleteSubElection(modalSubElection.id)
+  const deleteSubElection = (): void => {
+    void electionService
+      .deleteSubElection(modalSubElection?.id as number)
       .then(() => setEditSubElectionOpen(false));
   };
 
-  const handleMenuItemSelected = (item: number) => {
+  const handleMenuItemSelected = (item: number): void => {
     switch (item) {
       case 0: {
-        setSubElection([])
-        fetchData()
+        setSubElection([]);
+        fetchData();
         return;
       }
       case 1: {
-        electionService.closeElection(election.id).then(() => fetchData());
-        return;
+        void electionService
+          .closeElection((election as Election).id.toString())
+          .then(() => fetchData());
       }
     }
   };
 
-  const showResultModal = (subElection: SubElection) => {
+  const showResultModal = (subElection: SubElection): void => {
     setModalSubElection(subElection);
     setResultModalOpen(true);
   };
 
-  const fetchData = () => {
-    electionService.getElection(electionId).then((res) => {
+  const fetchData = (): void => {
+    void electionService.getElection(electionId as string).then((res) => {
       setElection(res);
     });
-    electionService
-      .getSubElections(electionId)
+    void electionService
+      .getSubElections(electionId as string)
       .then((res) => setSubElection(res));
   };
 
@@ -183,7 +180,7 @@ export const EditElectionContainer: FC = () => {
 
   return (
     <div>
-      {election && (
+      {election != null && (
         <EditElection
           election={election}
           subElections={subElections}
@@ -207,8 +204,8 @@ export const EditElectionContainer: FC = () => {
       {candidateModalOpen && (
         <CandidateModal
           isOpen={candidateModalOpen}
-          isNew={modalCandidate == emptyCandidate}
-          candidate={modalCandidate}
+          isNew={modalCandidate === emptyCandidate}
+          candidate={modalCandidate as Partial<Candidate>}
           handleClose={handleCandidateModalClose}
           saveCandidate={saveCandidate}
           handleDelete={handleDeleteCandidate}
@@ -231,7 +228,7 @@ export const EditElectionContainer: FC = () => {
               variant={"outlined"}
               label={"Name"}
               margin={"normal"}
-              value={modalSubElection.title}
+              value={modalSubElection?.title}
               required
               onChange={(e) => changeSubElectionModal(e.target.value)}
             />
@@ -264,7 +261,7 @@ export const EditElectionContainer: FC = () => {
       )}
       {resultModalOpen && (
         <ResultModal
-          subElection={modalSubElection}
+          subElection={modalSubElection as SubElection}
           handleClose={() => setResultModalOpen(false)}
         />
       )}

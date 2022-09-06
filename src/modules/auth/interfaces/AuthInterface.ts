@@ -1,11 +1,11 @@
-import {User} from "../services/user";
+import { User } from "../services/user";
 
 export interface AuthInterface {
-    user?: User
-    error?: string
-    isLoading: boolean
+  user?: User;
+  error?: string;
+  isLoading: boolean;
 
-    login(name: string, password: string): void,
+  login: (name: string, password: string) => void;
 
-    logout(): void,
+  logout: () => void;
 }

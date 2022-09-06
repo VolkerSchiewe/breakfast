@@ -1,6 +1,6 @@
-import {User} from "../services/user";
+import { User } from "../services/user";
 
 export interface LoginResponse {
-    token: string
-    user: User
+  token: string;
+  user: User;
 }
