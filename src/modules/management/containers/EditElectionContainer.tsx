@@ -142,7 +142,10 @@ export const EditElectionContainer: FC = () => {
   const deleteSubElection = (): void => {
     void electionService
       .deleteSubElection(modalSubElection?.id as number)
-      .then(() => setEditSubElectionOpen(false));
+      .then(() => {
+        fetchData()
+        setEditSubElectionOpen(false);
+      });
   };
 
   const handleMenuItemSelected = (item: number): void => {

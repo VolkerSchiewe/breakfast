@@ -2,10 +2,9 @@
   "name": "breakfast",
   "version": "1.0.0",
   "description": "Election Tool",
-  "main": "index.tsx",
   "scripts": {
-    "start": "parcel watch src/index.tsx -d static/build/ --public-url ./",
-    "build": "parcel build src/index.tsx -d static/build/ --no-source-maps --detailed-report",
+    "start": "parcel watch src/index.tsx --dist-dir static/build/ --public-url ./",
+    "build": "parcel build src/index.tsx --dist-dir static/build/ --no-source-maps --detailed-report",
     "lint": "eslint src",
     "format": "prettier src --write",
     "heroku-postbuild": "npm run build"
@@ -16,6 +15,7 @@
   },
   "author": "Volker Schiewe",
   "license": "MIT",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "bugs": {
     "url": "https://github.com/VolkerSchiewe/breakfast/issues"
   },
@@ -43,12 +43,14 @@
     "typestyle": "~2.0.4"
   },
   "devDependencies": {
+    "@parcel/transformer-sass": "2.7.0",
     "@types/qs": "^6.5.3",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
     "@types/react-router": "^5.1.18",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "buffer": "^6.0.3",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^22.0.0",
@@ -56,8 +58,9 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.31.6",
-    "parcel-bundler": "^1.12.3",
+    "parcel": "^2.0.0",
     "prettier": "^2.7.1",
+    "process": "^0.11.10",
     "sass": "^1.22.7",
     "typescript": "*"
   }

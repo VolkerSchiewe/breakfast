@@ -1,5 +1,5 @@
 import { SubElection } from "../management/interfaces/SubElection";
-import * as palette from "google-palette";
+import palette from "google-palette";
 import { ChartData, ChartOptions } from "chart.js";
 
 export function getDataFromSubElection(
@@ -10,8 +10,7 @@ export function getDataFromSubElection(
     datasets: [
       {
         data: subElection.candidates.map((candidate) => candidate.votes ?? 0),
-        backgroundColor: palette
-          .default("tol", subElection.candidates.length)
+        backgroundColor: palette("tol", subElection.candidates.length)
           .map((hex: string) => `#${hex}`),
       },
     ],

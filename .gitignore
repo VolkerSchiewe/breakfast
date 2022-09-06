@@ -56,5 +56,6 @@ build
 node_modules
 dump.rdb
 .cache
+.parcel-cache
 
 data

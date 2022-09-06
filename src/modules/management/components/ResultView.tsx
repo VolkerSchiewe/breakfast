@@ -4,6 +4,7 @@ import { SubElection } from "../interfaces/SubElection";
 import { Pie } from "react-chartjs-2";
 import { chartOptions, getDataFromSubElection } from "../../utils/chart";
 import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
+
 Chart.register(ArcElement, Legend, Tooltip);
 
 interface ResultViewProps {
