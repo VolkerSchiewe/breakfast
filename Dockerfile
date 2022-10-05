@@ -70,4 +70,4 @@ COPY ./ /app/
 COPY --from=node-build /app/static/build/ /app/static/build/
 WORKDIR /app
 RUN python manage.py collectstatic --no-input
-CMD ["daphne", "breakfast.asgi:application", "--port", "8080", "--bind","0.0.0.0"]
+CMD ["gunicorn", "breakfast.asgi:application", "-k", "uvicorn.workers.UvicornWorker", "--bin", "0.0.0.0:8080"]

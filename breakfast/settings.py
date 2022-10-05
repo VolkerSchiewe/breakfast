@@ -27,7 +27,6 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
     'election.apps.ElectionConfig',
     'api.apps.ApiConfig',
     'django.contrib.admin',
@@ -123,15 +122,6 @@ MESSAGE_TAGS = {
 FIXTURE_DIRS = [
     'fixtures'
 ]
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        },
-    },
-}
 
 # Logging
 LOGGING = {

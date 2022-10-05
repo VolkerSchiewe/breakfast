@@ -8,8 +8,7 @@ app = "ebu-breakfast"
   release_command = "python manage.py migrate --no-input"
 
 [processes]
-  app = "daphne breakfast.asgi:application --port 8080 --bind 0.0.0.0"
-  worker = "python manage.py runworker channels -v2"
+  app = "gunicorn breakfast.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8080"
 
 [[statics]]
   guest_path = "/app/static"

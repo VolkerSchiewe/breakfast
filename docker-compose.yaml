@@ -9,12 +9,6 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-  redis:
-    image: redis:6.2-alpine
-    restart: always
-    command: redis-server --save 20 1 --loglevel warning
-    volumes:
-      - "./data/redis:/data"
   web:
     build:
       context: .
@@ -26,8 +20,6 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
-      - REDIS_URL=redis://redis:6379
       - DEBUG=True
     depends_on:
       - db
-      - redis
